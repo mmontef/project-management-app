@@ -1,5 +1,9 @@
 package driver;
 
+/*HERE ARE SOME COMMENTS
+ * 
+ */
+
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,15 +14,15 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import swing_components.ActivityPanel;
-import swing_components.ButtonPanel;
 import swing_components.TabPanel;
 import swing_components.*;
 
 public class ClientLauncher {
 	
-	public static ButtonPanel buttonPane;
 	public static TabPanel tabPane;
 	public static ActivityPanel activityPane;
+	public static MenuBar menuBar;
+	public static ProjectPanel projectPane;
 
 	public static JFrame clientFrame;
 	public static JFrame loginFrame;
@@ -42,58 +46,64 @@ public class ClientLauncher {
 			clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			clientFrame.setSize((int)(screenX*clientWidthRatio), (int)(screenY*clientHeightRatio));
 			clientFrame.setVisible(false);                                // Client Starts off hidden
+			
+			//Initialize JMenuBar
+			menuBar = new MenuBar();
+			clientFrame.setJMenuBar(menuBar.getMenuBar());
+			
 			clientFrame.getContentPane().setBackground(Color.black);
-		
-			
-			
+					
 			loginFrame = new JFrame("Login");
 			loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//loginFrame.setSize(1800, 800);
 			loginFrame.setSize((int)(screenX*loginWidthRatio), (int)(screenY*loginHeightRatio));
-			loginFrame.setVisible(true);                                   //Login starts off visible
+			loginFrame.setVisible(true); //Login starts off visible
 			loginFrame.setResizable(false);
 			loginFrame.add(new LoginPanel());
-		
-		
-			
+
 			//Set the layout Manager of the Client frame
 			clientFrame.getContentPane().setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
 		
 			//Initialize the Necessary Panels
-			buttonPane = new ButtonPanel();
 			tabPane = new TabPanel();
+			projectPane = new ProjectPanel();
 			activityPane = new ActivityPanel();
-		
 				
-			//Constraints for Button Panel
-			c.insets = new Insets(0,0,0,5);
+			//Constraints for tabPanel
+			c.insets = new Insets(0 ,0, 4, 0);
+			c.weightx = 1;
+			c.weighty = 3;
 			c.gridx = 0;
 			c.gridy = 0;
-			c.gridheight = 2;
+			c.gridwidth = 2;
 			c.fill = GridBagConstraints.BOTH;
-			c.weighty = 1;
-			c.weightx = 0;
-			
-			//Add Button Panel
-			clientFrame.add(buttonPane, c);
-			
-			//Constraints for tabPanel
-			c.insets = new Insets(0,0, 5, 0);
-			c.weightx = 20;
-			c.weighty = 3;
-			c.gridx = 1;
-			c.gridy = 0;
-			c.gridheight = 1;
+			//c.gridwidth = GridBagConstraints.BOTH;
 			
 			//Add Tab Panel
 			clientFrame.add(tabPane, c);
 			
+			//Constraints for ProjectPanel
+			c.insets = new Insets(1 ,0, 0, 0);
+			c.weightx = 1;
+			c.weighty = 1;
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 1;
+			c.fill = GridBagConstraints.BOTH;
+			//c.gridwidth = GridBagConstraints.RELATIVE;
+			
+			//Add Project Panel
+			clientFrame.add(projectPane, c);
+			
 			//Constraints for Activity Panel
-			c.insets = new Insets(0,0,0,0);
+			c.insets = new Insets(1,0,0,0);
+			c.weightx = 1;
 			c.weighty = 1;
 			c.gridx = 1;
 			c.gridy = 1;
+			c.gridwidth = 1;
+			c.fill = GridBagConstraints.BOTH;
+			//c.gridwidth = GridBagConstraints.REMAINDER;
 			
 			//Add Activity Panel
 			clientFrame.add(activityPane,c);

@@ -4,16 +4,23 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import graph_components.GraphBox;
+import resources.Activities;
 
 @SuppressWarnings("serial")
 public  class TabPanel extends JPanel {
@@ -76,22 +83,81 @@ public  class TabPanel extends JPanel {
 		return this.tabPane;
 	}
 	
-	public  void  addProjectTab(){
+	public String toString(){
+		return "I am the tabPanel";
+	}
+	
+	public  void  addProjectTab(String name){
 		
+		//Create a JPanel Tab
 		JPanel tab = new JPanel(null);
+		
+		
 		tab.setPreferredSize(this.getPreferredSize());
 		tab.setBackground(Color.white);
+		tab.addMouseListener(new Mouse());
+			
 		
-		GraphBox graph = new GraphBox();
-		graph.setBounds(tab.getSize().width/5, tab.getSize().height/5, graph.getPreferredSize().width/2, graph.getPreferredSize().height/2);
-		graph.setPreferredSize(this.getPreferredSize());
-		tab.add(graph);
-		
-		
-		
-		this.getTabPanel().insertTab("Project " + (this.getTabPanel().getTabCount()+1), null, tab, null, this.getTabPanel().getTabCount());
-		
+		//this.getTabPanel().insertTab("Project " + (this.getTabPanel().getTabCount()+1), null, tab, null, this.getTabPanel().getTabCount());
+		this.getTabPanel().insertTab(name,null, tab, null,this.getTabPanel().getTabCount());
 	}
 	
 	
+	private class Mouse implements MouseListener{
+
+		private ArrayList<Point> myPoints = new ArrayList<Point>();
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+
+			
+			String activityDescription = (String) JOptionPane.showInputDialog(new JFrame(), "Enter Avtivity name/description",
+					"Activity Name", JOptionPane.PLAIN_MESSAGE, null, null, null);
+			
+			String activityDuration = (String) JOptionPane.showInputDialog(new JFrame(), "Enter Duration of Activity",
+					"Activity Duration", JOptionPane.PLAIN_MESSAGE, null, null, null);
+			 
+			
+			int duration = Integer.parseInt(activityDuration);
+			Point clickPoint = new Point(arg0.getPoint());
+			myPoints.add(clickPoint);
+			
+			Activities activity = new Activities(1,activityDescription, duration, clickPoint.x, clickPoint.y);
+			
+			//TODO MICHAEL NEED ACTIVITY TO GO TO DATABASE
+			
+			GraphBox graph = new GraphBox();
+			graph.setBounds(clickPoint.x, clickPoint.y, graph.getPreferredSize().width/2, graph.getPreferredSize().height/2);
+			
+
+			JPanel myPanel = (JPanel)arg0.getComponent();
+			myPanel.add(graph);
+			
+			myPanel.repaint(clickPoint.x, clickPoint.y, clickPoint.x + graph.getWidth(), clickPoint.y + graph.getHeight());
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 }
