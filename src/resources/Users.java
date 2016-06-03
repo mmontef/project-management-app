@@ -92,14 +92,6 @@ public class Users {
 		this.lastName = lastName;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public userType getType() {
 		return type;
 	}
