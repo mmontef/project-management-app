@@ -55,6 +55,13 @@ public class Activities {
 		ypos=0;
 	}
 
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
 	public static int getActivityCount() {
 		return activityCount;

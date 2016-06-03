@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -145,7 +144,7 @@ public static Projects getProjectbyProjectName(String name){
             		
             		while(result5.next())
             		{
-            			//now create activities and add to activiylist
+            			//now create activities and add to activityList
             			int id = result5.getInt(1);
             			String name = result5.getString(2);
             			String desc = result5.getString(3);
@@ -194,7 +193,7 @@ public static Projects getProjectbyProjectName(String name){
         		
         	}
 		
-        	//print to console to test if projects and activites and dependencies added correctly
+        	//print to console to test if projects and activities and dependencies added correctly
           for(Projects P: projectList)
           {
         	  System.out.println(P.getProjectName());
@@ -236,14 +235,13 @@ public static Projects getProjectbyProjectName(String name){
 		Connection connection = null;
 		try{
         	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
-        	
-        	
+
         	PreparedStatement ps1;
     		String projectName, description, date;
     		int projectID, managerID;
     		double budget;
     		
-    		//load projects in database
+    		//load projects in projects table in database
     		for(Projects projects: projectList)
     		{
     			projectID = projects.getId();
@@ -255,18 +253,64 @@ public static Projects getProjectbyProjectName(String name){
     		
     			ps1 = connection.prepareStatement("INSERT INTO Projects(id, name, date, description, budget, manager_id) "
     					+ "VALUES (" + projectID + ", " + projectName + ", " + date + " " + description + ", " + budget + "," + managerID+");");
-    			ps1.executeQuery();		
+    			ps1.executeQuery();
+    			
+    			PreparedStatement ps2;
+    			int userID;
+    			//for each project, insert the list of users associated with that project into the database
+    			for(Users user: projects.getUserList())
+    			{
+    				userID = user.getID();
+    				ps2 = connection.prepareStatement("INSERT INTO user_project_relationships(project_id, user_id) VALUES "
+    						+ "(" + projectID + ", " + userID + ")");
+    				ps2.executeQuery();
+    			}
+    			
+    			//for each project, insert the list of activities associated with that project into the database
+    			PreparedStatement ps3,ps5;
+    			int activityID, dependentActivityID;
+    			double duration;
+    			String actLabel, actDescription; 
+    			
+    			
+    			for(Activities activity : projects.getActivityList())
+    			{
+    				activityID = activity.getId();
+    				actLabel = activity.getLabel();
+    				actDescription = activity.getDescription();
+    				duration = activity.getDuration();
+    				
+    				ps5 = connection.prepareStatement("INSERT INTO activities(id, label, description, duration) VALUES "
+    						+ "(" + activityID + ", " + actLabel + "," + actDescription +", "+duration +")");
+    				ps5.executeQuery();
+    				
+    				ps3 = connection.prepareStatement("INSERT INTO activity_project_relationships(project_id, activity_id) VALUES "
+    						+ "(" + projectID + ", " + activityID + ")");
+    				ps3.executeQuery();
+    				
+    				PreparedStatement ps4;
+    				Set<DefaultEdge> edges = projects.getArrowSet();
+    				//for currently selected activity, add all the edges to activity_edge_relationship
+    				for(DefaultEdge e : edges)
+    				{
+    					if(activityID==projects.getActivityBefore(e).getId())
+    					{
+    						dependentActivityID = projects.getActivityAfter(e).getId();
+    						//if the activityID is a before edge, put the before and after edge into table under  from_activity_id and  to_activity_id
+    						ps4 = connection.prepareStatement("INSERT INTO activity_edge_relationship(from_activity_id, to_activity_id) VALUES "
+    	    						+ "(" + activityID + ", " + dependentActivityID + ")");
+    	    				ps4.executeQuery();
+    					}
+    				}
+    			}
+
     		}
     		
 
 		}catch(Exception exception) {
         	System.out.println(exception.getMessage());
         }
-		
-		
-    	
-    	
-        
+
 		//close connection at end
 		try{
         	connection.close();
