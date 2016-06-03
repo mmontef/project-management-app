@@ -104,14 +104,6 @@ public class Projects {
 		this.projectName = projectName;
 	}
 
-	public ArrayList<Users>  getProjectMembers() {
-		return userList;
-	}
-
-	public void setProjectMembers(ArrayList<Users>  userList) {
-		this.userList = userList;
-	}
-
 	public String getDate() {
 		return date;
 	}
