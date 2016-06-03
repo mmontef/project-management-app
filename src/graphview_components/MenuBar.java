@@ -1,21 +1,13 @@
 package graphview_components;
 
 import java.awt.event.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import driver.ClientLauncher;
+import listview_components.Activity_form;
 import listview_components.Project_form;
-import resources.Projects;
-import saver_loader.DataResource;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar{
@@ -102,11 +94,10 @@ public class MenuBar extends JMenuBar{
 	}
 
 	private class MenuItemListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {            
+        
+		public void actionPerformed(ActionEvent e) {            
            
-        	//add new project
-        	if(e.getActionCommand()== "New Project")
-        	{
+        	if(e.getActionCommand()== "New Project"){
         		SwingUtilities.invokeLater(new Runnable(){
 
 					@Override
@@ -117,13 +108,28 @@ public class MenuBar extends JMenuBar{
 						
 					}
         	});
+        		}
         	
-        	if(e.getActionCommand() == "Exit")
-        	{
+        		if(e.getActionCommand() == "Exit"){
         		System.exit(0);
-        	}
+        		}
+        		
+        		if(e.getActionCommand() == "New"){
+        			
+        			SwingUtilities.invokeLater(new Runnable() {
+						
+						@Override
+						public void run() {
+							Activity_form frame =  new Activity_form();
+							frame.setVisible(true);
+						}
+					});
+        			
+        		}
+        		
         	
         }    
      }
 	
-	}}
+	}
+

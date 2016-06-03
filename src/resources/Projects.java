@@ -26,7 +26,7 @@ public class Projects {
 		
 	public Projects(String projectName, ArrayList<Users> userList, String date, int managerID,
 			String description, double budget) {
-		this.id = projectCount++;
+		this.id = ++projectCount;
 		this.projectName = projectName;
 		this.userList = userList;
 		this.date = date;
