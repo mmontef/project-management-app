@@ -2,7 +2,9 @@ package resources;
 
 public class Activities {
 
+	private static int activityCount = 0;
 	private int id;
+	private String label;
 	private String description;
 	private double duration;
 	private double xpos, ypos;
@@ -23,20 +25,44 @@ public class Activities {
 		this.maxDuration = -1;
 	}
 	
-	public Activities(int id, String description, double duration, double xpos, double ypos) {
-		this.id = id;
+	public Activities(String description, double duration, String label) {
+		this.id = activityCount++;
 		this.description = description;
 		this.duration = duration;
-		this.xpos = xpos;
-		this.ypos = ypos;
+		this.label = label;
 		this.earliestStart = 0;
 		this.earliestFinish = 0;
 		this.latestStart = 0;
 		this.latestFinish = 0;
 		this.activityFloat = 0;
 		this.maxDuration = 0;
+		xpos =0;
+		ypos=0;
+	}
+	
+	public Activities(String description, double duration, String label, int id) {
+		this.id = id;
+		this.description = description;
+		this.duration = duration;
+		this.label = label;
+		this.earliestStart = 0;
+		this.earliestFinish = 0;
+		this.latestStart = 0;
+		this.latestFinish = 0;
+		this.activityFloat = 0;
+		this.maxDuration = 0;
+		xpos =0;
+		ypos=0;
 	}
 
+
+	public static int getActivityCount() {
+		return activityCount;
+	}
+
+	public static void setActivityCount(int activityCount) {
+		Activities.activityCount = activityCount;
+	}
 
 	public int getId() {
 		return id;

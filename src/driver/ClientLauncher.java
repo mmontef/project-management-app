@@ -13,9 +13,10 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import swing_components.ActivityPanel;
-import swing_components.TabPanel;
-import swing_components.*;
+import graphview_components.*;
+import listview_components.ActivityListPane;
+import listview_components.ProjectListPane;
+import saver_loader.DataResource;
 
 public class ClientLauncher {
 	
@@ -23,6 +24,9 @@ public class ClientLauncher {
 	public static ActivityPanel activityPane;
 	public static MenuBar menuBar;
 	public static ProjectPanel projectPane;
+	
+	public static ActivityListPane activityListPane;
+	public static ProjectListPane projectListPane;
 
 	public static JFrame clientFrame;
 	public static JFrame loginFrame;
@@ -51,7 +55,6 @@ public class ClientLauncher {
 			menuBar = new MenuBar();
 			clientFrame.setJMenuBar(menuBar.getMenuBar());
 			
-			clientFrame.getContentPane().setBackground(Color.black);
 					
 			loginFrame = new JFrame("Login");
 			loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,46 +71,33 @@ public class ClientLauncher {
 			tabPane = new TabPanel();
 			projectPane = new ProjectPanel();
 			activityPane = new ActivityPanel();
+			
+			projectListPane = new ProjectListPane();
+			activityListPane = new ActivityListPane();
+			
+			
+			
+	
+				//----------------------- LIST VIEW--------------------------------------------------------------------------
 				
-			//Constraints for tabPanel
-			c.insets = new Insets(0 ,0, 4, 0);
-			c.weightx = 1;
-			c.weighty = 3;
-			c.gridx = 0;
-			c.gridy = 0;
-			c.gridwidth = 2;
-			c.fill = GridBagConstraints.BOTH;
-			//c.gridwidth = GridBagConstraints.BOTH;
-			
-			//Add Tab Panel
-			clientFrame.add(tabPane, c);
-			
-			//Constraints for ProjectPanel
-			c.insets = new Insets(1 ,0, 0, 0);
-			c.weightx = 1;
-			c.weighty = 1;
-			c.gridx = 0;
-			c.gridy = 1;
-			c.gridwidth = 1;
-			c.fill = GridBagConstraints.BOTH;
-			//c.gridwidth = GridBagConstraints.RELATIVE;
-			
-			//Add Project Panel
-			clientFrame.add(projectPane, c);
-			
-			//Constraints for Activity Panel
-			c.insets = new Insets(1,0,0,0);
-			c.weightx = 1;
-			c.weighty = 1;
-			c.gridx = 1;
-			c.gridy = 1;
-			c.gridwidth = 1;
-			c.fill = GridBagConstraints.BOTH;
-			//c.gridwidth = GridBagConstraints.REMAINDER;
-			
-			//Add Activity Panel
-			clientFrame.add(activityPane,c);
+				c.gridx = 0;
+				c.gridy = 0;
+				c.weightx = 1;
+				c.weighty = 1;
+				c.fill = GridBagConstraints.BOTH;
 				
+				clientFrame.add(projectListPane, c);
+				
+				c.gridx =1;
+				c.weightx = 5;
+				c.insets = new Insets(0,10,0,0);
+
+				clientFrame.add(activityListPane, c);
+				
+				
+				
+				
+			
 	}
 		});
 		

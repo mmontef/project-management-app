@@ -8,31 +8,86 @@ import java.util.ArrayList;
 
 public class Projects {
 
+	private static int projectCount = 0;
 	private int id;
 	private String projectName;
-	private Users[] projectMembers;
+	private ArrayList<Users> userList;
 	private String date;
 	private DefaultDirectedGraph<Activities,DefaultEdge> activityGraph;
-	private ArrayList<Activities> activityList;
-
-	public Projects(int id, String projectName, Users[] projectMembers, String date, DefaultDirectedGraph<Activities,DefaultEdge> activityGraph, ArrayList<Activities> activityList) {
-		this.id = id;
-		this.projectName = projectName;
-		this.projectMembers = projectMembers;
-		this.date = date;
-		this.activityGraph = activityGraph;
-		this.activityList = activityList;
-	}
 	
-	public Projects(int id, String projectName, Users[] projectMembers, String date) {
-		this.id = id;
+	
+
+	private ArrayList<Activities> activityList;
+	private int managerID;
+	private double budget;
+	private String description;
+
+	
+		
+	public Projects(String projectName, ArrayList<Users> userList, String date, int managerID,
+			String description, double budget) {
+		this.id = projectCount++;
 		this.projectName = projectName;
-		this.projectMembers = projectMembers;
+		this.userList = userList;
 		this.date = date;
 		this.activityGraph = new DefaultDirectedGraph<Activities,DefaultEdge>(DefaultEdge.class);
 		this.activityList = new ArrayList<Activities>();
+		this.managerID = managerID;
+		this.budget = budget;
+		this.description = description;
 	}
 
+	public Projects(String projectName, ArrayList<Users> userList, String date, int projectID, int managerID,
+			String description, double budget) {
+		this.projectName = projectName;
+		this.userList = userList;
+		this.date = date;
+		this.activityGraph = new DefaultDirectedGraph<Activities,DefaultEdge>(DefaultEdge.class);
+		this.activityList = new ArrayList<Activities>();
+		this.managerID = managerID;
+		this.budget = budget;
+		this.description = description;
+	}
+	
+	public ArrayList<Users> getUserList() {
+		return userList;
+	}
+
+	public void setUserList(ArrayList<Users> userList) {
+		this.userList = userList;
+	}
+
+	public int getManagerID() {
+		return managerID;
+	}
+
+	public void setManagerID(int managerID) {
+		this.managerID = managerID;
+	}
+
+	public double getBudget() {
+		return budget;
+	}
+
+	public void setBudget(double budget) {
+		this.budget = budget;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public static int getProjectCount() {
+		return projectCount;
+	}
+
+	public static void setProjectCount(int projectCount) {
+		Projects.projectCount = projectCount;
+	}
 	public int getId() {
 		return id;
 	}
@@ -49,12 +104,12 @@ public class Projects {
 		this.projectName = projectName;
 	}
 
-	public Users[] getProjectMembers() {
-		return projectMembers;
+	public ArrayList<Users>  getProjectMembers() {
+		return userList;
 	}
 
-	public void setProjectMembers(Users[] projectMembers) {
-		this.projectMembers = projectMembers;
+	public void setProjectMembers(ArrayList<Users>  userList) {
+		this.userList = userList;
 	}
 
 	public String getDate() {

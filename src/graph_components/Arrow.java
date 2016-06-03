@@ -16,6 +16,9 @@ public class Arrow extends JComponent {
 
 	ArrayList<Point> arrowPoints = new ArrayList<Point>();
 	
+	public Arrow(){
+		super();
+	}
 	
 	public Arrow(int x1, int y1, int x2, int y2){
 		

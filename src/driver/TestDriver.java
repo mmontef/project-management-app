@@ -1,15 +1,19 @@
 package driver;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import org.jgraph.graph.DefaultEdge;
 
 import resources.Activities;
-import resources.Projects;
-import resources.Users;
 
 public class TestDriver {
-
+	
+// only used for testing
+	
+/*
 	public static void main(String[] args) {
 		
 		Activities A = new Activities(0, "S", 14, 0, 0);
@@ -85,5 +89,5 @@ public class TestDriver {
 		
 
 	}
-
+*/
 }
