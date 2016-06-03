@@ -1,4 +1,4 @@
-package swing_components;
+package graphview_components;
 
 import java.awt.Font;
 import java.awt.Graphics;

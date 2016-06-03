@@ -1,4 +1,4 @@
-package swing_components;
+package graphview_components;
 
 import java.awt.event.*;
 import java.text.DateFormat;
@@ -116,11 +116,7 @@ public class MenuBar extends JMenuBar{
 						frame.setVisible(true);
 						
 					}
-        			       			
-        		});
-        		
-        		
-        		}
+        	});
         	
         	if(e.getActionCommand() == "Exit")
         	{
@@ -130,4 +126,4 @@ public class MenuBar extends JMenuBar{
         }    
      }
 	
-}
+	}}

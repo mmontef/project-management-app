@@ -1,4 +1,4 @@
-package swing_components;
+package graphview_components;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -11,8 +11,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-
-import graphview_components.DrawPanel;
 
 @SuppressWarnings("serial")
 public  class TabPanel extends JPanel {
