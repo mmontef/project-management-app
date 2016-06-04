@@ -2,6 +2,8 @@ package listview_components;
 
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Set;
 
 import javax.swing.JLabel;
@@ -14,9 +16,10 @@ import org.jgraph.graph.DefaultEdge;
 
 import resources.Activities;
 import resources.Projects;
+import saver_loader.DataResource;
 
 @SuppressWarnings("serial")
-public class ActivityListPane extends JPanel {
+public class ActivityListPane extends JPanel implements MouseListener {
 
 	public static JTable table = new JTable();
 	private  DefaultTableModel mod = new DefaultTableModel();
@@ -43,6 +46,9 @@ public class ActivityListPane extends JPanel {
 		table.setFont(table.getFont().deriveFont(fontScalar*30f));
 		table.setRowHeight(35);
 		table.getTableHeader().setFont(table.getFont().deriveFont(40f));
+		table.addMouseListener(this);
+		table.setRowSelectionAllowed(true);
+		table.setEnabled(true);
 
 	
 		//add the table to a ScrollPanel
@@ -96,6 +102,42 @@ public class ActivityListPane extends JPanel {
 			
 		}
 				
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int row = table.rowAtPoint(e.getPoint());
+		
+		if(row >= 0){
+		
+			String activityLabel = (String) table.getValueAt(row, 0);
+			DataResource.selectedActivity= DataResource.selectedProject.getActivityByLabel(activityLabel);
+		}
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
