@@ -25,6 +25,7 @@ public class DataResource {
 	
 	public static Activities selectedActivity;
 	
+	public static String dataBase = "jdbc:sqlite:ultimate_sandwich.db";
 	
 	public static Projects getProjectbyProjectId(int projectId){
 		
@@ -40,7 +41,7 @@ public static Projects getProjectbyProjectName(String name){
         
         for(Projects project: projectList){
             
-            if(project.getProjectName() == name)
+            if(project.getProjectName().equals(name))
                 return project;
         }
         return null;
@@ -54,7 +55,7 @@ public static void removeProject(Projects project)
 	Connection connection = null;
 	String sql;
 	try{
-    	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+    	connection = DriverManager.getConnection(dataBase);
     	Statement stmt = connection.createStatement();
     	sql = ("DELETE FROM projects WHERE id="+project.getId());
     	stmt.executeQuery(sql);
@@ -88,7 +89,7 @@ public static void deleteActivity(Activities A)
 	String sql;
 	
 	try{
-    	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+    	connection = DriverManager.getConnection(dataBase);
     	Statement stmt = connection.createStatement();
     	//delete activity from activities table in database
     	sql = ("DELETE FROM activities WHERE id="+A.getId());
@@ -120,7 +121,7 @@ Connection connection = null;
 String sql;
 	
 	try{
-    	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+    	connection = DriverManager.getConnection(dataBase);
     	
     	// Delete edge in database between the activityBefore and activityAfter
     	Statement stmt = connection.createStatement();
@@ -151,7 +152,7 @@ String sql;
         PreparedStatement ps;
         
         try{
-        	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+        	connection = DriverManager.getConnection(dataBase);
         	
         	//set projectCount to max project id from database
         	
@@ -314,7 +315,7 @@ String sql;
 		Connection connection = null;
 		Statement stmt = null;
 		try{
-        	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+        	connection = DriverManager.getConnection(dataBase);
 
     		String projectName, description, date;
     		int projectID, managerID;
@@ -396,6 +397,11 @@ String sql;
         {
         	System.out.println(closingException.getMessage());
         }
+	}
+	
+	public static void setDatabase(String db)
+	{
+		dataBase = db;
 	}
 	
 }
