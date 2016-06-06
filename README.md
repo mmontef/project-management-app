@@ -63,6 +63,7 @@ Changes made are reflected immediately in the database. If an Activity is delete
 
 All additions, changes and deletions are made displayed immediately in the list.
 
+******
 
 Here is a breakdown of the main object structure:
 
