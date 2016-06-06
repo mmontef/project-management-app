@@ -2,10 +2,16 @@
 Project Management App
 
 login details
+
 username: mmontef
 pass: 123
 
-If you are having errors due to missing libraries, go to "build path" and make sure that the following libraries are linked:
+Alternate login:
+
+username: davedm
+pass: abc
+
+This program includes the following libraries. They should be added automatically but if there are any errors, you can find them in the working directory.
 
 jgrapht-ext-0.9.2-uber
 
@@ -13,43 +19,54 @@ sqlite-jdbc-3.8.11.2
 
 
 ******
+
 Note the following folder structure:
 
 driver: Contains the main driver ClientLauncher.java and another driver we used for testing (currently commented out)
 
-graph_components: Contains components used to draw a physical graph. As per the majority decision during Tuesday's meeting, we are no longer drawing a physical graph and will be saving this for the next iteration. 
+graph_components: Contains components used to draw a physical graph. Not currently used in this iteration.
 
-grapview_components: Contains various classes used to make up the GUI
+grapview_components: Contains various classes used to make up the GUI. Includes some components used to draw a physical graph.
+These are not used in the current iteration.
 
-listview_components: Same as above. We will consolidate these packages in the final iteration.
+listview_components: Similarly to above, this class contains GUI components used to draw the Projects and Activities lists.
 
 resources: Contains the main objects used for the application. Users, Projects and Activities. See below for more info.
 
-saver_loader: Contains methods for saving and loading from the database.
+saver_loader: Contains class used for saving/loading/editing the database, as well as holding the current instance of the database when the project is loaded.
 
-swing_Components: Contains swing classes used to make GUI objects.
 ******
 
-Where we currently stand:
+Current Functionalities:
 
-As per Tuesday's meeting and the majority's decision, we have scrapped the physical graph representation of project activities in lieu of a table-like view.
+The program allows a user to log in, and have all projects associated with this user displayed.
 
-Currently the database is set up correctly and loading from the database is working as it should.
+The only user type currently supported is a MANAGER, and each Manager can have a number of Projects associated to them.
 
-Display the data in the GUI is something we are working on now.
+Projects only support having a single manager associated with them.
 
-Currently, the user that logs in will have all projects associated with their userID displayed. Upon clicking any project, a table with Activity names, durations and interdependencies is displayed. Right now they are displaying twice, which is something we are working on.
+Projects are displayed in a list, and upon clicking a Project, a list of Activities associated with the project is displayed.
 
-The user is able to create new projects and have them added to the list by selecing new project from the menu bar. User is prompted to enter some project details.
+The user is able to Create new Projects from the menu bar. 
 
-We have created similar forms for adding/editing new activities, and editing projects. These will be integrated tomorrow. The user, upon choosing to create new activities, is given a list of all other activities in the project from which they can set inter-dependencies.
+Upon clicking a Project, the user can choose to Edit a Project from the menu bar, which will display editable fields containing Project attributes. From this screen, the user also has an option to delete the Project completely.
 
-Saving to the database is almost completed.
+Changes made are saved automatically to the Database. When a Project is Deleted, all Activities associated with the Project are deleted as well.
 
-All the data is being loaded and stored properly. The challenge is displaying it in the GUI. There are some errors we are working on. We had to modify a lot of things due to changing to a table view.
+Similarly, upon clicking a Project, the user is able to then Add new Activities to the Project from the menu bar. A form appears with editable text boxes to set the Activity attributes.
+
+When adding new Activities, the user can set Dependencies from a populated list of other Activities. The user can select no dependencies, or can select mutliple dependencies by holding SHIFT and clicking multiple options in the list.
+
+Upon clicking an Activity in the list, the user is able to Edit an Activity from the menu bar. This will display the current values associated with this Activity, and can be changed. The user also has an option to delete the Activity entirely.
+
+Changes made are reflected immediately in the database. If an Activity is deleted, all dependency associations that involve this Activity are deleted as well.
+
+All additions, changes and deletions are made displayed immediately in the list.
 
 
 Here is a breakdown of the main object structure:
+
+NOTE: The following classes all contain Javadoc documentation that detail the functionality of all methods.
 
 Users
 
