@@ -36,6 +36,7 @@ public class Arrow extends JComponent {
 		this.arrowPoints = points;
 	}
 	
+	@Override
 	public void paintComponent(Graphics g){
 		
 		double arcDegrees = 30*Math.PI/180;

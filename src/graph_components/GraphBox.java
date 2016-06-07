@@ -45,6 +45,7 @@ public class GraphBox extends JComponent{
 	}
 	
 	//How to component is painted.
+	@Override
 	public void paintComponent(Graphics g){
 		
 		g.setColor(Color.BLACK);

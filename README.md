@@ -1,6 +1,14 @@
 
 Project Management App
 
+******
+
+Standalone File is executable from working directory (where it is currently located)
+
+ProjectManager.jar
+
+******
+
 login details
 
 username: mmontef
@@ -22,7 +30,7 @@ sqlite-jdbc-3.8.11.2
 
 Note the following folder structure:
 
-driver: Contains the main driver ClientLauncher.java and another driver we used for testing (currently commented out)
+driver: Contains the main driver ClientLauncher.java 
 
 graph_components: Contains components used to draw a physical graph. Not currently used in this iteration.
 

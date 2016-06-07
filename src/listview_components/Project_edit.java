@@ -126,6 +126,16 @@ public class Project_edit extends JFrame {
 			}
 		});
 		
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleteAction();
+				disposeWindow();
+			}
+		});
+		
+		
 	}
 		
 	private void saveAction () {
@@ -143,5 +153,13 @@ public class Project_edit extends JFrame {
 	
 	private void disposeWindow(){
 		this.dispose();
+	}
+	
+	private void deleteAction () {
+		Projects toDelete = DataResource.selectedProject;
+		DataResource.removeProject(toDelete);
+		DataResource.selectedProject = null;
+		ProjectListPane.updateList();
+		
 	}
 }
