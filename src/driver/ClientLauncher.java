@@ -43,7 +43,8 @@ public class ClientLauncher {
 		
 		
 		//Launch the Client Window and set basic frame variables
-		SwingUtilities.invokeLater(new Runnable(){public void run(){
+		SwingUtilities.invokeLater(new Runnable(){@Override
+		public void run(){
 		
 		           					
 			loginFrame = new JFrame("Login");

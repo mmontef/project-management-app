@@ -53,7 +53,8 @@ public class ProjectListPane extends JPanel{
 	    //Add and define Listener for the list
 	    list.addListSelectionListener(new ListSelectionListener() {
 	        
-	    	public void valueChanged(ListSelectionEvent e) {
+	    	@Override
+			public void valueChanged(ListSelectionEvent e) {
 	         	      
 	    		if (e.getValueIsAdjusting()) {//This line prevents double events
 	    			DataResource.selectedProject = DataResource.getProjectbyProjectName(list.getSelectedValue());

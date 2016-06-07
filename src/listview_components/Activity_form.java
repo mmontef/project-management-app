@@ -131,6 +131,7 @@ public class Activity_form extends JFrame {
 		selectionList.addListSelectionListener(new ListSelectionListener() {
 			
 			
+			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
 				if (e.getValueIsAdjusting()) {//This line prevents double events

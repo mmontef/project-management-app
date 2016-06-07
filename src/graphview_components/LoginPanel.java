@@ -166,6 +166,7 @@ public class LoginPanel extends JPanel{
 	    			ClientLauncher.loginFrame.dispose();
 	    			
 	    			SwingUtilities.invokeLater(new Runnable() {
+						@Override
 						public void run() {
 							ClientLauncher.launchCLient();
 						}
