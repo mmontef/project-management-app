@@ -1,6 +1,14 @@
 
 Project Management App
 
+******
+
+Standalone File is executable from working directory (where it is currently located)
+
+ProjectManager.jar
+
+******
+
 login details
 
 username: mmontef
