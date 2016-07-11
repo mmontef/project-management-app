@@ -19,11 +19,7 @@ public class Users {
 	String lastName;
 	String password;
 	int id;
-	userType type;	
-	
-	enum userType {	
-		ADMIN, MANAGER, MEMBER
-	}
+	UserType type;	
 	
 	/**
 	 * Default Constructor
@@ -60,21 +56,21 @@ public class Users {
 		{
 		case "MANAGER":
 		{
-			this.type = userType.MANAGER;
+			this.type = UserType.MANAGER;
 			break;
 		}
 		case "ADMIN":
 		{
-			this.type = userType.ADMIN;
+			this.type = UserType.ADMIN;
 			break;
 		}
 		case "MEMBER":
 		{
-			this.type = userType.MEMBER;
+			this.type = UserType.MEMBER;
 			break;
 		}
 		default:
-			this.type = userType.MEMBER;
+			this.type = UserType.MEMBER;
 			break;
 		}		
 	}
@@ -164,7 +160,7 @@ public class Users {
 	 * Note: Returns an enum type
 	 * @return userType type
 	 */
-	public userType getType() {
+	public UserType getType() {
 		return type;
 	}
 
@@ -173,7 +169,7 @@ public class Users {
 	 * Note: Must pass an enum of type userType
 	 * @param type value for type
 	 */
-	public void setType(userType type) {
+	public void setType(UserType type) {
 		this.type = type;
 	}
 

@@ -128,6 +128,10 @@ public class DataResource {
 				statement = connection.prepareStatement(sql);
 				statement.executeUpdate();
 			}
+			
+			sql = ("DELETE FROM activity_user_project_relationships WHERE project_id=" + project.getId());
+			statement = connection.prepareStatement(sql);
+			statement.executeUpdate();
 
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
@@ -168,6 +172,10 @@ public class DataResource {
 
 			// delete activity from activity_edge_relationship in database
 			sql = ("DELETE FROM activity_edge_relationship WHERE from_activity_id=" + A.getId());
+			statement = connection.prepareStatement(sql);
+			statement.executeUpdate();
+			
+			sql = ("DELETE FROM activity_user_project_relationships WHERE activity_id=" + A.getId());
 			statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
 
@@ -256,6 +264,174 @@ public class DataResource {
 		}
 	}
 
+	public static void loadMemberDataFromDB()
+	{
+		Connection connection = null;
+		PreparedStatement ps;
+
+		try {
+			connection = DriverManager.getConnection(dataBase);
+
+			// get project members
+			PreparedStatement psTotMembers = connection
+					.prepareStatement("SELECT * FROM users where user_type = 'MEMBER';");
+			ResultSet resultTotMembers = psTotMembers.executeQuery();
+
+			while (resultTotMembers.next()) {
+				String username = resultTotMembers.getString(4);
+				String first_name = resultTotMembers.getString(2);
+				String last_name = resultTotMembers.getString(3);
+				String password = resultTotMembers.getString(5);
+				int id = resultTotMembers.getInt(1);
+				String userType = resultTotMembers.getString(6);
+
+				projectMembers.add(new Users(username, first_name, last_name, password, id, userType));
+			}
+			
+			PreparedStatement ps3 = connection.prepareStatement("SELECT max(id) FROM projects;");
+			ResultSet result3 = ps3.executeQuery();
+
+			if (result3.next()) {
+				Projects.setProjectCount(result3.getInt(1));
+			}
+
+			// set activityCount to max activity id from database
+			ps3 = connection.prepareStatement("SELECT max(id) FROM activities;");
+			result3 = ps3.executeQuery();
+			
+			PreparedStatement ps4 = connection.prepareStatement("SELECT distinct project_id from activity_user_project_relationships where user_id = ?");
+			ps4.setInt(1, currentUser.getID());
+			ResultSet result4 = ps4.executeQuery();
+
+			while (result4.next()) {
+				ps = connection.prepareStatement("SELECT * FROM projects WHERE id = ?");
+				ps.setInt(1, result4.getInt(1));
+				ResultSet rs = ps.executeQuery();
+				
+				while (rs.next()) {
+					// we have project ids
+					// projIds.add(result.getInt(1));
+					int projectID = rs.getInt(1);
+					int managerID = rs.getInt(6);
+					String projectName = rs.getString(2);
+					String description = rs.getString(4);
+					double budget = rs.getDouble(5);
+					String date = rs.getString(3);
+
+					// getting all users associated with project
+					PreparedStatement ps1 = connection
+							.prepareStatement("SELECT user_id FROM user_project_relationships WHERE " + "project_id = ?");
+					ps1.setInt(1, projectID);
+					ResultSet result1 = ps1.executeQuery();
+
+					ArrayList<Users> userList = new ArrayList<Users>();
+
+					while (result1.next()) {
+						// memeberIds.add(result1.getInt(1));//got all userids
+						// associated with project
+						int userID = result1.getInt(1);
+
+						PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM users WHERE " + "id = ?");
+						ps2.setInt(1, userID);
+						ResultSet result2 = ps2.executeQuery();
+
+						while (result2.next()) {
+							String username = result2.getString(4);
+							String first_name = result2.getString(2);
+							String last_name = result2.getString(3);
+							String password = result2.getString(5);
+							int id = result2.getInt(1);
+							String userType = result2.getString(6);
+
+							userList.add(new Users(username, first_name, last_name, password, id, userType));
+						}
+
+					}
+
+					ArrayList<Activities> activityList = new ArrayList<Activities>();
+
+					// query activity relation table to get activities associated
+					// with project
+					PreparedStatement psn = connection.prepareStatement(
+							"SELECT activity_id FROM activity_user_project_relationships WHERE project_id = ? and user_id = ?");
+					psn.setInt(1, projectID);
+					psn.setInt(2, currentUser.getID());
+					ResultSet resultn = psn.executeQuery();
+
+					while (resultn.next()) {
+						// have all activities associated with project
+
+						PreparedStatement ps5 = connection.prepareStatement("SELECT * FROM activities WHERE " + "id = ?");
+						ps5.setInt(1, resultn.getInt(1));
+						ResultSet result5 = ps5.executeQuery();
+
+						while (result5.next()) {
+							// now create activities and add to activityList
+							int id = result5.getInt(1);
+							String name = result5.getString(2);
+							String desc = result5.getString(3);
+							int duration = result5.getInt(4);
+
+							activityList.add(new Activities(desc, duration, name, id));
+						}
+
+					}
+
+					Projects project = new Projects(projectName, userList, date, projectID, managerID, description, budget);
+
+					for (Activities acts : activityList) {
+						project.addActivity(acts);// adding each activity to the
+													// project
+
+					}
+
+					// for each activity query activity table relation to get
+					// dependent activities
+					for (Activities activity : activityList) {
+						// make db call
+						PreparedStatement ps5 = connection.prepareStatement(
+								"SELECT to_activity_id FROM activity_edge_relationship WHERE " + "from_activity_id = ?");
+						ps5.setInt(1, activity.getId());
+						ResultSet result5 = ps5.executeQuery();
+						while (result5.next()) {
+							for (Activities dependent_activity : activityList) {
+								if (dependent_activity.getId() == result5.getInt(1)) {
+									project.addArrow(activity, dependent_activity);
+								}
+							}
+						}
+						
+						PreparedStatement ps6 = connection.prepareStatement("SELECT user_id from activity_user_project_relationships where activity_id = ?");
+						ps6.setInt(1, activity.getId());
+						ResultSet result6 = ps6.executeQuery();
+						ArrayList<Users> tmp = new ArrayList<Users>();
+						while (result6.next()) {
+							for (Users member : projectMembers) {
+								if (member.getID() == result6.getInt(1)) {
+									tmp.add(member);
+								}
+							}
+						}
+						activity.setMemberList(tmp);
+					}
+
+					// creates projects with activities
+					projectList.add(project);
+				}
+			}
+
+		}catch (Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+
+		// close connection at end
+		try {
+			connection.close();
+		} catch (Exception closingException) {
+			System.out.println(closingException.getMessage());
+		}
+	}
+	
 	/**
 	 * Method is used to load from database. The method builds each project
 	 * associated with the current User ID logged into the system. Each project
