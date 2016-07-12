@@ -1,42 +1,47 @@
 package resources;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Activities class:
  * 
- * This class represents Activities which are contained in Projects.
- * Activities can be added and removed from Project objects.
- * Activities have an id, label, description, duration, xpos, ypos, earliestStart, earliestFinish, lastestStart, latestFinish, activityFloat and maxDuration.
- * For the time being, only id, label, description and duration are used for current functionalities.
- * xpos and ypos are values to represent the position of the objects when displayed graphically.
- * The other attributes will be used for PERT analysis in future iterations.
- * Activities hold a static activityCount variable which is automatically incremented and used to set id when new objects are created.
- * This static variable is set based on the highest activity id stored in the database, and ensures that id is always unique.
- *  
+ * This class represents Activities which are contained in Projects. Activities
+ * can be added and removed from Project objects. Activities have an id, label,
+ * description, duration, xpos, ypos, earliestStart, earliestFinish,
+ * lastestStart, latestFinish, activityFloat and maxDuration. For the time
+ * being, only id, label, description and duration are used for current
+ * functionalities. xpos and ypos are values to represent the position of the
+ * objects when displayed graphically. The other attributes will be used for
+ * PERT analysis in future iterations. Activities hold a static activityCount
+ * variable which is automatically incremented and used to set id when new
+ * objects are created. This static variable is set based on the highest
+ * activity id stored in the database, and ensures that id is always unique.
+ * 
  * @author daveT
  *
  */
 
 public class Activities {
-	
+
 	private static int activityCount = 0;
 	private int id;
 	private String label;
 	private String description;
-	private double duration;
+	private Date startDate;
+	private Date endDate;
 	private double xpos, ypos;
 	private double earliestStart, earliestFinish, latestStart, latestFinish, activityFloat, maxDuration;
 	private ArrayList<Users> memberList;
-	
+
 	/**
-	 * Default Constructor. 
-	 * Sets all values to null or junk values.
+	 * Default Constructor. Sets all values to null or junk values.
 	 */
 	public Activities() {
 		this.id = -1;
 		this.description = null;
-		this.duration = -1;
+		this.startDate = new Date();
+		this.endDate = new Date();
 		this.xpos = -1;
 		this.ypos = -1;
 		this.earliestStart = -1;
@@ -47,21 +52,27 @@ public class Activities {
 		this.maxDuration = -1;
 		this.memberList = null;
 	}
-	
+
 	/**
-	 * Parameterized constructor for creating new Activities.
-	 * Value for id is set to the automatically incremented activityCount static variable (value initialized on load from database)
-	 * This ensures that id is always unique.
+	 * Parameterized constructor for creating new Activities. Value for id is
+	 * set to the automatically incremented activityCount static variable (value
+	 * initialized on load from database) This ensures that id is always unique.
 	 * The currently unused variables are all set to 0.
 	 * 
-	 * @param description value for description
-	 * @param duration value for duration
-	 * @param label value for label
+	 * @param description
+	 *            value for description
+	 * @param startDate
+	 *            value for startDate
+	 * @param endDate
+	 *            value for endDate
+	 * @param label
+	 *            value for label
 	 */
-	public Activities(String description, double duration, String label) {
+	public Activities(String description, Date startDate, Date endDate, String label) {
 		this.id = ++activityCount;
 		this.description = description;
-		this.duration = duration;
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.label = label;
 		this.earliestStart = 0;
 		this.earliestFinish = 0;
@@ -69,25 +80,34 @@ public class Activities {
 		this.latestFinish = 0;
 		this.activityFloat = 0;
 		this.maxDuration = 0;
-		xpos =0;
-		ypos=0;
+		xpos = 0;
+		ypos = 0;
 		this.memberList = new ArrayList<Users>();
 	}
-	
+
 	/**
-	 * Parameterized constructor for creating Activities from values in database.
-	 * Not be used when creating NEW Activities, but rather for creating Activities existing in the database.
-	 * Does not automatically set id attribute.
+	 * Parameterized constructor for creating Activities from values in
+	 * database. Not be used when creating NEW Activities, but rather for
+	 * creating Activities existing in the database. Does not automatically set
+	 * id attribute.
 	 * 
-	 * @param description value for description
-	 * @param duration value for duration
-	 * @param label value for label
-	 * @param id value for id
+	 * @param description
+	 *            value for description
+	 * @param startDate
+	 *            value for startDate
+	 * @param endDate
+	 *            value for endDate
+	 * @param label
+	 *            value for label
+	 * @param id
+	 *            value for id
 	 */
-	public Activities(String description, double duration, String label, int id) {
+	public Activities(String description, Date startDate, Date endDate, String label, int id) {
 		this.id = id;
 		this.description = description;
-		this.duration = duration;
+		this.description = description;
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.label = label;
 		this.earliestStart = 0;
 		this.earliestFinish = 0;
@@ -95,13 +115,14 @@ public class Activities {
 		this.latestFinish = 0;
 		this.activityFloat = 0;
 		this.maxDuration = 0;
-		xpos =0;
-		ypos=0;
+		xpos = 0;
+		ypos = 0;
 		this.memberList = new ArrayList<Users>();
 	}
 
 	/**
 	 * Getter for label
+	 * 
 	 * @return String label
 	 */
 	public String getLabel() {
@@ -110,7 +131,9 @@ public class Activities {
 
 	/**
 	 * Setter for label
-	 * @param label value for label
+	 * 
+	 * @param label
+	 *            value for label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
@@ -118,6 +141,7 @@ public class Activities {
 
 	/**
 	 * Getter for activitCount
+	 * 
 	 * @return int activityCount
 	 */
 	public static int getActivityCount() {
@@ -126,7 +150,9 @@ public class Activities {
 
 	/**
 	 * Setter for activityCount
-	 * @param activityCount value for activityCount
+	 * 
+	 * @param activityCount
+	 *            value for activityCount
 	 */
 	public static void setActivityCount(int activityCount) {
 		Activities.activityCount = activityCount;
@@ -134,6 +160,7 @@ public class Activities {
 
 	/**
 	 * Getter for id
+	 * 
 	 * @return int id
 	 */
 	public int getId() {
@@ -142,7 +169,9 @@ public class Activities {
 
 	/**
 	 * Setter for id
-	 * @param id value for id
+	 * 
+	 * @param id
+	 *            value for id
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -150,6 +179,7 @@ public class Activities {
 
 	/**
 	 * Getter for description
+	 * 
 	 * @return String description
 	 */
 	public String getDescription() {
@@ -158,30 +188,67 @@ public class Activities {
 
 	/**
 	 * Setter for description
-	 * @param description value for description
+	 * 
+	 * @param description
+	 *            value for description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * Getter for duration
-	 * @return double duration
+	 * Gets the number of days between the activities start and end dates
+	 * 
+	 * @return int duration
 	 */
-	public double getDuration() {
-		return duration;
+	public int getDuration() {
+		final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+
+		int diffInDays = (int) ((this.endDate.getTime() - this.startDate.getTime()) / DAY_IN_MILLIS);
+		return diffInDays;
 	}
 
 	/**
-	 * Setter for duration
-	 * @param duration value for duration
+	 * Getter for startDate
+	 * 
+	 * @return Date startDate
 	 */
-	public void setDuration(double duration) {
-		this.duration = duration;
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * Setter for startDate
+	 * 
+	 * @param startDate
+	 *            value for startDate
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	/**
+	 * Getter for endDate
+	 * 
+	 * @return Date endDate
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	/**
+	 * Setter for endDate
+	 * 
+	 * @param endDate
+	 *            value for endDate
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	/**
 	 * Getter for xPos
+	 * 
 	 * @return double xPos
 	 */
 	public double getXpos() {
@@ -190,7 +257,9 @@ public class Activities {
 
 	/**
 	 * Setter for xPos
-	 * @param xpos value for xPos
+	 * 
+	 * @param xpos
+	 *            value for xPos
 	 */
 	public void setXpos(double xpos) {
 		this.xpos = xpos;
@@ -198,6 +267,7 @@ public class Activities {
 
 	/**
 	 * Getter for yPos
+	 * 
 	 * @return double yPos
 	 */
 	public double getYpos() {
@@ -206,7 +276,9 @@ public class Activities {
 
 	/**
 	 * Setter for yPos
-	 * @param ypos value for yPos
+	 * 
+	 * @param ypos
+	 *            value for yPos
 	 */
 	public void setYpos(double ypos) {
 		this.ypos = ypos;
@@ -214,6 +286,7 @@ public class Activities {
 
 	/**
 	 * Getter for earliestStart
+	 * 
 	 * @return the earliestStart
 	 */
 	public double getEarliestStart() {
@@ -222,7 +295,9 @@ public class Activities {
 
 	/**
 	 * Setter for earliestStart
-	 * @param earliestStart the earliestStart to set
+	 * 
+	 * @param earliestStart
+	 *            the earliestStart to set
 	 */
 	public void setEarliestStart(double earliestStart) {
 		this.earliestStart = earliestStart;
@@ -230,6 +305,7 @@ public class Activities {
 
 	/**
 	 * Getter for earliestFinish
+	 * 
 	 * @return the earliestFinish
 	 */
 	public double getEarliestFinish() {
@@ -238,7 +314,9 @@ public class Activities {
 
 	/**
 	 * Setter for earliestFinish
-	 * @param earliestFinish the earliestFinish to set
+	 * 
+	 * @param earliestFinish
+	 *            the earliestFinish to set
 	 */
 	public void setEarliestFinish(double earliestFinish) {
 		this.earliestFinish = earliestFinish;
@@ -246,6 +324,7 @@ public class Activities {
 
 	/**
 	 * Getter for latestStart
+	 * 
 	 * @return the latestStart
 	 */
 	public double getLatestStart() {
@@ -254,7 +333,9 @@ public class Activities {
 
 	/**
 	 * Setter for latestStart
-	 * @param latestStart the latestStart to set
+	 * 
+	 * @param latestStart
+	 *            the latestStart to set
 	 */
 	public void setLatestStart(double latestStart) {
 		this.latestStart = latestStart;
@@ -262,6 +343,7 @@ public class Activities {
 
 	/**
 	 * Getter for latestFinish
+	 * 
 	 * @return the latestFinish
 	 */
 	public double getLatestFinish() {
@@ -270,7 +352,9 @@ public class Activities {
 
 	/**
 	 * Setter for latestFinish
-	 * @param latestFinish the latestFinish to set
+	 * 
+	 * @param latestFinish
+	 *            the latestFinish to set
 	 */
 	public void setLatestFinish(double latestFinish) {
 		this.latestFinish = latestFinish;
@@ -278,6 +362,7 @@ public class Activities {
 
 	/**
 	 * Getter for activityFloat
+	 * 
 	 * @return the activityFloat
 	 */
 	public double getActivityFloat() {
@@ -286,7 +371,9 @@ public class Activities {
 
 	/**
 	 * Setter for activityFloat
-	 * @param activityFloat the activityFloat to set
+	 * 
+	 * @param activityFloat
+	 *            the activityFloat to set
 	 */
 	public void setActivityFloat(double activityFloat) {
 		this.activityFloat = activityFloat;
@@ -294,6 +381,7 @@ public class Activities {
 
 	/**
 	 * Getter for maxDuration
+	 * 
 	 * @return the maxDuration
 	 */
 	public double getMaxDuration() {
@@ -302,14 +390,17 @@ public class Activities {
 
 	/**
 	 * Setter for maxDuration
-	 * @param maxDuration the maxDuration to set
+	 * 
+	 * @param maxDuration
+	 *            the maxDuration to set
 	 */
 	public void setMaxDuration(double maxDuration) {
 		this.maxDuration = maxDuration;
 	}
-	
+
 	/**
 	 * Getter for memberList
+	 * 
 	 * @return the memberList
 	 */
 	public ArrayList<Users> getMemberList() {
@@ -318,7 +409,9 @@ public class Activities {
 
 	/**
 	 * Setter for activityList
-	 * @param activityList the activityList to set
+	 * 
+	 * @param activityList
+	 *            the activityList to set
 	 */
 	public void setMemberList(ArrayList<Users> memberList) {
 		this.memberList = memberList;

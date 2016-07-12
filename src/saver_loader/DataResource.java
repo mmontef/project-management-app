@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 import org.jgraph.graph.DefaultEdge;
@@ -56,6 +59,8 @@ public class DataResource {
 	public static Activities selectedActivity;
 
 	public static String dataBase = "jdbc:sqlite:ultimate_sandwich.db";
+	
+	private static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
 	 * Method used to retreive a project given a projectID passed in parameters.
@@ -364,15 +369,16 @@ public class DataResource {
 						PreparedStatement ps5 = connection.prepareStatement("SELECT * FROM activities WHERE " + "id = ?");
 						ps5.setInt(1, resultn.getInt(1));
 						ResultSet result5 = ps5.executeQuery();
-
+						
 						while (result5.next()) {
 							// now create activities and add to activityList
 							int id = result5.getInt(1);
 							String name = result5.getString(2);
 							String desc = result5.getString(3);
-							int duration = result5.getInt(4);
+							Date start = dateFormatter.parse(result5.getString(4));
+							Date end = dateFormatter.parse(result5.getString(5));
 
-							activityList.add(new Activities(desc, duration, name, id));
+							activityList.add(new Activities(desc, start, end, name, id));
 						}
 
 					}
@@ -546,9 +552,10 @@ public class DataResource {
 						int id = result5.getInt(1);
 						String name = result5.getString(2);
 						String desc = result5.getString(3);
-						int duration = result5.getInt(4);
+						Date start = dateFormatter.parse(result5.getString(4));
+						Date end = dateFormatter.parse(result5.getString(5));
 
-						activityList.add(new Activities(desc, duration, name, id));
+						activityList.add(new Activities(desc, start, end, name, id));
 					}
 
 				}

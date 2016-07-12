@@ -3,21 +3,19 @@ package listview_components;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
 import resources.Activities;
 import resources.Users;
 import saver_loader.DataResource;
-
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import java.util.Date;
 
 import javax.swing.border.BevelBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -25,19 +23,16 @@ public class Activity_view extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel descriptionField;
-	private JLabel durationField;
-	private JLabel activityLabelField;
-
-	private ArrayList<String> dependencies = new ArrayList<String>();
-	private ArrayList<String> members = new ArrayList<String>();
-	
+	private JLabel startField;
+	private JLabel endField;
+	private JLabel activityLabelField;	
 	
 	public Activity_view() {
 		
 		//Initialize JFrame Settings
 		setTitle("VIEW");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 426, 500);
+		setBounds(100, 100, 426, 520);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		setContentPane(contentPane);
@@ -53,30 +48,39 @@ public class Activity_view extends JFrame {
 		lblDescription.setBounds(64, 26, 58, 14);
 		contentPane.add(lblDescription);
 		
-		JLabel lblDuration = new JLabel("Duration");
+		JLabel lblDuration = new JLabel("Start Date (DD-MM-YYYY)");
 		lblDuration.setBounds(64, 64, 46, 14);
 		contentPane.add(lblDuration);
 		
+		JLabel lblEnd = new JLabel("End Date (DD-MM-YYYY)");
+		lblEnd.setBounds(64, 94, 124, 14);
+		contentPane.add(lblEnd);
+		
 		JLabel lblLabel = new JLabel("Label");
-		lblLabel.setBounds(64, 103, 46, 14);
+		lblLabel.setBounds(64, 123, 46, 14);
 		contentPane.add(lblLabel);
 		
 		JLabel lblDependencies = new JLabel("Dependencies");
-		lblDependencies.setBounds(64, 173, 80, 14);
+		lblDependencies.setBounds(64, 193, 80, 14);
 		contentPane.add(lblDependencies);
 		
 		JLabel lblResources = new JLabel("Resources");
-		lblResources.setBounds(64, 273, 80, 14);
+		lblResources.setBounds(64, 293, 80, 14);
 		contentPane.add(lblResources);
 		
 		//Create and add all text Fields
-		Double initialDuration =  new Double(DataResource.selectedActivity.getDuration());
-		durationField = new JLabel(initialDuration.toString());
-		durationField.setBounds(226, 61, 58, 20);
-		contentPane.add(durationField);
+		Date initialStart = DataResource.selectedActivity.getStartDate();
+		startField = new JLabel(initialStart.toString());
+		startField.setBounds(226, 61, 124, 20);
+		contentPane.add(startField);
+
+		Date initialEnd = DataResource.selectedActivity.getEndDate();
+		endField = new JLabel(initialEnd.toString());
+		endField.setBounds(226, 91, 124, 20);
+		contentPane.add(endField);
 		
 		activityLabelField = new JLabel(DataResource.selectedActivity.getLabel());
-		activityLabelField.setBounds(226, 100, 58, 20);
+		activityLabelField.setBounds(226, 120, 58, 20);
 		contentPane.add(activityLabelField);
 		
 		//Create an array of the current Activities
@@ -100,13 +104,13 @@ public class Activity_view extends JFrame {
 		//Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollPane_1.setBounds(226, 155, 101, 88);
+		scrollPane_1.setBounds(226, 175, 101, 88);
 		
 		contentPane.add(scrollPane_1);
 		
 		//Create list with selections
 		JList<String> selectionList = new JList<String>(selections);
-		selectionList.setBounds(232, 172, 95, 82);
+		selectionList.setBounds(232, 192, 95, 82);
 		
 		//Set the default selections to current dependent activities
 		int[] selectedIndices = new int[currentSelections.size()];
@@ -134,12 +138,12 @@ public class Activity_view extends JFrame {
 		//Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollPane_2.setBounds(226, 265, 101, 88);
+		scrollPane_2.setBounds(226, 285, 101, 88);
 				
 		contentPane.add(scrollPane_2);
 		
 		JList<String> memberList = new JList<String>(memberNames);
-		memberList.setBounds(232, 172, 95, 82);
+		memberList.setBounds(232, 192, 95, 82);
 		
 		int[] memberIndices = new int[currentMembers.size()];
 		for(int i = 0; i < currentMembers.size(); i++)
@@ -158,7 +162,7 @@ public class Activity_view extends JFrame {
 		
 		//Initialize and set Buttons
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(64, 399, 89, 23);
+		btnCancel.setBounds(64, 419, 89, 23);
 		contentPane.add(btnCancel);
 		
 		//Add and define ActionListeners to the buttons
