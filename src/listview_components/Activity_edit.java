@@ -77,13 +77,13 @@ public class Activity_edit extends JFrame {
 		contentPane.add(lblResources);
 
 		// Create and add all text Fields
-		Date initialStart = DataResource.selectedActivity.getStartDate();
+		String initialStart = DataResource.dateFormatter.format(DataResource.selectedActivity.getStartDate());
 		startField = new JTextField(initialStart.toString());
 		startField.setBounds(226, 61, 124, 20);
 		contentPane.add(startField);
 		startField.setColumns(10);
 
-		Date initialEnd = DataResource.selectedActivity.getEndDate();
+		String initialEnd = DataResource.dateFormatter.format(DataResource.selectedActivity.getEndDate());
 		endField = new JTextField(initialEnd.toString());
 		endField.setBounds(226, 91, 124, 20);
 		contentPane.add(endField);

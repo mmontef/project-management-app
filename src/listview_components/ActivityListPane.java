@@ -96,7 +96,7 @@ public class ActivityListPane extends JPanel implements MouseListener {
 			
 			//Add The rows		
 			Object data[] = {activityArray[i].getLabel(), activityArray[i].getDescription(),
-								activityArray[i].getStartDate(), activityArray[i].getEndDate(), dependencies}; 
+					DataResource.dateFormatter.format(activityArray[i].getStartDate()), DataResource.dateFormatter.format(activityArray[i].getEndDate()), dependencies}; 
 			
 			model.addRow(data);	
 			

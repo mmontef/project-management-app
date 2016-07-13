@@ -12,7 +12,6 @@ import javax.swing.JList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
@@ -68,12 +67,12 @@ public class Activity_view extends JFrame {
 		contentPane.add(lblResources);
 		
 		//Create and add all text Fields
-		Date initialStart = DataResource.selectedActivity.getStartDate();
+		String initialStart = DataResource.dateFormatter.format(DataResource.selectedActivity.getStartDate());
 		startField = new JLabel(initialStart.toString());
 		startField.setBounds(226, 61, 124, 20);
 		contentPane.add(startField);
 
-		Date initialEnd = DataResource.selectedActivity.getEndDate();
+		String initialEnd = DataResource.dateFormatter.format(DataResource.selectedActivity.getEndDate());
 		endField = new JLabel(initialEnd.toString());
 		endField.setBounds(226, 91, 124, 20);
 		contentPane.add(endField);

@@ -60,7 +60,7 @@ public class DataResource {
 
 	public static String dataBase = "jdbc:sqlite:ultimate_sandwich.db";
 
-	private static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+	public static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
 	 * Method used to retreive a project given a projectID passed in parameters.
@@ -571,22 +571,23 @@ public class DataResource {
 				// for each project, insert the list of activities associated
 				// with that project into the database
 				int activityID, dependentActivityID;
-				double duration;
-				String actLabel, actDescription;
+				String actLabel, actDescription, start, end;
 
 				for (Activities activity : projects.getActivityList()) {
 					activityID = activity.getId();
 					actLabel = activity.getLabel();
 					actDescription = activity.getDescription();
-					duration = activity.getDuration();
+					start = dateFormatter.format(activity.getStartDate());
+					end =  dateFormatter.format(activity.getEndDate());
 
-					sql = ("INSERT OR REPLACE INTO activities(id, label, description, duration) VALUES "
-							+ "(?, ?, ?, ?)");
+					sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate) VALUES "
+							+ "(?, ?, ?, ?, ?)");
 					statement = connection.prepareStatement(sql);
 					statement.setInt(1, activityID);
 					statement.setString(2, actLabel);
 					statement.setString(3, actDescription);
-					statement.setDouble(4, duration);
+					statement.setString(4, start);
+					statement.setString(5, end);
 					statement.executeUpdate();
 
 					sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "
