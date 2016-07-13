@@ -59,7 +59,7 @@ public class DataResource {
 	public static Activities selectedActivity;
 
 	public static String dataBase = "jdbc:sqlite:ultimate_sandwich.db";
-	
+
 	private static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
@@ -133,7 +133,7 @@ public class DataResource {
 				statement = connection.prepareStatement(sql);
 				statement.executeUpdate();
 			}
-			
+
 			sql = ("DELETE FROM activity_user_project_relationships WHERE project_id=" + project.getId());
 			statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
@@ -179,7 +179,7 @@ public class DataResource {
 			sql = ("DELETE FROM activity_edge_relationship WHERE from_activity_id=" + A.getId());
 			statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
-			
+
 			sql = ("DELETE FROM activity_user_project_relationships WHERE activity_id=" + A.getId());
 			statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
@@ -235,20 +235,19 @@ public class DataResource {
 			System.out.println(closingException.getMessage());
 		}
 	}
-	
+
 	/**
-	 * This method is used to delete every association between an activity and
-	 * a user from the database.
+	 * This method is used to delete every association between an activity and a
+	 * user from the database.
 	 * 
 	 * @param activityId
-	 *            Activity ID for the Activity who's members are to be
-	 *            removed
+	 *            Activity ID for the Activity who's members are to be removed
 	 */
 	public static void resetActivityMembers(int activityId) {
 		Connection connection = null;
 		String sql;
 		PreparedStatement statement;
-		
+
 		try {
 			connection = DriverManager.getConnection(dataBase);
 
@@ -269,42 +268,116 @@ public class DataResource {
 		}
 	}
 
-	public static void loadMemberDataFromDB()
-	{
+	public static void load(Connection connection, String projectName, String date, int projectID, int managerID,
+			String description, double budget, ResultSet resultn, ArrayList<Activities> activityList) {
+		try {
+			// getting all users associated with project
+			PreparedStatement ps1 = connection
+					.prepareStatement("SELECT user_id FROM user_project_relationships WHERE " + "project_id = ?");
+			ps1.setInt(1, projectID);
+			ResultSet result1 = ps1.executeQuery();
+
+			ArrayList<Users> userList = new ArrayList<Users>();
+
+			while (result1.next()) {
+				// memeberIds.add(result1.getInt(1));//got all userids
+				// associated with project
+				int userID = result1.getInt(1);
+
+				PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM users WHERE " + "id = ?");
+				ps2.setInt(1, userID);
+				ResultSet result2 = ps2.executeQuery();
+
+				while (result2.next()) {
+					String username = result2.getString(4);
+					String first_name = result2.getString(2);
+					String last_name = result2.getString(3);
+					String password = result2.getString(5);
+					int id = result2.getInt(1);
+					String userType = result2.getString(6);
+
+					userList.add(new Users(username, first_name, last_name, password, id, userType));
+				}
+
+			}
+
+			while (resultn.next()) {
+				// have all activities associated with project
+
+				PreparedStatement ps5 = connection.prepareStatement("SELECT * FROM activities WHERE " + "id = ?");
+				ps5.setInt(1, resultn.getInt(1));
+				ResultSet result5 = ps5.executeQuery();
+
+				while (result5.next()) {
+					// now create activities and add to activityList
+					int id = result5.getInt(1);
+					String name = result5.getString(2);
+					String desc = result5.getString(3);
+					Date start = dateFormatter.parse(result5.getString(4));
+					Date end = dateFormatter.parse(result5.getString(5));
+
+					activityList.add(new Activities(desc, start, end, name, id));
+				}
+
+			}
+
+			Projects project = new Projects(projectName, userList, date, projectID, managerID, description, budget);
+
+			for (Activities acts : activityList) {
+				project.addActivity(acts);// adding each activity to the
+											// project
+
+			}
+
+			// for each activity query activity table relation to get
+			// dependent activities
+			for (Activities activity : activityList) {
+				// make db call
+				PreparedStatement psE = connection.prepareStatement(
+						"SELECT to_activity_id FROM activity_edge_relationship WHERE " + "from_activity_id = ?");
+				psE.setInt(1, activity.getId());
+				ResultSet resultE = psE.executeQuery();
+				while (resultE.next()) {
+					for (Activities dependent_activity : activityList) {
+						if (dependent_activity.getId() == resultE.getInt(1)) {
+							project.addArrow(activity, dependent_activity);
+						}
+					}
+				}
+
+				PreparedStatement ps6 = connection.prepareStatement(
+						"SELECT user_id from activity_user_project_relationships where activity_id = ?");
+				ps6.setInt(1, activity.getId());
+				ResultSet result6 = ps6.executeQuery();
+				ArrayList<Users> tmp = new ArrayList<Users>();
+				while (result6.next()) {
+					for (Users member : projectMembers) {
+						if (member.getID() == result6.getInt(1)) {
+							tmp.add(member);
+						}
+					}
+				}
+				activity.setMemberList(tmp);
+			}
+
+			// creates projects with activities
+			projectList.add(project);
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+	}
+
+	public static void loadMemberDataFromDB() {
 		Connection connection = null;
 		PreparedStatement ps;
 
 		try {
 			connection = DriverManager.getConnection(dataBase);
 
-			// get project members
-			PreparedStatement psTotMembers = connection
-					.prepareStatement("SELECT * FROM users where user_type = 'MEMBER';");
-			ResultSet resultTotMembers = psTotMembers.executeQuery();
+			loadStart(connection);
 
-			while (resultTotMembers.next()) {
-				String username = resultTotMembers.getString(4);
-				String first_name = resultTotMembers.getString(2);
-				String last_name = resultTotMembers.getString(3);
-				String password = resultTotMembers.getString(5);
-				int id = resultTotMembers.getInt(1);
-				String userType = resultTotMembers.getString(6);
-
-				projectMembers.add(new Users(username, first_name, last_name, password, id, userType));
-			}
-			
-			PreparedStatement ps3 = connection.prepareStatement("SELECT max(id) FROM projects;");
-			ResultSet result3 = ps3.executeQuery();
-
-			if (result3.next()) {
-				Projects.setProjectCount(result3.getInt(1));
-			}
-
-			// set activityCount to max activity id from database
-			ps3 = connection.prepareStatement("SELECT max(id) FROM activities;");
-			result3 = ps3.executeQuery();
-			
-			PreparedStatement ps4 = connection.prepareStatement("SELECT distinct project_id from activity_user_project_relationships where user_id = ?");
+			PreparedStatement ps4 = connection.prepareStatement(
+					"SELECT distinct project_id from activity_user_project_relationships where user_id = ?");
 			ps4.setInt(1, currentUser.getID());
 			ResultSet result4 = ps4.executeQuery();
 
@@ -312,7 +385,7 @@ public class DataResource {
 				ps = connection.prepareStatement("SELECT * FROM projects WHERE id = ?");
 				ps.setInt(1, result4.getInt(1));
 				ResultSet rs = ps.executeQuery();
-				
+
 				while (rs.next()) {
 					// we have project ids
 					// projIds.add(result.getInt(1));
@@ -323,39 +396,10 @@ public class DataResource {
 					double budget = rs.getDouble(5);
 					String date = rs.getString(3);
 
-					// getting all users associated with project
-					PreparedStatement ps1 = connection
-							.prepareStatement("SELECT user_id FROM user_project_relationships WHERE " + "project_id = ?");
-					ps1.setInt(1, projectID);
-					ResultSet result1 = ps1.executeQuery();
-
-					ArrayList<Users> userList = new ArrayList<Users>();
-
-					while (result1.next()) {
-						// memeberIds.add(result1.getInt(1));//got all userids
-						// associated with project
-						int userID = result1.getInt(1);
-
-						PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM users WHERE " + "id = ?");
-						ps2.setInt(1, userID);
-						ResultSet result2 = ps2.executeQuery();
-
-						while (result2.next()) {
-							String username = result2.getString(4);
-							String first_name = result2.getString(2);
-							String last_name = result2.getString(3);
-							String password = result2.getString(5);
-							int id = result2.getInt(1);
-							String userType = result2.getString(6);
-
-							userList.add(new Users(username, first_name, last_name, password, id, userType));
-						}
-
-					}
-
 					ArrayList<Activities> activityList = new ArrayList<Activities>();
 
-					// query activity relation table to get activities associated
+					// query activity relation table to get activities
+					// associated
 					// with project
 					PreparedStatement psn = connection.prepareStatement(
 							"SELECT activity_id FROM activity_user_project_relationships WHERE project_id = ? and user_id = ?");
@@ -363,70 +407,12 @@ public class DataResource {
 					psn.setInt(2, currentUser.getID());
 					ResultSet resultn = psn.executeQuery();
 
-					while (resultn.next()) {
-						// have all activities associated with project
-
-						PreparedStatement ps5 = connection.prepareStatement("SELECT * FROM activities WHERE " + "id = ?");
-						ps5.setInt(1, resultn.getInt(1));
-						ResultSet result5 = ps5.executeQuery();
-						
-						while (result5.next()) {
-							// now create activities and add to activityList
-							int id = result5.getInt(1);
-							String name = result5.getString(2);
-							String desc = result5.getString(3);
-							Date start = dateFormatter.parse(result5.getString(4));
-							Date end = dateFormatter.parse(result5.getString(5));
-
-							activityList.add(new Activities(desc, start, end, name, id));
-						}
-
-					}
-
-					Projects project = new Projects(projectName, userList, date, projectID, managerID, description, budget);
-
-					for (Activities acts : activityList) {
-						project.addActivity(acts);// adding each activity to the
-													// project
-
-					}
-
-					// for each activity query activity table relation to get
-					// dependent activities
-					for (Activities activity : activityList) {
-						// make db call
-						PreparedStatement ps5 = connection.prepareStatement(
-								"SELECT to_activity_id FROM activity_edge_relationship WHERE " + "from_activity_id = ?");
-						ps5.setInt(1, activity.getId());
-						ResultSet result5 = ps5.executeQuery();
-						while (result5.next()) {
-							for (Activities dependent_activity : activityList) {
-								if (dependent_activity.getId() == result5.getInt(1)) {
-									project.addArrow(activity, dependent_activity);
-								}
-							}
-						}
-						
-						PreparedStatement ps6 = connection.prepareStatement("SELECT user_id from activity_user_project_relationships where activity_id = ?");
-						ps6.setInt(1, activity.getId());
-						ResultSet result6 = ps6.executeQuery();
-						ArrayList<Users> tmp = new ArrayList<Users>();
-						while (result6.next()) {
-							for (Users member : projectMembers) {
-								if (member.getID() == result6.getInt(1)) {
-									tmp.add(member);
-								}
-							}
-						}
-						activity.setMemberList(tmp);
-					}
-
-					// creates projects with activities
-					projectList.add(project);
+					load(connection, projectName, date, projectID, managerID, description, budget, resultn,
+							activityList);
 				}
 			}
 
-		}catch (Exception exception) {
+		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
 
@@ -437,7 +423,7 @@ public class DataResource {
 			System.out.println(closingException.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Method is used to load from database. The method builds each project
 	 * associated with the current User ID logged into the system. Each project
@@ -445,7 +431,7 @@ public class DataResource {
 	 * populated in the projectList static variable.
 	 * 
 	 */
-	public static void loadFromDB() {
+	public static void loadManagerDataFromDB() {
 		// query user_project_relationship
 		// get all projID where userID = currentUserID
 
@@ -454,8 +440,49 @@ public class DataResource {
 
 		try {
 			connection = DriverManager.getConnection(dataBase);
+			loadStart(connection);
 
-			// get project members
+			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id = ?;");
+			ps.setInt(1, currentUser.getID());
+			ResultSet result = ps.executeQuery();
+
+			while (result.next()) {
+				// we have project ids
+				// projIds.add(result.getInt(1));
+				int projectID = result.getInt(1);
+				int managerID = result.getInt(6);
+				String projectName = result.getString(2);
+				String description = result.getString(4);
+				double budget = result.getDouble(5);
+				String date = result.getString(3);
+
+				ArrayList<Activities> activityList = new ArrayList<Activities>();
+
+				// query activity relation table to get activities associated
+				// with project
+				PreparedStatement ps4 = connection.prepareStatement(
+						"SELECT activity_id FROM activity_project_relationships WHERE " + "project_id = ?");
+				ps4.setInt(1, projectID);
+				ResultSet result4 = ps4.executeQuery();
+
+				load(connection, projectName, date, projectID, managerID, description, budget, result4, activityList);
+			}
+
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+
+		// close connection at end
+		try {
+			connection.close();
+		} catch (Exception closingException) {
+			System.out.println(closingException.getMessage());
+		}
+	}
+
+	private static void loadStart(Connection connection) {
+		// get project members
+		try {
 			PreparedStatement psTotMembers = connection
 					.prepareStatement("SELECT * FROM users where user_type = 'MEMBER';");
 			ResultSet resultTotMembers = psTotMembers.executeQuery();
@@ -486,133 +513,9 @@ public class DataResource {
 			if (result3.next()) {
 				Activities.setActivityCount(result3.getInt(1));
 			}
-
-			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id = ?;");
-			ps.setInt(1, currentUser.getID());
-			ResultSet result = ps.executeQuery();
-
-			while (result.next()) {
-				// we have project ids
-				// projIds.add(result.getInt(1));
-				int projectID = result.getInt(1);
-				int managerID = result.getInt(6);
-				String projectName = result.getString(2);
-				String description = result.getString(4);
-				double budget = result.getDouble(5);
-				String date = result.getString(3);
-
-				// getting all users associated with project
-				PreparedStatement ps1 = connection
-						.prepareStatement("SELECT user_id FROM user_project_relationships WHERE " + "project_id = ?");
-				ps1.setInt(1, projectID);
-				ResultSet result1 = ps1.executeQuery();
-
-				ArrayList<Users> userList = new ArrayList<Users>();
-
-				while (result1.next()) {
-					// memeberIds.add(result1.getInt(1));//got all userids
-					// associated with project
-					int userID = result1.getInt(1);
-
-					PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM users WHERE " + "id = ?");
-					ps2.setInt(1, userID);
-					ResultSet result2 = ps2.executeQuery();
-
-					while (result2.next()) {
-						String username = result2.getString(4);
-						String first_name = result2.getString(2);
-						String last_name = result2.getString(3);
-						String password = result2.getString(5);
-						int id = result2.getInt(1);
-						String userType = result2.getString(6);
-
-						userList.add(new Users(username, first_name, last_name, password, id, userType));
-					}
-
-				}
-
-				ArrayList<Activities> activityList = new ArrayList<Activities>();
-
-				// query activity relation table to get activities associated
-				// with project
-				PreparedStatement ps4 = connection.prepareStatement(
-						"SELECT activity_id FROM activity_project_relationships WHERE " + "project_id = ?");
-				ps4.setInt(1, projectID);
-				ResultSet result4 = ps4.executeQuery();
-
-				while (result4.next()) {
-					// have all activities associated with project
-
-					PreparedStatement ps5 = connection.prepareStatement("SELECT * FROM activities WHERE " + "id = ?");
-					ps5.setInt(1, result4.getInt(1));
-					ResultSet result5 = ps5.executeQuery();
-
-					while (result5.next()) {
-						// now create activities and add to activityList
-						int id = result5.getInt(1);
-						String name = result5.getString(2);
-						String desc = result5.getString(3);
-						Date start = dateFormatter.parse(result5.getString(4));
-						Date end = dateFormatter.parse(result5.getString(5));
-
-						activityList.add(new Activities(desc, start, end, name, id));
-					}
-
-				}
-
-				Projects project = new Projects(projectName, userList, date, projectID, managerID, description, budget);
-
-				for (Activities acts : activityList) {
-					project.addActivity(acts);// adding each activity to the
-												// project
-
-				}
-
-				// for each activity query activity table relation to get
-				// dependent activities
-				for (Activities activity : activityList) {
-					// make db call
-					PreparedStatement ps5 = connection.prepareStatement(
-							"SELECT to_activity_id FROM activity_edge_relationship WHERE " + "from_activity_id = ?");
-					ps5.setInt(1, activity.getId());
-					ResultSet result5 = ps5.executeQuery();
-					while (result5.next()) {
-						for (Activities dependent_activity : activityList) {
-							if (dependent_activity.getId() == result5.getInt(1)) {
-								project.addArrow(activity, dependent_activity);
-							}
-						}
-					}
-					
-					PreparedStatement ps6 = connection.prepareStatement("SELECT user_id from activity_user_project_relationships where activity_id = ?");
-					ps6.setInt(1, activity.getId());
-					ResultSet result6 = ps6.executeQuery();
-					ArrayList<Users> tmp = new ArrayList<Users>();
-					while (result6.next()) {
-						for (Users member : projectMembers) {
-							if (member.getID() == result6.getInt(1)) {
-								tmp.add(member);
-							}
-						}
-					}
-					activity.setMemberList(tmp);
-				}
-
-				// creates projects with activities
-				projectList.add(project);
-			}
-
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
-
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
-
 	}
 
 	/**

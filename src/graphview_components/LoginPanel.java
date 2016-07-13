@@ -157,7 +157,7 @@ public class LoginPanel extends JPanel{
 	    					result.getString(5),result.getInt(1),result.getString(6));
 	    			
 	    			if(DataResource.currentUser.getType() == UserType.MANAGER) {
-	    				DataResource.loadFromDB();
+	    				DataResource.loadManagerDataFromDB();
 	    			} else {
 	    				DataResource.loadMemberDataFromDB();
 	    			}
