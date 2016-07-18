@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import driver.ClientLauncher;
+import resources.UserType;
 import resources.Users;
 import saver_loader.DataResource;
 
@@ -155,7 +156,11 @@ public class LoginPanel extends JPanel{
 	    			DataResource.currentUser = new Users(result.getString(4),result.getString(2),result.getString(3),
 	    					result.getString(5),result.getInt(1),result.getString(6));
 	    			
-	    			DataResource.loadFromDB();
+	    			if(DataResource.currentUser.getType() == UserType.MANAGER) {
+	    				DataResource.loadManagerDataFromDB();
+	    			} else {
+	    				DataResource.loadMemberDataFromDB();
+	    			}
 	    			
 	    			try {
 	    			    Thread.sleep(1000);                 //1000 milliseconds is one second.

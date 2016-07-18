@@ -33,7 +33,7 @@ public class DataResourceTest {
 		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "abc123", 1, "MANAGER");
 		
 		//loads all projects and activities
-		DataResource.loadFromDB();
+		DataResource.loadManagerDataFromDB();
 		
 		//a project is created in the set up with id 1
 		Projects p = DataResource.getProjectbyProjectId(1);
@@ -51,7 +51,7 @@ public class DataResourceTest {
 		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "abc123", 1, "MANAGER");
 		
 		//loads all projects and activities
-		DataResource.loadFromDB();
+		DataResource.loadManagerDataFromDB();
 		
 		//a project is created in the set up with name Project
 		Projects p = DataResource.getProjectbyProjectName("Project");
@@ -69,7 +69,7 @@ public class DataResourceTest {
 		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "abc123", 1, "MANAGER");
 		
 		//loads all projects and activities
-		DataResource.loadFromDB();
+		DataResource.loadManagerDataFromDB();
 		
 		Projects p = DataResource.projectList.get(0);
 		
@@ -105,7 +105,7 @@ public class DataResourceTest {
 		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "abc123", 1, "MANAGER");
 		
 		//loads all projects and activities
-		DataResource.loadFromDB();
+		DataResource.loadManagerDataFromDB();
 		
 		Projects p = DataResource.projectList.get(0);
 		Activities a = p.getActivityList().get(0);
@@ -141,7 +141,7 @@ public class DataResourceTest {
 		
 		// test the method
 		System.out.println("calling loadFromDb method");
-		DataResource.loadFromDB();
+		DataResource.loadManagerDataFromDB();
 		System.out.println("called loadFromDb method");
 		
 		// the resource should have one project in it
