@@ -18,10 +18,8 @@ import listview_components.ProjectListPane;
 
 public class ClientLauncher {
 	
-	public static TabPanel tabPane;
-	public static ActivityPanel activityPane;
+	
 	public static MenuBar menuBar;
-	public static ProjectPanel projectPane;
 	
 	public static ActivityListPane activityListPane;
 	public static ProjectListPane projectListPane;
@@ -79,10 +77,7 @@ public class ClientLauncher {
 		GridBagConstraints c = new GridBagConstraints();
 	
 		//Initialize the Necessary Panels
-		tabPane = new TabPanel();
-		projectPane = new ProjectPanel();
-		activityPane = new ActivityPanel();
-		
+				
 		projectListPane = new ProjectListPane();
 		activityListPane = new ActivityListPane();
 		

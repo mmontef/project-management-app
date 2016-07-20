@@ -63,7 +63,7 @@ public class DataResource {
 	public static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
-	 * Method used to retreive a project given a projectID passed in parameters.
+	 * Method used to retrieve a project given a projectID passed in parameters.
 	 * Project must be contained in the projectList.
 	 * 
 	 * @param projectId
@@ -82,7 +82,7 @@ public class DataResource {
 	}
 
 	/**
-	 * Method used to retreive a project by projectName given a string passed in
+	 * Method used to retrieve a project by projectName given a string passed in
 	 * parameters. Project must be contained in the projectList.
 	 * 
 	 * @param name
@@ -314,7 +314,7 @@ public class DataResource {
 					String name = result5.getString(2);
 					String desc = result5.getString(3);
 					Date start = dateFormatter.parse(result5.getString(4));
-					Date end = dateFormatter.parse(result5.getString(5));
+					Date end = dateFormatter.parse(result5.getString(4));
 
 					activityList.add(new Activities(desc, start, end, name, id));
 				}
@@ -442,7 +442,7 @@ public class DataResource {
 			connection = DriverManager.getConnection(dataBase);
 			loadStart(connection);
 
-			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id = ?;");
+			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id  ?=;");
 			ps.setInt(1, currentUser.getID());
 			ResultSet result = ps.executeQuery();
 
