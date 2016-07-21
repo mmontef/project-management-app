@@ -35,7 +35,7 @@ public class ActivityListPane extends JPanel implements MouseListener {
 		this.setLayout(new BorderLayout());
 		
 		//Set Headers to the Table Model
-		String[] columnHeaders = {"Label" , "Description", "Duration", "Depedencies"};
+		String[] columnHeaders = {"Label" , "Description", "Start Date", "End Date", "Depedencies"};
 		mod.setColumnIdentifiers(columnHeaders);
 		
 		
@@ -96,7 +96,7 @@ public class ActivityListPane extends JPanel implements MouseListener {
 			
 			//Add The rows		
 			Object data[] = {activityArray[i].getLabel(), activityArray[i].getDescription(),
-								activityArray[i].getDuration(), dependencies}; 
+					DataResource.dateFormatter.format(activityArray[i].getStartDate()), DataResource.dateFormatter.format(activityArray[i].getEndDate()), dependencies}; 
 			
 			model.addRow(data);	
 			

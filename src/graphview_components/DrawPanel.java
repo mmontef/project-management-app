@@ -60,11 +60,11 @@ public class DrawPanel extends JPanel implements MouseListener {
 		Point clickPoint = new Point(arg0.getPoint());
 		
 		//Create the activity
-		Activities activity = new Activities(activityDescription, duration, label); 
+		//Activities activity = new Activities(activityDescription, duration, label); 
 		
 		int currentProjectId = ClientLauncher.tabPane.getTabPanel().getSelectedIndex();
 		
-		DataResource.getProjectbyProjectId(currentProjectId).addActivity(activity);
+		//DataResource.getProjectbyProjectId(currentProjectId).addActivity(activity);
 		
 		GraphBox graph = new GraphBox();
 		graph.setBounds(clickPoint.x, clickPoint.y, graph.getPreferredSize().width/2, graph.getPreferredSize().height/2);
