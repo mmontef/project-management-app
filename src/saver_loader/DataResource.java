@@ -297,7 +297,7 @@ public class DataResource {
 					String name = result5.getString(2);
 					String desc = result5.getString(3);
 					Date start = dateFormatter.parse(result5.getString(4));
-					Date end = dateFormatter.parse(result5.getString(5));
+					Date end = dateFormatter.parse(result5.getString(4));
 
 					activityList.add(new Activities(desc, start, end, name, id));
 				}
@@ -418,7 +418,7 @@ public class DataResource {
 		try {
 			loadStart(connection);
 
-			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id = ?;");
+			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id  ?=;");
 			ps.setInt(1, currentUser.getID());
 			ResultSet result = ps.executeQuery();
 

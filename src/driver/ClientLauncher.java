@@ -75,9 +75,6 @@ public class ClientLauncher {
 		//Set the layout Manager of the Client frame
 		clientFrame.getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-	
-		//Initialize the Necessary Panels
-		
 		projectListPane = new ProjectListPane();
 		activityListPane = new ActivityListPane();
 		
