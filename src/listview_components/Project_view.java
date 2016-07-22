@@ -35,7 +35,7 @@ public class Project_view extends JFrame {
 
 		// Initialize Frame Settings
 		setTitle("PROJECT VIEW");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 349, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));

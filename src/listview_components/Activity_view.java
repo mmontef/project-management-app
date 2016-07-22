@@ -29,7 +29,7 @@ public class Activity_view extends JFrame {
 		
 		//Initialize JFrame Settings
 		setTitle("VIEW");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 426, 520);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));

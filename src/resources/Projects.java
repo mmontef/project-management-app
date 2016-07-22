@@ -8,6 +8,7 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import saver_loader.DataResource;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 /**
@@ -612,14 +613,19 @@ public class Projects {
 	 */
 	public void resetIncomingEdges(Activities A) {
 		Set<DefaultEdge> incomingEdges = this.getIncomingArrowsOfActivity(A);
-		
+		Set<DefaultEdge> tempSet = new HashSet<DefaultEdge>(incomingEdges);
 		for(DefaultEdge e : incomingEdges)
 		{
-			this.activityGraph.removeEdge(e);
+									
 			Activities beforeEdge = this.getActivityBefore(e);
 			Activities afterEdge = this.getActivityAfter(e);
-			DataResource.deleteEdgeFromDB(beforeEdge.getId(), afterEdge.getId());			
+			DataResource.deleteEdgeFromDB(beforeEdge.getId(), afterEdge.getId());
 		}
+		for(DefaultEdge e : tempSet)
+		{
+			this.activityGraph.removeEdge(e);
+		}
+		
 	}
 	
 	/**

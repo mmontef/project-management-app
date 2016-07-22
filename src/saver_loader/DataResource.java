@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class DataResource {
 	public static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
-	 * Method used to retreive a project given a projectID passed in parameters.
+	 * Method used to retrieve a project given a projectID passed in parameters.
 	 * Project must be contained in the projectList.
 	 * 
 	 * @param projectId
@@ -82,7 +83,7 @@ public class DataResource {
 	}
 
 	/**
-	 * Method used to retreive a project by projectName given a string passed in
+	 * Method used to retrieve a project by projectName given a string passed in
 	 * parameters. Project must be contained in the projectList.
 	 * 
 	 * @param name
@@ -135,6 +136,10 @@ public class DataResource {
 			}
 
 			sql = ("DELETE FROM activity_user_project_relationships WHERE project_id=" + project.getId());
+			statement = connection.prepareStatement(sql);
+			statement.executeUpdate();
+			
+			sql = ("DELETE FROM user_project_relationships WHERE project_id=" + project.getId());
 			statement = connection.prepareStatement(sql);
 			statement.executeUpdate();
 
@@ -654,4 +659,159 @@ public class DataResource {
 		dataBase = db;
 	}
 
+	public static void saveActivity(Activities selectedActivity)
+	{
+		//save the tuple in Activities table in the database where that id is equal to the selected activity id
+		Connection conn = createConnectionToDB(dataBase);
+		
+		int activityID, dependentActivityID;
+		
+		String actLabel, actDescription, start, end;
+		
+		activityID = selectedActivity.getId();
+		actLabel = selectedActivity.getLabel();
+		actDescription = selectedActivity.getDescription();
+		start = dateFormatter.format(selectedActivity.getStartDate());
+		end =  dateFormatter.format(selectedActivity.getEndDate());
+		
+		
+		String sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate) VALUES "
+				+ "(?, ?, ?, ?, ?)");
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, activityID);
+			ps.setString(2, actLabel);
+			ps.setString(3, actDescription);
+			ps.setString(4, start);
+			ps.setString(5, end);
+			ps.executeUpdate();
+			
+			sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "
+					+ "(?, ?)");
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, selectedProject.getId());
+			ps.setInt(2, activityID);
+			ps.executeUpdate();
+			
+			int memberID;
+
+			for (Users member : selectedActivity.getMemberList()) {
+				memberID = member.getID();
+
+				sql = ("INSERT OR REPLACE INTO activity_user_project_relationships(activity_id, user_id, project_id) VALUES "
+						+ "(?, ?, ?)");
+				ps = conn.prepareStatement(sql);
+				ps.setInt(1, activityID);
+				ps.setInt(2, memberID);
+				ps.setInt(3, selectedProject.getId());
+				ps.executeUpdate();
+			}
+
+			Set<DefaultEdge> edges = selectedProject.getArrowSet();
+			// for currently selected activity, add all the edges to
+			// activity_edge_relationship
+			for (DefaultEdge e : edges) {
+				if (activityID == selectedProject.getActivityAfter(e).getId()) {
+					dependentActivityID = selectedProject.getActivityBefore(e).getId();
+					// if the activityID is a before edge, put the
+					// before and after edge into table under
+					// from_activity_id and to_activity_id
+					sql = ("INSERT OR REPLACE INTO activity_edge_relationship(from_activity_id, to_activity_id) VALUES "
+							+ "(?, ?)");
+					ps = conn.prepareStatement(sql);
+					ps.setInt(1, dependentActivityID);
+					ps.setInt(2, activityID);
+					ps.executeUpdate();
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection(conn);
+		
+	}
+	
+	public static void saveProject(Projects selectedProject){
+		
+		Connection connection = DataResource.createConnectionToDB(dataBase);
+
+		
+			String projectName, description, date;
+			int projectID, managerID;
+			double budget;
+
+		try {
+			
+			PreparedStatement statement;
+
+			
+			
+			// load projects in projects table in database
+				projectID = selectedProject.getId();
+				description = selectedProject.getDescription();
+				date = selectedProject.getDate();
+				projectName = selectedProject.getProjectName();
+				managerID = selectedProject.getManagerID();
+				budget = selectedProject.getBudget();
+				
+				int userID = currentUser.getID();
+				// for each project, insert the list of users associated with
+				// that project into the database
+				
+				String sql = ("INSERT OR REPLACE INTO user_project_relationships(project_id, user_id) VALUES " + "(?, ?)");
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, projectID);
+				statement.setInt(2, userID);
+				statement.executeUpdate();
+				
+
+				sql = ("INSERT OR REPLACE INTO projects(id, name, date, description, budget, manager_id) "
+						+ "VALUES (?, ?, ?, ?, ?, ?)");
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, projectID);
+				statement.setString(2, projectName);
+				statement.setString(3, date);
+				statement.setString(4, description);
+				statement.setDouble(5, budget);
+				statement.setInt(6, managerID);
+				statement.executeUpdate();
+
+				
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		closeConnection(connection);
+		
+	}
+	/*****************************helper functions to connect to and close database connections***************/
+	public static Connection createConnectionToDB(String database)
+	{
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection(dataBase);
+		}catch (Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+		return connection;
+	}
+	
+	public static void closeConnection(Connection connection)
+	{
+		// close connection at end
+		try {
+			connection.close();
+		} catch (Exception closingException) {
+			System.out.println(closingException.getMessage());
+		}
+	}
+	
+	
 }

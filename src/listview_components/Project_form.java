@@ -36,7 +36,7 @@ public class Project_form extends JFrame {
 		
 		//Initialize Frame Settings
 		setTitle("PROJECT CREATION");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 266, 255);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -123,7 +123,9 @@ public class Project_form extends JFrame {
         
         ProjectListPane.updateList();
         this.dispose();
-        DataResource.saveToDB(); 
+        
+        DataResource.saveProject(newProject);
+        //DataResource.saveToDB(); 
     }
 	
 	private void disposeWindow(){
