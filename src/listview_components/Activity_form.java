@@ -38,7 +38,7 @@ public class Activity_form extends JFrame {
 
 		// Initialize JFrame Settings
 		setTitle("ACTIVITY CREATION");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 266, 455);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -105,7 +105,7 @@ public class Activity_form extends JFrame {
 			selections[i] = activityList[i].getLabel();
 
 		// Create list with selections
-		JList<String> selectionList = new JList<String>(selections);
+		final JList<String> selectionList = new JList<String>(selections);
 
 		// Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -120,7 +120,7 @@ public class Activity_form extends JFrame {
 		for (int i = 0; i < DataResource.projectMembers.size(); i++) {
 			memberNames[i] = DataResource.projectMembers.get(i).getName();
 		}
-		JList<String> memberList = new JList<String>(memberNames);
+		final JList<String> memberList = new JList<String>(memberNames);
 		// Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -219,7 +219,10 @@ public class Activity_form extends JFrame {
 				}
 			}
 			newActivity.setMemberList(tmp);
-			DataResource.saveToDB();
+			
+			//***************************** SAVE NEW ACTIVITY TO DATABASE **********************
+			DataResource.saveActivity(newActivity);
+			//DataResource.saveToDB();
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}

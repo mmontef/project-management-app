@@ -34,7 +34,7 @@ public class Project_edit extends JFrame {
 		
 		//Initialize Frame Settings
 		setTitle("PROJECT EDITING");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 349, 453);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -145,7 +145,9 @@ public class Project_edit extends JFrame {
 		myProject.setProjectName(nameField.getText());
 		myProject.setDescription(descriptionField.getText());
 		myProject.setBudget(Double.parseDouble(BudgetField.getText()));
-		DataResource.saveToDB();//save the new project to the database
+		
+		DataResource.saveProject(myProject);
+		//DataResource.saveToDB();//save the new project to the database
        
         ProjectListPane.updateList();
                 

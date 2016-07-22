@@ -616,6 +616,7 @@ public class Projects {
 		Set<DefaultEdge> tempSet = new HashSet<DefaultEdge>(incomingEdges);
 		for(DefaultEdge e : incomingEdges)
 		{
+									
 			Activities beforeEdge = this.getActivityBefore(e);
 			Activities afterEdge = this.getActivityAfter(e);
 			DataResource.deleteEdgeFromDB(beforeEdge.getId(), afterEdge.getId());

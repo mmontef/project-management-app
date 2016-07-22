@@ -38,7 +38,7 @@ public class Activity_edit extends JFrame {
 
 		// Initialize JFrame Settings
 		setTitle("EDITING");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 426, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -119,7 +119,7 @@ public class Activity_edit extends JFrame {
 		contentPane.add(scrollPane_1);
 
 		// Create list with selections
-		JList<String> selectionList = new JList<String>(selections);
+		final JList<String> selectionList = new JList<String>(selections);
 		selectionList.setBounds(232, 192, 95, 82);
 
 		// Set the default selections to current dependent activities
@@ -150,7 +150,7 @@ public class Activity_edit extends JFrame {
 
 		contentPane.add(scrollPane_2);
 
-		JList<String> memberList = new JList<String>(memberNames);
+		final JList<String> memberList = new JList<String>(memberNames);
 		memberList.setBounds(232, 192, 95, 82);
 
 		int[] memberIndices = new int[currentMembers.size()];
@@ -283,7 +283,11 @@ public class Activity_edit extends JFrame {
 				}
 				DataResource.selectedActivity.setMemberList(tmp);
 			}
-			DataResource.saveToDB();
+			
+			
+			//******************************SAVE TO DATABASE METHOD*********************************8
+			DataResource.saveActivity(DataResource.selectedActivity);
+			//DataResource.saveToDB();
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
