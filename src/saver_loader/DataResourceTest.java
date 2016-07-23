@@ -3,15 +3,14 @@ package saver_loader;
 import static org.junit.Assert.*;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import javafx.scene.chart.PieChart.Data;
 import resources.Activities;
 import resources.Projects;
 import resources.Users;
@@ -58,7 +57,7 @@ public class DataResourceTest {
 		//loads all projects and activities
 		DataResource.loadManagerDataFromDB();
 		
-		//a project is created in the set up with name Project
+		//a project is created in the set up with name TestProject
 		Projects p = DataResource.getProjectbyProjectName("TestProject");
 		assertTrue("should have id 1", p.getId() == 1);
 		assertTrue("should be named TestProject", p.getProjectName().equals("TestProject"));
@@ -189,6 +188,216 @@ public class DataResourceTest {
 		
 	}
 	
+	@Test
+	public void testEditProject(){
+		// set current user
+		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "123", 1, "MANAGER");
+		//loads all projects and activities
+		DataResource.loadManagerDataFromDB();
+		
+		//get the project to edit
+		Projects p = DataResource.getProjectbyProjectId(1);
+		
+		//edit the project
+		p.setBudget(250.00);
+		p.setDate("07-25-2016");
+		p.setDescription("Changed the test description");
+		p.setProjectName("TestProjectEdited");
+		
+		//save the changes to the test database
+		DataResource.saveProject(p);
+		
+		//load the changes to test if changed correctly
+		DataResource.loadManagerDataFromDB();
+		
+		//get the same project to test if changes were made
+		Projects p1 = DataResource.getProjectbyProjectId(1);
+		
+		assertTrue("budget should equal 250.00", p1.getBudget()==250.00);
+		assertTrue("date should equal 07-25-2016", p1.getDate().equals("07-25-2016"));
+		assertTrue("description should equal: Changed the test description", p1.getDescription().equals("Changed the test description"));
+		assertTrue("project name should equal: TestProjectEdited", p1.getProjectName().equals("TestProjectEdited"));
+		
+		System.out.println("project editing tested");
+	}
+	
+	@Test
+	public void testEditActivities(){
+		// set current user
+		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "123", 1, "MANAGER");
+		//loads all projects and activities
+		DataResource.loadManagerDataFromDB();
+		
+		//get the project to edit
+		Projects p = DataResource.getProjectbyProjectId(1);
+		DataResource.selectedProject = p;
+		
+		//get the activities to edit
+		Activities a1 = p.getActivityList().get(0);
+		Activities a2 = p.getActivityList().get(1);
+		Activities a3 = p.getActivityList().get(2);
+		
+		//edit the activities
+		a1.setDescription("New Description");
+		a2.setDescription("New Description");
+		a3.setDescription("New Description");
+		a1.setLabel("New Label");
+		a2.setLabel("New Label");
+		a3.setLabel("New Label");
+		//a1.setStartDate("07-25-2016");
+		//a2.setStartDate("07-25-2016");
+		//a3.setStartDate("07-25-2016");
+		//a1.setStartDate("07-25-2016");
+		//a2.setEndDate("07-25-2016");
+		//a3.setEndDate("07-25-2016");
+		
+		//save changes to the test database
+		DataResource.saveActivity(a1);
+		DataResource.saveActivity(a2);
+		DataResource.saveActivity(a3);
+		
+		//load from database to check if changes there
+		DataResource.loadManagerDataFromDB();
+		
+		//get the project and activities to test
+		p = DataResource.getProjectbyProjectId(1);
+		
+		a1 = p.getActivityList().get(0);
+		a2 = p.getActivityList().get(1);
+		a3 = p.getActivityList().get(2);
+		
+		assertTrue("should equal New Description",a1.getDescription().equals("New Description"));
+		assertTrue("should equal New Label",a1.getLabel().equals("New Label"));
+		//assertTrue("should equal 07-25-2016",a1.getStartDate().equals("07-25-2016"));
+		//assertTrue("should equal 07-25-2016",a1.getEndDate().equals("07-25-2016"));
+		
+		assertTrue("should equal New Description",a2.getDescription().equals("New Description"));
+		assertTrue("should equal New Label",a2.getLabel().equals("New Label"));
+		//assertTrue("should equal 07-25-2016",a2.getStartDate().equals("07-25-2016"));
+		//assertTrue("should equal 07-25-2016",a2.getEndDate().equals("07-25-2016"));
+		
+		assertTrue("should equal New Description",a3.getDescription().equals("New Description"));
+		assertTrue("should equal New Label",a3.getLabel().equals("New Label"));
+		//assertTrue("should equal 07-25-2016",a3.getStartDate().equals("07-25-2016"));
+		//assertTrue("should equal 07-25-2016",a3.getEndDate().equals("07-25-2016"));
+		
+		System.out.println("tested edit activities");
+		
+	}
+	
+	 
+	@Test
+	public void testAddActivity(){
+		// set current user
+		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "123", 1, "MANAGER");
+		//loads all projects and activities
+		DataResource.loadManagerDataFromDB();
+		//get the project to edit
+		Projects p = DataResource.getProjectbyProjectId(1);
+		DataResource.selectedProject = p;
+		
+		Date start = new Date();
+		Date end = new Date();
+		
+		//create the activity to add
+		Activities a = new Activities("New Activity Created", start, end, "New Label Created", 4 );
+		//add the activity
+		p.addActivity(a);
+		
+		ArrayList<String> dependencies = new ArrayList<String>();
+		ArrayList<String> members = new ArrayList<String>();
+		
+		// Set the dependencies in the JGraphT
+					for (String element : dependencies) {
+
+						ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
+
+						for (Activities activity : activities) {
+
+							if (activity.getLabel().equals(element))
+								DataResource.selectedProject.addArrow(activity, a);
+						}
+					}
+
+					ArrayList<Users> users = DataResource.projectMembers;
+					ArrayList<Users> tmp = new ArrayList<Users>();
+
+					for (String element : members) {
+						for (Users user : users) {
+							if (user.getName().equals(element))
+								tmp.add(user);
+						}
+					}
+					a.setMemberList(tmp);
+		
+		//save the new activity
+		DataResource.saveActivity(a);
+		
+		//load from database to check if changes there
+		DataResource.loadManagerDataFromDB();
+		p = DataResource.getProjectbyProjectId(1);
+		DataResource.selectedProject = p;
+		
+		Activities newActivity = p.getActivityByLabel("New Label Created");
+		
+		assertTrue("",newActivity.getLabel().equals("New Label Created"));
+		assertTrue("",newActivity.getDescription().equals("New Activity Created"));
+		//TODO assert tests for dates
+		assertTrue("",newActivity.getId()==4);
+		
+		System.out.println("tested adding an activity");
+		
+		
+	}
+	/*
+	
+	@Test
+	public void testEditActivityDependencies(){
+		
+	}
+	
+	@Test
+	public void testDeleteActivityDependencies(){
+		
+	}
+	*/
+	
+	public void testAddActivityDependencies(){
+		// set current user
+		DataResource.currentUser = new Users( "tsand", "Turkey", "Sandwhich", "123", 1, "MANAGER");
+		//loads all projects and activities
+		DataResource.loadManagerDataFromDB();
+		
+		//get the project to edit
+		Projects p = DataResource.getProjectbyProjectId(1);
+		DataResource.selectedProject = p;
+		
+		//get the activities to edit
+		Activities a1 = p.getActivityList().get(0);
+		Activities a2 = p.getActivityList().get(1);
+		Activities a3 = p.getActivityList().get(2);
+		
+		//add dependency between a2 and a3
+		p.addArrow(a2, a3);
+		
+		//save to test database
+		DataResource.saveProject(p);
+		DataResource.saveActivity(a2);
+		DataResource.saveActivity(a3);
+		
+		//loads all projects and activities
+		DataResource.loadManagerDataFromDB();
+		p = DataResource.getProjectbyProjectId(1);
+		//get the activities to edit
+		a1 = p.getActivityList().get(0);
+		a2 = p.getActivityList().get(1);
+		a3 = p.getActivityList().get(2);
+		
+		//test to see if added dependency there
+		//TODO write asserts testing if dependency is there
+	}
+	
+	
 	private void setUpTestDatabase() {
 		// set up the database with test data
 		Connection connection = DataResource.createConnectionToDB(testDB);
@@ -253,7 +462,11 @@ public class DataResourceTest {
 			stmt.executeUpdate(sql);
 			System.out.println("related activities to project");
 			
-			//TODO create edges between activities for later testing
+			//create edges between activities for later testing
+			sql = ("INSERT OR REPLACE INTO activity_edge_relationship(from_activity_id, to_activity_id) " +
+			"VALUES (1, 2), (1,3)");
+			stmt.executeUpdate(sql);
+			System.out.println("created edges between activities");
 			
 			//relate the members to the activities
 			sql = ("INSERT OR REPLACE INTO activity_user_project_relationships(activity_id, user_id, project_id) " +

@@ -24,8 +24,6 @@ public class Project_edit extends JFrame {
 	private JTextField descriptionField;
 	private JTextField BudgetField;
 
-	
-
 	/**
 	 * Create the frame.
 	 */

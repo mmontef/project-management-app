@@ -36,25 +36,20 @@ public class ClientLauncher {
 	static final int screenX = Toolkit.getDefaultToolkit().getScreenSize().width;
 	
 	
-	public static void main(String[] args) {
-
-		
-		
-		//Launch the Client Window and set basic frame variables
-		SwingUtilities.invokeLater(new Runnable(){@Override
+	public static void main(String[] args) {	
+	//Launch the Client Window and set basic frame variables
+	SwingUtilities.invokeLater(new Runnable(){@Override
 		public void run(){
-		
-		           					
-			loginFrame = new JFrame("Login");
-			loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			loginFrame.setSize((int)(screenX*loginWidthRatio), (int)(screenY*loginHeightRatio));
-			loginFrame.setVisible(true); //Login starts off visible
-			loginFrame.setResizable(false);
-			loginFrame.add(new LoginPanel());
-
-								
-	}
-		});
+	    					
+		loginFrame = new JFrame("Login");
+		loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		loginFrame.setSize((int)(screenX*loginWidthRatio), (int)(screenY*loginHeightRatio));
+		loginFrame.setVisible(true); //Login starts off visible
+		loginFrame.setResizable(false);
+		loginFrame.add(new LoginPanel());
+									
+		}
+	});
 		
 	}
 	
@@ -75,28 +70,27 @@ public class ClientLauncher {
 		//Set the layout Manager of the Client frame
 		clientFrame.getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+	
+		//Initialize the Necessary Panels
+		
 		projectListPane = new ProjectListPane();
 		activityListPane = new ActivityListPane();
+	
+		//----------------------- LIST VIEW--------------------------------------------------------------------------
 		
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
 		
+		clientFrame.add(projectListPane, c);
 		
+		c.gridx =1;
+		c.weightx = 5;
+		c.insets = new Insets(0,10,0,0);
 
-			//----------------------- LIST VIEW--------------------------------------------------------------------------
-			
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 1;
-			c.weighty = 1;
-			c.fill = GridBagConstraints.BOTH;
-			
-			clientFrame.add(projectListPane, c);
-			
-			c.gridx =1;
-			c.weightx = 5;
-			c.insets = new Insets(0,10,0,0);
-
-			clientFrame.add(activityListPane, c);
+		clientFrame.add(activityListPane, c);
 	}
 	
 }
-

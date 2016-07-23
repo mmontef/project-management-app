@@ -418,7 +418,7 @@ public class DataResource {
 		try {
 			loadStart(connection);
 
-			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id  ?=;");
+			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id =?;");
 			ps.setInt(1, currentUser.getID());
 			ResultSet result = ps.executeQuery();
 
@@ -695,15 +695,13 @@ public class DataResource {
 					ps.executeUpdate();
 				}
 			}
-			
-			
+	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		closeConnection(connection);
-		
 	}
 	
 	/**

@@ -137,11 +137,12 @@ public class LoginPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			Connection connection = null;
+			DataResource.setDatabase("jdbc:sqlite:ultimate_sandwich.db");
+			Connection connection = DataResource.createConnectionToDB(DataResource.dataBase);
 	        PreparedStatement ps;
 	        
 	        try{
-	        	connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+	        	
 	        	ps = connection.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
 	        	
 	        	ps.setString(1, usernameField.getText());
