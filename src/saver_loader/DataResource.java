@@ -61,7 +61,7 @@ public class DataResource {
 
 	public static String dataBase = "jdbc:sqlite:ultimate_sandwich.db";
 
-	public static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+	public static DateFormat dateFormatter = new SimpleDateFormat("dd-mm-yyyy");
 
 	/**
 	 * Method used to retrieve a project given a projectID passed in parameters.
@@ -113,17 +113,17 @@ public class DataResource {
 		projectList.remove(project);// removes project from projectList
 
 		// query database and remove project
-		Connection connection = null;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
 		String sql;
-		PreparedStatement statement;
+		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
+			
 			// delete the project
 			// cascade takes care of associated tuples in other tables
 			sql = ("DELETE FROM projects WHERE id=" + project.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 			ArrayList<Activities> actList = project.getActivityList();
 
@@ -131,28 +131,23 @@ public class DataResource {
 			// cascade takes care of associated tuples in other tables
 			for (Activities acts : actList) {
 				sql = ("DELETE FROM activities WHERE id=" + acts.getId());
-				statement = connection.prepareStatement(sql);
-				statement.executeUpdate();
+				ps = connection.prepareStatement(sql);
+				ps.executeUpdate();
 			}
 
 			sql = ("DELETE FROM activity_user_project_relationships WHERE project_id=" + project.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 			
 			sql = ("DELETE FROM user_project_relationships WHERE project_id=" + project.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 
 	}
 
@@ -164,41 +159,36 @@ public class DataResource {
 	 *            Activity we wish to delete
 	 */
 	public static void deleteActivity(Activities A) {
-		Connection connection = null;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
 		String sql;
-		PreparedStatement statement;
+		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
+			
 			// delete activity from activities table in database
 			sql = ("DELETE FROM activities WHERE id=" + A.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 			// delete activity from activity_project_relationships in database
 			sql = ("DELETE FROM activity_project_relationships WHERE activity_id=" + A.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 			// delete activity from activity_edge_relationship in database
 			sql = ("DELETE FROM activity_edge_relationship WHERE from_activity_id=" + A.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 			sql = ("DELETE FROM activity_user_project_relationships WHERE activity_id=" + A.getId());
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 	}
 
 	/**
@@ -215,30 +205,24 @@ public class DataResource {
 	 *            removed
 	 */
 	public static void deleteEdgeFromDB(int activityBefore, int activityAfter) {
-		Connection connection = null;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
 		String sql;
-		PreparedStatement statement;
+		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
 
 			// Delete edge in database between the activityBefore and
 			// activityAfter
 			sql = ("DELETE FROM activity_edge_relationship WHERE from_activity_id=" + activityBefore
 					+ " AND to_activity_id=" + activityAfter);
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 	}
 
 	/**
@@ -249,28 +233,22 @@ public class DataResource {
 	 *            Activity ID for the Activity who's members are to be removed
 	 */
 	public static void resetActivityMembers(int activityId) {
-		Connection connection = null;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
 		String sql;
-		PreparedStatement statement;
+		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
 
 			// Delete members in database associated with the activity
 			sql = ("DELETE FROM activity_user_project_relationships WHERE activity_id=" + activityId);
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
+			ps = connection.prepareStatement(sql);
+			ps.executeUpdate();
 
 		} catch (Exception exception) {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 	}
 
 	public static void load(Connection connection, String projectName, String date, int projectID, int managerID,
@@ -319,7 +297,7 @@ public class DataResource {
 					String name = result5.getString(2);
 					String desc = result5.getString(3);
 					Date start = dateFormatter.parse(result5.getString(4));
-					Date end = dateFormatter.parse(result5.getString(5));
+					Date end = dateFormatter.parse(result5.getString(4));
 
 					activityList.add(new Activities(desc, start, end, name, id));
 				}
@@ -337,7 +315,7 @@ public class DataResource {
 			// for each activity query activity table relation to get
 			// dependent activities
 			for (Activities activity : activityList) {
-				// make db call
+				// make database call
 				PreparedStatement psE = connection.prepareStatement(
 						"SELECT to_activity_id FROM activity_edge_relationship WHERE " + "from_activity_id = ?");
 				psE.setInt(1, activity.getId());
@@ -373,12 +351,11 @@ public class DataResource {
 	}
 
 	public static void loadMemberDataFromDB() {
-		Connection connection = null;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
 		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
-
+			
 			loadStart(connection);
 
 			PreparedStatement ps4 = connection.prepareStatement(
@@ -421,12 +398,7 @@ public class DataResource {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 	}
 
 	/**
@@ -440,14 +412,13 @@ public class DataResource {
 		// query user_project_relationship
 		// get all projID where userID = currentUserID
 
-		Connection connection = null;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
 		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
 			loadStart(connection);
 
-			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id = ?;");
+			ps = connection.prepareStatement("SELECT * FROM projects " + "WHERE manager_id =?;");
 			ps.setInt(1, currentUser.getID());
 			ResultSet result = ps.executeQuery();
 
@@ -477,19 +448,18 @@ public class DataResource {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 	}
 
+	/**
+	 * Method loadStart is used by both loadManagerDataFromDB and loadMemberDataFromDB. This method
+	 * loads the common elements of both user types.
+	 * @param connection
+	 */
 	private static void loadStart(Connection connection) {
 		// get project members
 		try {
-			PreparedStatement psTotMembers = connection
-					.prepareStatement("SELECT * FROM users where user_type = 'MEMBER';");
+			PreparedStatement psTotMembers = connection.prepareStatement("SELECT * FROM users where user_type = 'MEMBER';");
 			ResultSet resultTotMembers = psTotMembers.executeQuery();
 
 			while (resultTotMembers.next()) {
@@ -531,11 +501,11 @@ public class DataResource {
 	 * users, activities, dependencies to database.
 	 */
 	public static void saveToDB() {
-		Connection connection = null;
-		PreparedStatement statement;
+		Connection connection = DataResource.createConnectionToDB(dataBase);
+		PreparedStatement ps;
 
 		try {
-			connection = DriverManager.getConnection(dataBase);
+			
 
 			String projectName, description, date;
 			int projectID, managerID;
@@ -552,14 +522,14 @@ public class DataResource {
 
 				String sql = ("INSERT OR REPLACE INTO projects(id, name, date, description, budget, manager_id) "
 						+ "VALUES (?, ?, ?, ?, ?, ?)");
-				statement = connection.prepareStatement(sql);
-				statement.setInt(1, projectID);
-				statement.setString(2, projectName);
-				statement.setString(3, date);
-				statement.setString(4, description);
-				statement.setDouble(5, budget);
-				statement.setInt(6, managerID);
-				statement.executeUpdate();
+				ps = connection.prepareStatement(sql);
+				ps.setInt(1, projectID);
+				ps.setString(2, projectName);
+				ps.setString(3, date);
+				ps.setString(4, description);
+				ps.setDouble(5, budget);
+				ps.setInt(6, managerID);
+				ps.executeUpdate();
 
 				int userID;
 				// for each project, insert the list of users associated with
@@ -567,10 +537,10 @@ public class DataResource {
 				for (Users user : projects.getUserList()) {
 					userID = user.getID();
 					sql = ("INSERT OR REPLACE INTO user_project_relationships(project_id, user_id) VALUES " + "(?, ?)");
-					statement = connection.prepareStatement(sql);
-					statement.setInt(1, projectID);
-					statement.setInt(2, userID);
-					statement.executeUpdate();
+					ps = connection.prepareStatement(sql);
+					ps.setInt(1, projectID);
+					ps.setInt(2, userID);
+					ps.executeUpdate();
 				}
 
 				// for each project, insert the list of activities associated
@@ -587,20 +557,20 @@ public class DataResource {
 
 					sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate) VALUES "
 							+ "(?, ?, ?, ?, ?)");
-					statement = connection.prepareStatement(sql);
-					statement.setInt(1, activityID);
-					statement.setString(2, actLabel);
-					statement.setString(3, actDescription);
-					statement.setString(4, start);
-					statement.setString(5, end);
-					statement.executeUpdate();
+					ps = connection.prepareStatement(sql);
+					ps.setInt(1, activityID);
+					ps.setString(2, actLabel);
+					ps.setString(3, actDescription);
+					ps.setString(4, start);
+					ps.setString(5, end);
+					ps.executeUpdate();
 
 					sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "
 							+ "(?, ?)");
-					statement = connection.prepareStatement(sql);
-					statement.setInt(1, projectID);
-					statement.setInt(2, activityID);
-					statement.executeUpdate();
+					ps = connection.prepareStatement(sql);
+					ps.setInt(1, projectID);
+					ps.setInt(2, activityID);
+					ps.executeUpdate();
 
 					int memberID;
 
@@ -609,11 +579,11 @@ public class DataResource {
 
 						sql = ("INSERT OR REPLACE INTO activity_user_project_relationships(activity_id, user_id, project_id) VALUES "
 								+ "(?, ?, ?)");
-						statement = connection.prepareStatement(sql);
-						statement.setInt(1, activityID);
-						statement.setInt(2, memberID);
-						statement.setInt(3, projectID);
-						statement.executeUpdate();
+						ps = connection.prepareStatement(sql);
+						ps.setInt(1, activityID);
+						ps.setInt(2, memberID);
+						ps.setInt(3, projectID);
+						ps.executeUpdate();
 					}
 
 					Set<DefaultEdge> edges = projects.getArrowSet();
@@ -627,10 +597,10 @@ public class DataResource {
 							// from_activity_id and to_activity_id
 							sql = ("INSERT OR REPLACE INTO activity_edge_relationship(from_activity_id, to_activity_id) VALUES "
 									+ "(?, ?)");
-							statement = connection.prepareStatement(sql);
-							statement.setInt(1, activityID);
-							statement.setInt(2, dependentActivityID);
-							statement.executeUpdate();
+							ps = connection.prepareStatement(sql);
+							ps.setInt(1, activityID);
+							ps.setInt(2, dependentActivityID);
+							ps.executeUpdate();
 						}
 					}
 				}
@@ -641,12 +611,7 @@ public class DataResource {
 			System.out.println(exception.getMessage());
 		}
 
-		// close connection at end
-		try {
-			connection.close();
-		} catch (Exception closingException) {
-			System.out.println(closingException.getMessage());
-		}
+		closeConnection(connection);
 	}
 
 	/**
@@ -659,10 +624,15 @@ public class DataResource {
 		dataBase = db;
 	}
 
+	/**
+	 * Method used to save an Activity to the database. This method is called after a new
+	 * activity is created and after an activity has been edited in the Activity_edit form.
+	 * @param selectedActivity
+	 */
 	public static void saveActivity(Activities selectedActivity)
 	{
 		//save the tuple in Activities table in the database where that id is equal to the selected activity id
-		Connection conn = createConnectionToDB(dataBase);
+		Connection connection = createConnectionToDB(dataBase);
 		
 		int activityID, dependentActivityID;
 		
@@ -679,7 +649,7 @@ public class DataResource {
 				+ "(?, ?, ?, ?, ?)");
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement(sql);
+			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, activityID);
 			ps.setString(2, actLabel);
 			ps.setString(3, actDescription);
@@ -689,7 +659,7 @@ public class DataResource {
 			
 			sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "
 					+ "(?, ?)");
-			ps = conn.prepareStatement(sql);
+			ps = connection.prepareStatement(sql);
 			ps.setInt(1, selectedProject.getId());
 			ps.setInt(2, activityID);
 			ps.executeUpdate();
@@ -701,7 +671,7 @@ public class DataResource {
 
 				sql = ("INSERT OR REPLACE INTO activity_user_project_relationships(activity_id, user_id, project_id) VALUES "
 						+ "(?, ?, ?)");
-				ps = conn.prepareStatement(sql);
+				ps = connection.prepareStatement(sql);
 				ps.setInt(1, activityID);
 				ps.setInt(2, memberID);
 				ps.setInt(3, selectedProject.getId());
@@ -719,70 +689,67 @@ public class DataResource {
 					// from_activity_id and to_activity_id
 					sql = ("INSERT OR REPLACE INTO activity_edge_relationship(from_activity_id, to_activity_id) VALUES "
 							+ "(?, ?)");
-					ps = conn.prepareStatement(sql);
+					ps = connection.prepareStatement(sql);
 					ps.setInt(1, dependentActivityID);
 					ps.setInt(2, activityID);
 					ps.executeUpdate();
 				}
 			}
-			
-			
+	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		closeConnection(conn);
-		
+		closeConnection(connection);
 	}
 	
+	/**
+	 * Method saveProject saves the fields of the selected project to the database.
+	 * @param selectedProject
+	 */
 	public static void saveProject(Projects selectedProject){
 		
 		Connection connection = DataResource.createConnectionToDB(dataBase);
 
-		
-			String projectName, description, date;
-			int projectID, managerID;
-			double budget;
+		String projectName, description, date;
+		int projectID, managerID;
+		double budget;
 
 		try {
 			
-			PreparedStatement statement;
+			PreparedStatement ps;
 
-			
-			
 			// load projects in projects table in database
-				projectID = selectedProject.getId();
-				description = selectedProject.getDescription();
-				date = selectedProject.getDate();
-				projectName = selectedProject.getProjectName();
-				managerID = selectedProject.getManagerID();
-				budget = selectedProject.getBudget();
-				
-				int userID = currentUser.getID();
-				// for each project, insert the list of users associated with
-				// that project into the database
-				
-				String sql = ("INSERT OR REPLACE INTO user_project_relationships(project_id, user_id) VALUES " + "(?, ?)");
-				statement = connection.prepareStatement(sql);
-				statement.setInt(1, projectID);
-				statement.setInt(2, userID);
-				statement.executeUpdate();
-				
-
-				sql = ("INSERT OR REPLACE INTO projects(id, name, date, description, budget, manager_id) "
-						+ "VALUES (?, ?, ?, ?, ?, ?)");
-				statement = connection.prepareStatement(sql);
-				statement.setInt(1, projectID);
-				statement.setString(2, projectName);
-				statement.setString(3, date);
-				statement.setString(4, description);
-				statement.setDouble(5, budget);
-				statement.setInt(6, managerID);
-				statement.executeUpdate();
-
-				
+			projectID = selectedProject.getId();
+			description = selectedProject.getDescription();
+			date = selectedProject.getDate();
+			projectName = selectedProject.getProjectName();
+			managerID = selectedProject.getManagerID();
+			budget = selectedProject.getBudget();
 			
+			int userID = currentUser.getID();
+			// for each project, insert the list of users associated with
+			// that project into the database
+			
+			String sql = ("INSERT OR REPLACE INTO user_project_relationships(project_id, user_id) VALUES " + "(?, ?)");
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, projectID);
+			ps.setInt(2, userID);
+			ps.executeUpdate();
+				
+
+			sql = ("INSERT OR REPLACE INTO projects(id, name, date, description, budget, manager_id) "
+					+ "VALUES (?, ?, ?, ?, ?, ?)");
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, projectID);
+			ps.setString(2, projectName);
+			ps.setString(3, date);
+			ps.setString(4, description);
+			ps.setDouble(5, budget);
+			ps.setInt(6, managerID);
+			ps.executeUpdate();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -792,6 +759,12 @@ public class DataResource {
 		
 	}
 	/*****************************helper functions to connect to and close database connections***************/
+	
+	/**
+	 * A helper function to connect to the database. This method returns an active connection to the database.
+	 * @param database
+	 * @return
+	 */
 	public static Connection createConnectionToDB(String database)
 	{
 		Connection connection = null;
@@ -803,6 +776,10 @@ public class DataResource {
 		return connection;
 	}
 	
+	/**
+	 * A helper function to close the given connection to the database.
+	 * @param connection
+	 */
 	public static void closeConnection(Connection connection)
 	{
 		// close connection at end
