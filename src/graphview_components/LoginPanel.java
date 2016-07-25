@@ -93,10 +93,12 @@ public class LoginPanel extends JPanel{
 		c.gridy = 4;
 		passwordField.setColumns(15);
 		this.add(passwordField, c);
+        passwordField.addActionListener(new EnterListener());
 		
 		c.gridy = 5;
 		loginButton.addActionListener(new ButtonListener());
 		this.add(loginButton, c);
+
 		
 		c.weighty = 1;
 		c.gridy = 6;
@@ -197,5 +199,71 @@ public class LoginPanel extends JPanel{
 	        }
 		}	
 	}
+
+    private class EnterListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            Connection connection = null;
+            PreparedStatement ps;
+
+            try{
+                connection = DriverManager.getConnection("jdbc:sqlite:ultimate_sandwich.db");
+                ps = connection.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
+
+                ps.setString(1, usernameField.getText());
+                ps.setString(2, String.valueOf(passwordField.getPassword()));
+                ResultSet result = ps.executeQuery();
+                if(result.next()){
+
+                    authorizationStatus.setText("login successful");
+                    authorizationStatus.paintImmediately(authorizationStatus.getVisibleRect());
+
+                    // Create Current User
+                    DataResource.currentUser = new Users(result.getString(4),result.getString(2),result.getString(3),
+                            result.getString(5),result.getInt(1),result.getString(6));
+
+                    if(DataResource.currentUser.getType() == UserType.MANAGER) {
+                        DataResource.loadManagerDataFromDB();
+                    } else {
+                        DataResource.loadMemberDataFromDB();
+                    }
+
+                    try {
+                        Thread.sleep(1000);                 //1000 milliseconds is one second.
+                    } catch(InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+
+                    ClientLauncher.loginFrame.dispose();
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            ClientLauncher.launchCLient();
+                        }
+                    });
+
+
+                }
+                else
+                {
+                    authorizationStatus.setText("login failed: invalid username or password");
+                    authorizationStatus.paintImmediately(authorizationStatus.getVisibleRect());
+                }
+
+            }catch(Exception exception) {
+                System.out.println(exception.getMessage());
+            }
+
+            try{
+                connection.close();
+            }catch(Exception closingException)
+            {
+                System.out.println(closingException.getMessage());
+            }
+        }
+    }
 
 }
