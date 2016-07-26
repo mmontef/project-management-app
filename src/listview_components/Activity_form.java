@@ -22,6 +22,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 
+import domain.ActivityController;
+
 @SuppressWarnings("serial")
 public class Activity_form extends JFrame {
 
@@ -152,8 +154,7 @@ public class Activity_form extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
+				ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
 				disposeWindow();
 			}
 		});
@@ -184,48 +185,6 @@ public class Activity_form extends JFrame {
 			}
 		});
 
-	}
-
-	private void saveAction() {
-		try {
-			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-			Date start = dateFormatter.parse(startField.getText());
-			Date end = dateFormatter.parse(endField.getText());
-
-			// Create activity and add it to current Project
-			Activities newActivity = new Activities(descriptionField.getText(), start, end,
-					activityLabelField.getText());
-			DataResource.selectedProject.addActivity(newActivity);
-
-			// Set the dependencies in the JGraphT
-			for (String element : dependencies) {
-
-				ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
-
-				for (Activities activity : activities) {
-
-					if (activity.getLabel().equals(element))
-						DataResource.selectedProject.addArrow(activity, newActivity);
-				}
-			}
-
-			ArrayList<Users> users = DataResource.projectMembers;
-			ArrayList<Users> tmp = new ArrayList<Users>();
-
-			for (String element : members) {
-				for (Users user : users) {
-					if (user.getName().equals(element))
-						tmp.add(user);
-				}
-			}
-			newActivity.setMemberList(tmp);
-			
-			//***************************** SAVE NEW ACTIVITY TO DATABASE **********************
-			DataResource.saveActivity(newActivity);
-			//DataResource.saveToDB();
-		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
-		}
 	}
 
 	private void disposeWindow() {

@@ -12,6 +12,8 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import domain.ActivityController;
+import domain.ProjectController;
 import graphview_components.*;
 import listview_components.ActivityListPane;
 import listview_components.ProjectListPane;
@@ -73,9 +75,14 @@ public class ClientLauncher {
 	
 		//Initialize the Necessary Panels
 		
-		projectListPane = new ProjectListPane();
-		activityListPane = new ActivityListPane();
+		projectListPane = new ProjectListPane();	//Observer
+		activityListPane = new ActivityListPane();	//Observer
 	
+		//Add Observers to Subjects
+		
+		ProjectController.addObserver(projectListPane);
+		ActivityController.addObserver(activityListPane);
+		
 		//----------------------- LIST VIEW--------------------------------------------------------------------------
 		
 		c.gridx = 0;

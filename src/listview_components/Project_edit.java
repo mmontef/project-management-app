@@ -14,6 +14,9 @@ import java.util.Map;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
+
+import domain.ProjectController;
+
 import javax.swing.JButton;
 
 @SuppressWarnings("serial")
@@ -137,18 +140,7 @@ public class Project_edit extends JFrame {
 	}
 		
 	private void saveAction () {
-		
-		Projects myProject = DataResource.selectedProject;
-		
-		myProject.setProjectName(nameField.getText());
-		myProject.setDescription(descriptionField.getText());
-		myProject.setBudget(Double.parseDouble(BudgetField.getText()));
-		
-		DataResource.saveProject(myProject);
-		//DataResource.saveToDB();//save the new project to the database
-       
-        ProjectListPane.updateList();
-                
+		ProjectController.editProject(nameField.getText(), descriptionField.getText(), Double.parseDouble(BudgetField.getText()));
     }
 	
 	private void disposeWindow(){
@@ -156,10 +148,6 @@ public class Project_edit extends JFrame {
 	}
 	
 	private void deleteAction () {
-		Projects toDelete = DataResource.selectedProject;
-		DataResource.removeProject(toDelete);
-		DataResource.selectedProject = null;
-		ProjectListPane.updateList();
-		
+		ProjectController.deleteProject();
 	}
 }
