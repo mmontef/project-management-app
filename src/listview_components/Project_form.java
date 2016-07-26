@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 
+import domain.ProjectController;
+
 @SuppressWarnings("serial")
 public class Project_form extends JFrame {
 
@@ -26,8 +28,6 @@ public class Project_form extends JFrame {
 	private JTextField NameField;
 	private JTextField DescField;
 	private JTextField BudgetField;
-
-	
 
 	/**
 	 * Create the frame.
@@ -105,27 +105,8 @@ public class Project_form extends JFrame {
 	}
 		
 	private void saveAction () {
-		
-		//Initialize A user list and add current user to it
-		ArrayList<Users> userList = new ArrayList<Users>();
-        userList.add(DataResource.currentUser);
-        
-        // Create the date
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
-        Date dateobj = new Date();
-        String date = df.format(dateobj);
-        
-        
-        //Create a new Project with information from the form, userList, and date
-        Projects newProject = new Projects(NameField.getText(), userList, date,DataResource.currentUser.getID(),
-        		DescField.getText(), Double.parseDouble(BudgetField.getText()));
-        DataResource.projectList.add(newProject);
-        
-        ProjectListPane.updateList();
+		ProjectController.addProject(NameField.getText(), DescField.getText(), Double.parseDouble(BudgetField.getText()));
         this.dispose();
-        
-        DataResource.saveProject(newProject);
-        //DataResource.saveToDB(); 
     }
 	
 	private void disposeWindow(){

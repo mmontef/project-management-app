@@ -16,9 +16,10 @@ import javax.swing.event.ListSelectionListener;
 import resources.Projects;
 import saver_loader.DataResource;
 
+import domain.IObserver;
 
 @SuppressWarnings("serial")
-public class ProjectListPane extends JPanel{
+public class ProjectListPane extends JPanel implements IObserver{
 
 	public static JList<String> list;
 	public JScrollPane scrollpane;
@@ -83,14 +84,14 @@ public class ProjectListPane extends JPanel{
 				
 		
 	}
-	
-	public static void updateList(){
-		
+
+	@Override
+	public void update() 
+	{
 		listModel.clear();
 		
 		for(Projects element : DataResource.projectList)
 			listModel.addElement(element.getProjectName());
-		
 	}
 	
 }

@@ -22,6 +22,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 
+import domain.ActivityController;
+
 @SuppressWarnings("serial")
 public class Activity_edit extends JFrame {
 
@@ -215,8 +217,7 @@ public class Activity_edit extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				deleteAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
+				ActivityController.deleteActivity();
 				disposeWindow();
 			}
 		});
@@ -232,72 +233,11 @@ public class Activity_edit extends JFrame {
 		btnSave.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
+			public void actionPerformed(ActionEvent e) {				
+				ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
 				disposeWindow();
 			}
 		});
-
-	}
-
-	private void saveAction() {
-		try {
-			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-			Date start = dateFormatter.parse(startField.getText());
-			Date end = dateFormatter.parse(endField.getText());
-			
-			Activities myActivity = DataResource.selectedActivity;
-
-			myActivity.setDescription(descriptionField.getText());
-			myActivity.setStartDate(start);
-			myActivity.setEndDate(end);
-			myActivity.setLabel(activityLabelField.getText());
-
-			if (!dependencies.isEmpty()) {
-
-				DataResource.selectedProject.resetIncomingEdges(myActivity);
-				ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
-
-				// Set the dependencies in the JGraphT
-				for (String element : dependencies) {
-
-					for (Activities activity : activities) {
-
-						if (activity.getLabel().equals(element))
-							DataResource.selectedProject.addArrow(activity, myActivity);
-					}
-				}
-			}
-
-			if (!members.isEmpty()) {
-				DataResource.resetActivityMembers(DataResource.selectedActivity.getId());
-				ArrayList<Users> users = DataResource.projectMembers;
-				ArrayList<Users> tmp = new ArrayList<Users>();
-
-				for (String element : members) {
-					for (Users user : users) {
-						if (user.getName().equals(element))
-							tmp.add(user);
-					}
-				}
-				DataResource.selectedActivity.setMemberList(tmp);
-			}
-			
-			
-			//******************************SAVE TO DATABASE METHOD*********************************8
-			DataResource.saveActivity(DataResource.selectedActivity);
-			//DataResource.saveToDB();
-		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
-		}
-
-	}
-
-	private void deleteAction() {
-
-		Activities myActivity = DataResource.selectedActivity;
-		DataResource.selectedProject.deleteActivity(myActivity);
 
 	}
 
