@@ -1,21 +1,25 @@
 package listview_components;
 
-import javax.swing.*;
-
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import resources.Activities;
 import resources.Users;
 import saver_loader.DataResource;
 
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JButton;
+
+import domain.ActivityController;
 
 @SuppressWarnings("serial")
 public class Activity_edit extends JFrame {
@@ -34,52 +38,46 @@ public class Activity_edit extends JFrame {
 		// Initialize JFrame Settings
 		setTitle("EDITING");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 426, 562);
+		setBounds(100, 100, 433, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		activityLabelField = new JTextField(DataResource.selectedActivity.getLabel());
+		activityLabelField.setBounds(226, 23, 58, 20);
+		contentPane.add(activityLabelField);
+		activityLabelField.setColumns(10);
+		
 		// Create and add Description Field
-
-        activityLabelField = new JTextField(DataResource.selectedActivity.getLabel());
-        activityLabelField.setBounds(226, 120, 124, 20);
-        contentPane.add(activityLabelField);
-        activityLabelField.setColumns(10);
-
 		descriptionField = new JTextField(DataResource.selectedActivity.getDescription());
-		descriptionField.setBounds(226, 23, 124, 20);
+		descriptionField.setBounds(226, 120, 124, 20);
 		descriptionField.setColumns(10);
 		contentPane.add(descriptionField);
 
 		// Create and add all Labels
-
-        JLabel lblLabel = new JLabel("Name");
-        lblLabel.setBounds(64, 123, 150, 14);
-        contentPane.add(lblLabel);
-
-
-
 		JLabel lblDescription = new JLabel("Description");
-        lblDescription.setBounds(64, 26, 150, 14);
+		lblDescription.setBounds(21, 123, 160, 14);
 		contentPane.add(lblDescription);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
-        lblStart.setBounds(64, 64, 150, 14);
+		lblStart.setBounds(21, 64, 170, 14);
 		contentPane.add(lblStart);
 
 		JLabel lblEnd = new JLabel("End Date (DD-MM-YYYY)");
-        lblEnd.setBounds(64, 94, 150, 14);
+		lblEnd.setBounds(21, 94, 170, 14);
 		contentPane.add(lblEnd);
 
-
+		JLabel lblLabel = new JLabel("Name");
+		lblLabel.setBounds(21, 26, 160, 14);
+		contentPane.add(lblLabel);
 
 		JLabel lblDependencies = new JLabel("Dependencies");
-        lblDependencies.setBounds(64, 193, 150, 14);
+		lblDependencies.setBounds(21, 157, 160, 14);
 		contentPane.add(lblDependencies);
 
 		JLabel lblResources = new JLabel("Resources");
-        lblResources.setBounds(64, 293, 150, 14);
+		lblResources.setBounds(21, 267, 160, 14);
 		contentPane.add(lblResources);
 
 		// Create and add all text Fields
@@ -94,8 +92,6 @@ public class Activity_edit extends JFrame {
 		endField.setBounds(226, 91, 124, 20);
 		contentPane.add(endField);
 		endField.setColumns(10);
-
-
 
 		// Create an array of the current Activities
 		int activityCount = DataResource.selectedProject.getActivityList().size();
@@ -179,7 +175,7 @@ public class Activity_edit extends JFrame {
 		contentPane.add(btnSave);
 
 		JLabel lblDoYouWant = new JLabel("Do you want to delete?");
-		lblDoYouWant.setBounds(64, 471, 150, 23);
+		lblDoYouWant.setBounds(64, 471, 124, 23);
 		contentPane.add(lblDoYouWant);
 
 		JButton btnDelete = new JButton("Delete");
@@ -218,8 +214,7 @@ public class Activity_edit extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				deleteAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
+				ActivityController.deleteActivity();
 				disposeWindow();
 			}
 		});
@@ -235,97 +230,11 @@ public class Activity_edit extends JFrame {
 		btnSave.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
+			public void actionPerformed(ActionEvent e) {				
+				ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
 				disposeWindow();
 			}
 		});
-
-	}
-
-	private void saveAction() {
-		try {
-			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-			Date start = dateFormatter.parse(startField.getText());
-			Date end = dateFormatter.parse(endField.getText());
-			
-			Activities myActivity = DataResource.selectedActivity;
-
-            if (start.before(end) && !descriptionField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
-            {
-                myActivity.setDescription(descriptionField.getText());
-                myActivity.setStartDate(start);
-                myActivity.setEndDate(end);
-                myActivity.setLabel(activityLabelField.getText());
-
-                if (!dependencies.isEmpty()) {
-
-                    DataResource.selectedProject.resetIncomingEdges(myActivity);
-                    ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
-
-                    // Set the dependencies in the JGraphT
-                    for (String element : dependencies) {
-
-                        for (Activities activity : activities) {
-
-                            if (activity.getLabel().equals(element))
-                                DataResource.selectedProject.addArrow(activity, myActivity);
-                        }
-                    }
-                }
-
-                if (!members.isEmpty()) {
-                    DataResource.resetActivityMembers(DataResource.selectedActivity.getId());
-                    ArrayList<Users> users = DataResource.projectMembers;
-                    ArrayList<Users> tmp = new ArrayList<Users>();
-
-                    for (String element : members) {
-                        for (Users user : users) {
-                            if (user.getName().equals(element))
-                                tmp.add(user);
-                        }
-                    }
-                    DataResource.selectedActivity.setMemberList(tmp);
-                }
-
-
-                //******************************SAVE TO DATABASE METHOD*********************************8
-                DataResource.saveActivity(DataResource.selectedActivity);
-                //DataResource.saveToDB();
-            }
-            else
-            {
-                if (start.after(end))
-                {
-                    JOptionPane.showMessageDialog(new JFrame(),
-                            "End date must be AFTER start date",
-                            "Incorrect Dates",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(new JFrame(),
-                            "End date must be AFTER start date",
-                            "Incorrect Dates",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-
-            }
-
-		} catch (Exception exception) {
-            JOptionPane.showMessageDialog(new JFrame(),
-                    "End date must be AFTER start date",
-                    "Incorrect Dates",
-                    JOptionPane.WARNING_MESSAGE);
-		}
-
-	}
-
-	private void deleteAction() {
-
-		Activities myActivity = DataResource.selectedActivity;
-		DataResource.selectedProject.deleteActivity(myActivity);
 
 	}
 
