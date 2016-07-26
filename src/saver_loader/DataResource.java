@@ -61,7 +61,7 @@ public class DataResource {
 
 	public static String dataBase = "jdbc:sqlite:ultimate_sandwich.db";
 
-	public static DateFormat dateFormatter = new SimpleDateFormat("dd-mm-yyyy");
+	public static DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	/**
 	 * Method used to retrieve a project given a projectID passed in parameters.
@@ -297,7 +297,7 @@ public class DataResource {
 					String name = result5.getString(2);
 					String desc = result5.getString(3);
 					Date start = dateFormatter.parse(result5.getString(4));
-					Date end = dateFormatter.parse(result5.getString(4));
+					Date end = dateFormatter.parse(result5.getString(5));
 
 					activityList.add(new Activities(desc, start, end, name, id));
 				}
