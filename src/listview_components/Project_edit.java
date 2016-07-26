@@ -1,23 +1,17 @@
 package listview_components;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+
 import resources.Projects;
 import saver_loader.DataResource;
 
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.util.Map;
 import java.awt.Color;
-import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
-
-import domain.ProjectController;
-
-import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class Project_edit extends JFrame {
@@ -26,6 +20,8 @@ public class Project_edit extends JFrame {
 	private JTextField nameField;
 	private JTextField descriptionField;
 	private JTextField BudgetField;
+
+	
 
 	/**
 	 * Create the frame.
@@ -140,7 +136,48 @@ public class Project_edit extends JFrame {
 	}
 		
 	private void saveAction () {
-		ProjectController.editProject(nameField.getText(), descriptionField.getText(), Double.parseDouble(BudgetField.getText()));
+		
+		Projects myProject = DataResource.selectedProject;
+
+        try
+        {
+            if (!nameField.getText().isEmpty() && !descriptionField.getText().isEmpty())
+            {
+                myProject.setProjectName(nameField.getText());
+                myProject.setDescription(descriptionField.getText());
+
+                myProject.setBudget(Double.parseDouble(BudgetField.getText()));
+
+                DataResource.saveProject(myProject);
+                //DataResource.saveToDB();//save the new project to the database
+                ProjectListPane.updateList();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "Please fill in all values",
+                        "Values are Empty",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        catch (Exception exception) {
+            if (!BudgetField.getText().isEmpty())
+            {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "Budget must be numeric",
+                        "Budget must be numeric",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "Please fill in all values",
+                        "Values are Empty",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+                
     }
 	
 	private void disposeWindow(){
@@ -148,6 +185,10 @@ public class Project_edit extends JFrame {
 	}
 	
 	private void deleteAction () {
-		ProjectController.deleteProject();
+		Projects toDelete = DataResource.selectedProject;
+		DataResource.removeProject(toDelete);
+		DataResource.selectedProject = null;
+		ProjectListPane.updateList();
+		
 	}
 }

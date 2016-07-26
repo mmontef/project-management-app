@@ -6,10 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Set;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import org.jgraph.graph.DefaultEdge;
@@ -39,6 +36,7 @@ public class ActivityListPane extends JPanel implements MouseListener, IObserver
 		//Set Headers to the Table Model
 		String[] columnHeaders = {"Label" , "Description", "Start Date", "End Date", "Depedencies"};
 		mod.setColumnIdentifiers(columnHeaders);
+
 		
 		
 		
@@ -50,7 +48,7 @@ public class ActivityListPane extends JPanel implements MouseListener, IObserver
 		table.getTableHeader().setFont(table.getFont().deriveFont(40f));
 		table.addMouseListener(this);
 		table.setRowSelectionAllowed(true);
-		table.setEnabled(true);
+		table.setEnabled(false);
 
 	
 		//add the table to a ScrollPanel
@@ -148,7 +146,7 @@ public class ActivityListPane extends JPanel implements MouseListener, IObserver
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int row = table.rowAtPoint(e.getPoint());
-		
+
 		if(row >= 0){
 		
 			String activityLabel = (String) table.getValueAt(row, 0);
