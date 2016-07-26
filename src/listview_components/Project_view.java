@@ -2,9 +2,8 @@ package listview_components;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import resources.UserType;
 import saver_loader.DataResource;
+import resources.UserType;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -67,7 +66,7 @@ public class Project_view extends JFrame {
 		contentPane.add(nameField);
 
 		descriptionField = new JLabel(DataResource.selectedProject.getDescription());
-		descriptionField.setBounds(139, 123, 147, 20);
+		descriptionField.setBounds(139, 123, 200, 20);
 		contentPane.add(descriptionField);
 
 		BudgetField = new JLabel(Double.toString(DataResource.selectedProject.getBudget()));
@@ -82,7 +81,7 @@ public class Project_view extends JFrame {
         if (DataResource.currentUser.getType() == UserType.MANAGER)
         {
             JButton btnGantt = new JButton("Generate Gantt");
-            btnGantt.setBounds(46, 261, 120, 23);
+            btnGantt.setBounds(46, 261, 89, 23);
             contentPane.add(btnGantt);
 
             btnGantt.addActionListener(new ActionListener() {
@@ -94,6 +93,7 @@ public class Project_view extends JFrame {
                 }
             });
         }
+
 
 		JLabel editLabel = new JLabel("View");
 		Font font = editLabel.getFont();
@@ -114,6 +114,8 @@ public class Project_view extends JFrame {
 				disposeWindow();
 			}
 		});
+
+
 	}
 	
 	private void ganttAction() {

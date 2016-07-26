@@ -58,7 +58,7 @@ public class ClientLauncher {
 	
 	public static void launchCLient(){
 		
-		clientFrame = new JFrame("Ultimate Sandwhich Program Management UI");
+		clientFrame = new JFrame("Ultimate Sandwich Program Management UI");
 		
 		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		clientFrame.setSize((int)(screenX*clientWidthRatio), (int)(screenY*clientHeightRatio));

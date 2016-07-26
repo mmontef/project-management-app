@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.*;
 
 import resources.Activities;
 import resources.Users;
@@ -21,39 +22,64 @@ public class ActivityController extends ActivitySubject{
 			Date start = dateFormatter.parse(startDate);
 			Date end = dateFormatter.parse(endDate);
 
-			// Create activity and add it to current Project
-			Activities newActivity = new Activities(description, start, end, label);
-			DataResource.selectedProject.addActivity(newActivity);
+            if (start.before(end))
+            {
+                // Create activity and add it to current Project
+                Activities newActivity = new Activities(description, start, end, label);
+                DataResource.selectedProject.addActivity(newActivity);
 
-			// Set the dependencies in the JGraphT
-			for (String element : dependencies) {
+                // Set the dependencies in the JGraphT
+                for (String element : dependencies) {
 
-				ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
+                    ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
 
-				for (Activities activity : activities) {
+                    for (Activities activity : activities) {
 
-					if (activity.getLabel().equals(element))
-						DataResource.selectedProject.addArrow(activity, newActivity);
-				}
-			}
+                        if (activity.getLabel().equals(element))
+                            DataResource.selectedProject.addArrow(activity, newActivity);
+                    }
+                }
 
-			ArrayList<Users> users = DataResource.projectMembers;
-			ArrayList<Users> tmp = new ArrayList<Users>();
+                ArrayList<Users> users = DataResource.projectMembers;
+                ArrayList<Users> tmp = new ArrayList<Users>();
 
-			for (String element : members) {
-				for (Users user : users) {
-					if (user.getName().equals(element))
-						tmp.add(user);
-				}
-			}
-			newActivity.setMemberList(tmp);
-			
-			//***************************** SAVE NEW ACTIVITY TO DATABASE **********************
-			DataResource.saveActivity(newActivity);
-			
-			notifyObservers();
+                for (String element : members) {
+                    for (Users user : users) {
+                        if (user.getName().equals(element))
+                            tmp.add(user);
+                    }
+                }
+                newActivity.setMemberList(tmp);
+
+                //***************************** SAVE NEW ACTIVITY TO DATABASE **********************
+                DataResource.saveActivity(newActivity);
+
+                notifyObservers();
+            }
+            else
+            {
+                if (start.after(end))
+                {
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "End date must be AFTER start date",
+                            "Incorrect Dates",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "Please Fill in all values correctly",
+                            "Values are incorrect format or missing",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
 		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
+
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Please Fill in all values correctly",
+                    "Values are incorrect format or missing",
+                    JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -65,49 +91,74 @@ public class ActivityController extends ActivitySubject{
 			
 			Activities myActivity = DataResource.selectedActivity;
 
-			myActivity.setDescription(description);
-			myActivity.setStartDate(start);
-			myActivity.setEndDate(end);
-			myActivity.setLabel(label);
+            if (start.before(end))
+            {
+                myActivity.setDescription(description);
+                myActivity.setStartDate(start);
+                myActivity.setEndDate(end);
+                myActivity.setLabel(label);
 
-			if (!dependencies.isEmpty()) {
+                if (!dependencies.isEmpty()) {
 
-				DataResource.selectedProject.resetIncomingEdges(myActivity);
-				ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
+                    DataResource.selectedProject.resetIncomingEdges(myActivity);
+                    ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
 
-				// Set the dependencies in the JGraphT
-				for (String element : dependencies) {
+                    // Set the dependencies in the JGraphT
+                    for (String element : dependencies) {
 
-					for (Activities activity : activities) {
+                        for (Activities activity : activities) {
 
-						if (activity.getLabel().equals(element))
-							DataResource.selectedProject.addArrow(activity, myActivity);
-					}
-				}
-			}
+                            if (activity.getLabel().equals(element))
+                                DataResource.selectedProject.addArrow(activity, myActivity);
+                        }
+                    }
+                }
 
-			if (!members.isEmpty()) {
-				DataResource.resetActivityMembers(DataResource.selectedActivity.getId());
-				ArrayList<Users> users = DataResource.projectMembers;
-				ArrayList<Users> tmp = new ArrayList<Users>();
+                if (!members.isEmpty()) {
+                    DataResource.resetActivityMembers(DataResource.selectedActivity.getId());
+                    ArrayList<Users> users = DataResource.projectMembers;
+                    ArrayList<Users> tmp = new ArrayList<Users>();
 
-				for (String element : members) {
-					for (Users user : users) {
-						if (user.getName().equals(element))
-							tmp.add(user);
-					}
-				}
-				DataResource.selectedActivity.setMemberList(tmp);
-			}
-			
-			
-			//******************************SAVE TO DATABASE METHOD*********************************8
-			DataResource.saveActivity(DataResource.selectedActivity);
-			
-			notifyObservers();
+                    for (String element : members) {
+                        for (Users user : users) {
+                            if (user.getName().equals(element))
+                                tmp.add(user);
+                        }
+                    }
+                    DataResource.selectedActivity.setMemberList(tmp);
+                }
+
+
+                //******************************SAVE TO DATABASE METHOD*********************************8
+                DataResource.saveActivity(DataResource.selectedActivity);
+
+                notifyObservers();
+            }
+            else
+            {
+                if (start.after(end))
+                {
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "End date must be AFTER start date",
+                            "Incorrect Dates",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "End date must be AFTER start date",
+                            "Incorrect Dates",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
 		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
-		}
+            JOptionPane.showMessageDialog(new JFrame(),
+                    "Please Fill in all values",
+                    "Empty Values",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+
 	}
 	
 	public static void deleteActivity() {
