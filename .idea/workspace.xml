@@ -2,18 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30eee96c-0535-4f39-9e19-bc88aebe369f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/resources/Activities.class" afterPath="$PROJECT_DIR$/bin/resources/Activities.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/driver/ClientLauncher$1.class" afterPath="$PROJECT_DIR$/bin/driver/ClientLauncher$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/driver/ClientLauncher.class" afterPath="$PROJECT_DIR$/bin/driver/ClientLauncher.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/resources/Projects.class" afterPath="$PROJECT_DIR$/bin/resources/Projects.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/resources/Users.class" afterPath="$PROJECT_DIR$/bin/resources/Users.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ultimate_sandwich.db" afterPath="$PROJECT_DIR$/ultimate_sandwich.db" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/ActivityListPane.java" afterPath="$PROJECT_DIR$/src/listview_components/ActivityListPane.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/Activity_edit.java" afterPath="$PROJECT_DIR$/src/listview_components/Activity_edit.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/Activity_form.java" afterPath="$PROJECT_DIR$/src/listview_components/Activity_form.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphview_components/LoginPanel.java" afterPath="$PROJECT_DIR$/src/graphview_components/LoginPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/Project_edit.java" afterPath="$PROJECT_DIR$/src/listview_components/Project_edit.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/Project_form.java" afterPath="$PROJECT_DIR$/src/listview_components/Project_form.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/Project_view.java" afterPath="$PROJECT_DIR$/src/listview_components/Project_view.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/listview_components/Activity_view.java" afterPath="$PROJECT_DIR$/src/listview_components/Activity_view.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="project-management-app.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,75 +32,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="LoginPanel.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/graphview_components/LoginPanel.java">
+      <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/doc/stylesheet.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.76233184" vertical-offset="0" max-vertical-offset="4097">
-              <caret line="44" column="24" selection-start-line="44" selection-start-column="24" selection-end-line="44" selection-end-column="24" />
-              <folding>
-                <element signature="e#680#707#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="12" max-vertical-offset="9860">
+              <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Activity_edit.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Activities.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/doc/resources/Activities.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.5272727" vertical-offset="13291" max-vertical-offset="14620">
+              <caret line="790" column="14" selection-start-line="790" selection-start-column="13" selection-end-line="790" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Activity_edit.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_edit.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-149.48276" vertical-offset="0" max-vertical-offset="5015">
-              <caret line="291" column="17" selection-start-line="291" selection-start-column="17" selection-end-line="291" selection-end-column="17" />
-              <folding>
-                <element signature="e#463#490#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Project_form.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/listview_components/Project_form.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-58.62069" vertical-offset="0" max-vertical-offset="2244">
-              <caret line="125" column="45" selection-start-line="125" selection-start-column="45" selection-end-line="125" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Activity_view.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_view.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2771">
-              <caret line="31" column="58" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ActivityListPane.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/listview_components/ActivityListPane.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2567">
-              <caret line="4" column="33" selection-start-line="4" selection-start-column="33" selection-end-line="4" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Project_view.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/listview_components/Project_view.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1785">
-              <caret line="83" column="28" selection-start-line="83" selection-start-column="28" selection-end-line="83" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Project_edit.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/listview_components/Project_edit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1853" max-vertical-offset="2941">
-              <caret line="120" column="29" selection-start-line="120" selection-start-column="29" selection-end-line="120" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.4147982" vertical-offset="410" max-vertical-offset="5151">
+              <caret line="50" column="53" selection-start-line="50" selection-start-column="53" selection-end-line="50" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -115,10 +65,78 @@
       <file leaf-file-name="Activity_form.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_form.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3060" max-vertical-offset="3740">
-              <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="232" selection-end-column="13" />
+            <state vertical-scroll-proportion="-49.103447" vertical-offset="548" max-vertical-offset="3740">
+              <caret line="131" column="45" selection-start-line="131" selection-start-column="45" selection-end-line="131" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Project_form.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/listview_components/Project_form.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="544" max-vertical-offset="2244">
+              <caret line="61" column="45" selection-start-line="61" selection-start-column="45" selection-end-line="61" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Activity_view.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_view.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-8.620689" vertical-offset="277" max-vertical-offset="3094">
+              <caret line="31" column="57" selection-start-line="31" selection-start-column="57" selection-end-line="31" selection-end-column="57" />
               <folding>
-                <element signature="e#463#490#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActivityListPane.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/listview_components/ActivityListPane.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="574" max-vertical-offset="2533">
+              <caret line="44" column="31" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProjectListPane.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/listview_components/ProjectListPane.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1445">
+              <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Activities.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/resources/Activities.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.2413793" vertical-offset="1072" max-vertical-offset="6222">
+              <caret line="73" column="22" selection-start-line="73" selection-start-column="13" selection-end-line="73" selection-end-column="22" />
+              <folding>
+                <element signature="e#6513#6514#0" expanded="true" />
+                <element signature="e#6554#6555#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MenuBar.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/graphview_components/MenuBar.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="731" max-vertical-offset="2975">
+              <caret line="92" column="15" selection-start-line="92" selection-start-column="15" selection-end-line="92" selection-end-column="15" />
+              <folding>
+                <element signature="e#2681#3278#0" expanded="true" />
+                <element signature="e#3277#3278#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -134,10 +152,12 @@
       <list>
         <option value="$PROJECT_DIR$/src/graphview_components/LoginPanel.java" />
         <option value="$PROJECT_DIR$/src/listview_components/Project_form.java" />
-        <option value="$PROJECT_DIR$/src/listview_components/Activity_form.java" />
         <option value="$PROJECT_DIR$/src/listview_components/Project_edit.java" />
-        <option value="$PROJECT_DIR$/src/listview_components/Activity_edit.java" />
         <option value="$PROJECT_DIR$/src/listview_components/Project_view.java" />
+        <option value="$PROJECT_DIR$/src/listview_components/ActivityListPane.java" />
+        <option value="$PROJECT_DIR$/src/listview_components/Activity_edit.java" />
+        <option value="$PROJECT_DIR$/src/listview_components/Activity_view.java" />
+        <option value="$PROJECT_DIR$/src/listview_components/Activity_form.java" />
       </list>
     </option>
   </component>
@@ -187,6 +207,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="project-management-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="project-management-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="project-management-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="saver_loader" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -551,7 +589,7 @@
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="11" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -614,14 +652,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/resources/Activities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.448276" vertical-offset="1287" max-vertical-offset="6188">
-          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/resources/Projects.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2150" max-vertical-offset="10574">
@@ -633,26 +663,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/doc/index-files/index-8.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.3846154" vertical-offset="1423" max-vertical-offset="4828">
-          <caret line="95" column="4" selection-start-line="95" selection-start-column="4" selection-end-line="95" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="3.8" vertical-offset="1132" max-vertical-offset="1938">
           <caret line="61" column="17" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/doc/saver_loader/DataResource.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.730769" vertical-offset="7059" max-vertical-offset="8636">
-          <caret line="424" column="34" selection-start-line="424" selection-start-column="34" selection-end-line="424" selection-end-column="34" />
           <folding />
         </state>
       </provider>
@@ -673,14 +687,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/ProjectListPane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1445">
-          <caret line="83" column="8" selection-start-line="83" selection-start-column="8" selection-end-line="83" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/saver_loader/DataResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.3161435" vertical-offset="10255" max-vertical-offset="13685">
@@ -697,54 +703,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_form.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3060" max-vertical-offset="3740">
-          <caret line="226" column="0" selection-start-line="226" selection-start-column="0" selection-end-line="232" selection-end-column="13" />
-          <folding>
-            <element signature="e#463#490#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/listview_components/EndingListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.31416836" vertical-offset="0" max-vertical-offset="487">
           <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_edit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-149.48276" vertical-offset="0" max-vertical-offset="5015">
-          <caret line="291" column="17" selection-start-line="291" selection-start-column="17" selection-end-line="291" selection-end-column="17" />
-          <folding>
-            <element signature="e#463#490#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/Project_form.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-58.62069" vertical-offset="0" max-vertical-offset="2244">
-          <caret line="125" column="45" selection-start-line="125" selection-start-column="45" selection-end-line="125" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_view.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2771">
-          <caret line="31" column="58" selection-start-line="31" selection-start-column="58" selection-end-line="31" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/graphview_components/MenuBar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="663" max-vertical-offset="2907">
-          <caret line="118" column="15" selection-start-line="118" selection-start-column="15" selection-end-line="118" selection-end-column="15" />
           <folding />
         </state>
       </provider>
@@ -773,29 +735,143 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/ActivityListPane.java">
+    <entry file="file://$PROJECT_DIR$/doc/script.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2567">
-          <caret line="4" column="33" selection-start-line="4" selection-start-column="33" selection-end-line="4" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="612">
+          <caret line="7" column="58" selection-start-line="7" selection-start-column="58" selection-end-line="7" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/listview_components/Project_view.java">
+    <entry file="file://$PROJECT_DIR$/doc/resources/Users.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1785">
-          <caret line="83" column="28" selection-start-line="83" selection-start-column="28" selection-end-line="83" selection-end-column="28" />
+        <state vertical-scroll-proportion="-5.730769" vertical-offset="242" max-vertical-offset="9792">
+          <caret line="23" column="7" selection-start-line="23" selection-start-column="7" selection-end-line="23" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/graphview_components/LoginPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76233184" vertical-offset="0" max-vertical-offset="4097">
-          <caret line="44" column="24" selection-start-line="44" selection-start-column="24" selection-end-line="44" selection-end-column="24" />
+        <state vertical-scroll-proportion="-7.62069" vertical-offset="0" max-vertical-offset="4097">
+          <caret line="37" column="56" selection-start-line="37" selection-start-column="56" selection-end-line="37" selection-end-column="56" />
           <folding>
             <element signature="e#680#707#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/Project_view.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="703" max-vertical-offset="1785">
+          <caret line="64" column="45" selection-start-line="64" selection-start-column="45" selection-end-line="64" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/ProjectListPane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1445">
+          <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/graphview_components/MenuBar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="731" max-vertical-offset="2975">
+          <caret line="92" column="15" selection-start-line="92" selection-start-column="15" selection-end-line="92" selection-end-column="15" />
+          <folding>
+            <element signature="e#2681#3278#0" expanded="true" />
+            <element signature="e#3277#3278#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/saver_loader/DataResource.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3325893" vertical-offset="225" max-vertical-offset="8636">
+          <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/resources/Activities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.2413793" vertical-offset="1072" max-vertical-offset="6222">
+          <caret line="73" column="22" selection-start-line="73" selection-start-column="13" selection-end-line="73" selection-end-column="22" />
+          <folding>
+            <element signature="e#6513#6514#0" expanded="true" />
+            <element signature="e#6554#6555#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/index-files/index-8.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.92410713" vertical-offset="4312" max-vertical-offset="4828">
+          <caret line="278" column="0" selection-start-line="278" selection-start-column="0" selection-end-line="278" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/stylesheet.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="12" max-vertical-offset="9860">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/resources/Activities.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.5272727" vertical-offset="13291" max-vertical-offset="14620">
+          <caret line="790" column="14" selection-start-line="790" selection-start-column="13" selection-end-line="790" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/ActivityListPane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="574" max-vertical-offset="2533">
+          <caret line="44" column="31" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/Project_form.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="544" max-vertical-offset="2244">
+          <caret line="61" column="45" selection-start-line="61" selection-start-column="45" selection-end-line="61" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_view.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.620689" vertical-offset="277" max-vertical-offset="3094">
+          <caret line="31" column="57" selection-start-line="31" selection-start-column="57" selection-end-line="31" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_form.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-49.103447" vertical-offset="548" max-vertical-offset="3740">
+          <caret line="131" column="45" selection-start-line="131" selection-start-column="45" selection-end-line="131" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/listview_components/Activity_edit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4147982" vertical-offset="410" max-vertical-offset="5151">
+          <caret line="50" column="53" selection-start-line="50" selection-start-column="53" selection-end-line="50" selection-end-column="53" />
+          <folding />
         </state>
       </provider>
     </entry>

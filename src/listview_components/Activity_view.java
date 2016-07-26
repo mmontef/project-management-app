@@ -30,40 +30,47 @@ public class Activity_view extends JFrame {
 		//Initialize JFrame Settings
 		setTitle("VIEW");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 426, 520);
+        setBounds(100, 100, 426, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		//Create and add Description Field
+        activityLabelField = new JLabel(DataResource.selectedActivity.getLabel());
+        activityLabelField.setBounds(226, 120, 150, 20);
+        contentPane.add(activityLabelField);
+
 		descriptionField = new JLabel( DataResource.selectedActivity.getDescription());
-		descriptionField.setBounds(226, 23, 124, 20);
+		descriptionField.setBounds(226, 23, 150, 20);
 		contentPane.add(descriptionField);
 
 		//Create and add all Labels
+
+        JLabel lblLabel = new JLabel("Name");
+        lblLabel.setBounds(64, 123, 150, 14);
+        contentPane.add(lblLabel);
+
 		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(64, 26, 58, 14);
+		lblDescription.setBounds(64, 26, 150, 14);
 		contentPane.add(lblDescription);
 		
 		JLabel lblDuration = new JLabel("Start Date (DD-MM-YYYY)");
-		lblDuration.setBounds(64, 64, 46, 14);
+		lblDuration.setBounds(64, 64, 150, 14);
 		contentPane.add(lblDuration);
 		
 		JLabel lblEnd = new JLabel("End Date (DD-MM-YYYY)");
-		lblEnd.setBounds(64, 94, 124, 14);
+		lblEnd.setBounds(64, 94, 150, 14);
 		contentPane.add(lblEnd);
 		
-		JLabel lblLabel = new JLabel("Label");
-		lblLabel.setBounds(64, 123, 46, 14);
-		contentPane.add(lblLabel);
+
 		
 		JLabel lblDependencies = new JLabel("Dependencies");
-		lblDependencies.setBounds(64, 193, 80, 14);
+		lblDependencies.setBounds(64, 193, 150, 14);
 		contentPane.add(lblDependencies);
 		
 		JLabel lblResources = new JLabel("Resources");
-		lblResources.setBounds(64, 293, 80, 14);
+		lblResources.setBounds(64, 293, 150, 14);
 		contentPane.add(lblResources);
 		
 		//Create and add all text Fields
@@ -77,9 +84,7 @@ public class Activity_view extends JFrame {
 		endField.setBounds(226, 91, 124, 20);
 		contentPane.add(endField);
 		
-		activityLabelField = new JLabel(DataResource.selectedActivity.getLabel());
-		activityLabelField.setBounds(226, 120, 58, 20);
-		contentPane.add(activityLabelField);
+
 		
 		//Create an array of the current Activities
 		int activityCount = DataResource.selectedProject.getActivityList().size();
@@ -159,7 +164,7 @@ public class Activity_view extends JFrame {
 		scrollPane_2.setViewportView(memberList);
 		
 		//Initialize and set Buttons
-		JButton btnCancel = new JButton("Cancel");
+		JButton btnCancel = new JButton("Close");
 		btnCancel.setBounds(64, 419, 89, 23);
 		contentPane.add(btnCancel);
 		

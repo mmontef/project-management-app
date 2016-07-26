@@ -34,7 +34,7 @@ public class Activity_form extends JFrame {
 		// Initialize JFrame Settings
 		setTitle("ACTIVITY CREATION");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 266, 455);
+        setBounds(100, 100, 426, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		setContentPane(contentPane);
@@ -42,50 +42,50 @@ public class Activity_form extends JFrame {
 
         // Create and add Name Field
         activityLabelField = new JTextField();
-        activityLabelField.setBounds(116, 120, 58, 20);
+        activityLabelField.setBounds(226, 120, 150, 20);
         contentPane.add(activityLabelField);
         activityLabelField.setColumns(10);
 
 		// Create and add Description Field
 		descriptionField = new JTextField();
-		descriptionField.setBounds(116, 23, 124, 20);
+		descriptionField.setBounds(226, 23, 150, 20);
 		descriptionField.setColumns(10);
 		contentPane.add(descriptionField);
 
 		// Create and add all Labels
         JLabel lblLabel = new JLabel("Name");
-        lblLabel.setBounds(21, 26, 160, 14);
+        lblLabel.setBounds(64, 123, 150, 14);
         contentPane.add(lblLabel);
 
 		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(21, 123, 160, 14);
+        lblDescription.setBounds(64, 26, 150, 14);
 		contentPane.add(lblDescription);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
-		lblStart.setBounds(21, 64, 170, 14);
+        lblStart.setBounds(64, 64, 150, 14);
 		contentPane.add(lblStart);
 
 		JLabel lblEnd = new JLabel("End Date (DD-MM-YYYY)");
-		lblEnd.setBounds(21, 94, 170, 14);
+        lblEnd.setBounds(64, 94, 150, 14);
 		contentPane.add(lblEnd);
 
 		JLabel lblDependencies = new JLabel("Dependencies");
-		lblDependencies.setBounds(21, 157, 160, 14);
+        lblDependencies.setBounds(64, 193, 150, 14);
 		contentPane.add(lblDependencies);
 
 		JLabel lblResources = new JLabel("Resources");
-		lblResources.setBounds(21, 267, 160, 14);
+        lblResources.setBounds(64, 293, 150, 14);
 		contentPane.add(lblResources);
 
 		// Create and add all text Fields
 		startField = new JTextField();
-		startField.setBounds(116, 61, 124, 20);
+		startField.setBounds(226, 61, 124, 20);
 		contentPane.add(startField);
 		startField.setColumns(10);
 
 		// Create and add all text Fields
 		endField = new JTextField();
-		endField.setBounds(116, 91, 124, 20);
+		endField.setBounds(226, 91, 124, 20);
 		contentPane.add(endField);
 		endField.setColumns(10);
 
@@ -108,7 +108,7 @@ public class Activity_form extends JFrame {
 		// Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollPane_1.setBounds(116, 157, 101, 88);
+		scrollPane_1.setBounds(226, 175, 101, 88);
 		scrollPane_1.setViewportView(selectionList);
 
 		contentPane.add(scrollPane_1);
@@ -122,18 +122,18 @@ public class Activity_form extends JFrame {
 		// Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollPane_2.setBounds(116, 267, 101, 88);
+		scrollPane_2.setBounds(226, 285, 101, 88);
 		scrollPane_2.setViewportView(memberList);
 
 		contentPane.add(scrollPane_2);
 
 		// Initialize and set Buttons
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(28, 372, 89, 23);
+		btnCancel.setBounds(74, 400, 89, 23);
 		contentPane.add(btnCancel);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(138, 372, 89, 23);
+		btnSave.setBounds(226, 400, 89, 23);
 		contentPane.add(btnSave);
 
 		// Add and define ActionListeners to the buttons

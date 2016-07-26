@@ -41,34 +41,45 @@ public class Activity_edit extends JFrame {
 		contentPane.setLayout(null);
 
 		// Create and add Description Field
+
+        activityLabelField = new JTextField(DataResource.selectedActivity.getLabel());
+        activityLabelField.setBounds(226, 120, 124, 20);
+        contentPane.add(activityLabelField);
+        activityLabelField.setColumns(10);
+
 		descriptionField = new JTextField(DataResource.selectedActivity.getDescription());
 		descriptionField.setBounds(226, 23, 124, 20);
 		descriptionField.setColumns(10);
 		contentPane.add(descriptionField);
 
 		// Create and add all Labels
+
+        JLabel lblLabel = new JLabel("Name");
+        lblLabel.setBounds(64, 123, 150, 14);
+        contentPane.add(lblLabel);
+
+
+
 		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(64, 26, 124, 14);
+        lblDescription.setBounds(64, 26, 150, 14);
 		contentPane.add(lblDescription);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
-		lblStart.setBounds(64, 64, 124, 14);
+        lblStart.setBounds(64, 64, 150, 14);
 		contentPane.add(lblStart);
 
 		JLabel lblEnd = new JLabel("End Date (DD-MM-YYYY)");
-		lblEnd.setBounds(64, 94, 124, 14);
+        lblEnd.setBounds(64, 94, 150, 14);
 		contentPane.add(lblEnd);
 
-		JLabel lblLabel = new JLabel("Label");
-		lblLabel.setBounds(64, 123, 46, 14);
-		contentPane.add(lblLabel);
+
 
 		JLabel lblDependencies = new JLabel("Dependencies");
-		lblDependencies.setBounds(64, 193, 80, 14);
+        lblDependencies.setBounds(64, 193, 150, 14);
 		contentPane.add(lblDependencies);
 
 		JLabel lblResources = new JLabel("Resources");
-		lblResources.setBounds(64, 293, 80, 14);
+        lblResources.setBounds(64, 293, 150, 14);
 		contentPane.add(lblResources);
 
 		// Create and add all text Fields
@@ -84,10 +95,7 @@ public class Activity_edit extends JFrame {
 		contentPane.add(endField);
 		endField.setColumns(10);
 
-		activityLabelField = new JTextField(DataResource.selectedActivity.getLabel());
-		activityLabelField.setBounds(226, 120, 58, 20);
-		contentPane.add(activityLabelField);
-		activityLabelField.setColumns(10);
+
 
 		// Create an array of the current Activities
 		int activityCount = DataResource.selectedProject.getActivityList().size();
@@ -171,7 +179,7 @@ public class Activity_edit extends JFrame {
 		contentPane.add(btnSave);
 
 		JLabel lblDoYouWant = new JLabel("Do you want to delete?");
-		lblDoYouWant.setBounds(64, 471, 124, 23);
+		lblDoYouWant.setBounds(64, 471, 150, 23);
 		contentPane.add(lblDoYouWant);
 
 		JButton btnDelete = new JButton("Delete");
