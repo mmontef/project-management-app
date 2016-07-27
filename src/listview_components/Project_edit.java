@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 import saver_loader.DataResource;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -122,7 +124,7 @@ public class Project_edit extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveAction();
-				disposeWindow();
+				
 			}
 		});
 		
@@ -140,7 +142,29 @@ public class Project_edit extends JFrame {
 		
 	private void saveAction () {
 
-		ProjectController.editProject(nameField.getText(), descriptionField.getText(), Double.parseDouble(BudgetField.getText()));
+		try
+		{
+			double budget = Double.parseDouble(BudgetField.getText());
+			if (!nameField.getText().isEmpty() && !descriptionField.getText().isEmpty() && budget > 0)
+			{
+				ProjectController.editProject(nameField.getText(), descriptionField.getText(), Double.parseDouble(BudgetField.getText()));	
+				disposeWindow();
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(new JFrame(),
+	                    "Please Fill in all values correctly",
+	                    "Values are incorrect format or missing values",
+	                    JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		catch (Exception exception)
+		{
+			JOptionPane.showMessageDialog(new JFrame(),
+                    "Budget must be numeric",
+                    "Budget must be numeric",
+                    JOptionPane.WARNING_MESSAGE);
+		}
     }
 	
 	private void disposeWindow(){

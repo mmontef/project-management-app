@@ -74,7 +74,7 @@ public class Project_view extends JFrame {
 		contentPane.add(BudgetField);
 
 		// Initialize and cancel Buttons
-		JButton btnCancel = new JButton("Cancel");
+		JButton btnCancel = new JButton("Close");
 		btnCancel.setBounds(197, 261, 89, 23);
 		contentPane.add(btnCancel);
 
