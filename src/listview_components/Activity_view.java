@@ -159,7 +159,7 @@ public class Activity_view extends JFrame {
 		scrollPane_2.setViewportView(memberList);
 		
 		//Initialize and set Buttons
-		JButton btnCancel = new JButton("Cancel");
+		JButton btnCancel = new JButton("Close");
 		btnCancel.setBounds(64, 419, 89, 23);
 		contentPane.add(btnCancel);
 		

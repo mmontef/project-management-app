@@ -95,29 +95,29 @@ public class Project_form extends JFrame {
 	}
 		
 	private void saveAction () {
-        try
-        {
-            double budget = Double.parseDouble(BudgetField.getText());
-            if (budget > 0)
-            {
-                ProjectController.addProject(NameField.getText(), DescField.getText(), Double.parseDouble(BudgetField.getText()));
+		try
+		{
+			double budget = Double.parseDouble(BudgetField.getText());
+			if (!NameField.getText().isEmpty() && !DescField.getText().isEmpty() && budget > 0)
+			{
+				ProjectController.addProject(NameField.getText(), DescField.getText(), Double.parseDouble(BudgetField.getText()));
                 this.dispose();
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(new JFrame(),
-                        "Please use valid budget",
-                        "Invalid Values",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        catch (Exception exception)
-        {
-            JOptionPane.showMessageDialog(new JFrame(),
-                    "Please use valid values",
-                    "Invalid Values",
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(new JFrame(),
+	                    "Please Fill in all values correctly",
+	                    "Values are incorrect format or missing values",
+	                    JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		catch (Exception exception)
+		{
+			JOptionPane.showMessageDialog(new JFrame(),
+                    "Budget must be numeric",
+                    "Budget must be numeric",
                     JOptionPane.WARNING_MESSAGE);
-        }
+		}
 
     }
 	

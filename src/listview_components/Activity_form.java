@@ -7,7 +7,10 @@ import saver_loader.DataResource;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -40,7 +43,7 @@ public class Activity_form extends JFrame {
 		
 		// Create and add Name Field
 		activityLabelField = new JTextField();
-		activityLabelField.setBounds(216, 23, 58, 20);
+		activityLabelField.setBounds(216, 23, 124, 20);
 		contentPane.add(activityLabelField);
 		activityLabelField.setColumns(10);
 
@@ -146,31 +149,43 @@ public class Activity_form extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-                try
-                {
-                    if (!descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
-                    {
-                        ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
+				try
+				{
+					DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+					Date start = dateFormatter.parse(startField.getText());
+					Date end = dateFormatter.parse(endField.getText());
+					
+					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
+					{
+						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
                         disposeWindow();
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(new JFrame(),
-                                "Please use valid values",
-                                "Invalid Values",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    JOptionPane.showMessageDialog(new JFrame(),
-                            "Please use valid values",
-                            "Invalid Values",
+					}
+					else
+					{
+						if (start.after(end))
+		                {
+		                    JOptionPane.showMessageDialog(new JFrame(),
+		                            "End date must be AFTER start date",
+		                            "Incorrect Dates",
+		                            JOptionPane.WARNING_MESSAGE);
+		                }
+		                else
+		                {
+		                    JOptionPane.showMessageDialog(new JFrame(),
+		                            "Please Fill in all values correctly",
+		                            "Values are incorrect format or missing",
+		                            JOptionPane.WARNING_MESSAGE);
+		                }
+					}
+					
+				}
+				catch (Exception exception)
+				{
+					JOptionPane.showMessageDialog(new JFrame(),
+                            "Please Fill in all values correctly",
+                            "Values are incorrect format or missing",
                             JOptionPane.WARNING_MESSAGE);
-                }
-
-
-
+				}
 			}
 		});
 
