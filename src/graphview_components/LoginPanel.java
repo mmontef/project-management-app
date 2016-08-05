@@ -77,6 +77,8 @@ public class LoginPanel extends JPanel{
 		transparent.setOpaque(false);
 		this.add(transparent, c);
 		
+		c = new GridBagConstraints();
+		
 		c.weighty = 1;
 		c.weightx = 1;
 		c.gridheight=1;
@@ -84,25 +86,37 @@ public class LoginPanel extends JPanel{
 		c.gridy = 0;
 		this.add(title, c);
 		
+		c = new GridBagConstraints();
+		
 		c.weighty=0.25;
 		c.gridy = 1;
 		this.add(username, c);
+		
+		c = new GridBagConstraints();
 		
 		c.gridy = 2;
 		usernameField.setColumns(15);
 		this.add(usernameField, c);
 		
+		c = new GridBagConstraints();
+		
 		c.gridy = 3;		
 		this.add(password, c);
+		
+		c = new GridBagConstraints();
 		
 		c.gridy = 4;
 		passwordField.setColumns(15);
 		this.add(passwordField, c);
+		
+		c = new GridBagConstraints();
         passwordField.addActionListener(new EnterListener());
 		
 		c.gridy = 5;
 		loginButton.addActionListener(new ButtonListener());
 		this.add(loginButton, c);
+		
+		c = new GridBagConstraints();
 		
 		c.weighty = 1;
 		c.gridy = 6;
