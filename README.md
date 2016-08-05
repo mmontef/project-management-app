@@ -1,11 +1,33 @@
 
 Project Management App
 
+Dependencies
+
+Maven:
+
+Maven handles all the other dependencies as well as building the jar file
+
+Make sure maven plugin is installed in eclipse:
+
+if you can right click the project, run as -> maven install, then maven is already installed, otherwise:
+
+Open Eclipse
+Go to Help -> Eclipse Marketplace
+Search by Maven
+Click "Install" button at "Maven Integration for Eclipse" section
+Follow the instruction step by step
+
 ******
 
-Standalone File is executable from working directory (where it is currently located)
+To build the jar file:
 
-ProjectManager.jar
+right click the project, run as -> maven install
+
+The executable jar can be run by the command
+
+java -jar target/project-management-app-0.0.1-SNAPSHOT.jar
+
+or whatever the jar is currently named
 
 ******
 
@@ -18,13 +40,6 @@ Alternate login:
 
 username: davedm
 pass: abc
-
-This program includes the following libraries. They should be added automatically but if there are any errors, you can find them in the working directory.
-
-jgrapht-ext-0.9.2-uber
-
-sqlite-jdbc-3.8.11.2
-
 
 ******
 
