@@ -427,4 +427,8 @@ public class Activities {
 	public int getDepth() {
 		return this.depth;
 	}
+	
+	public String toString() {
+		return "ES: " + this.earliestStart + " EF: " + this.earliestFinish + " Duration: " + this.getDuration() + " LS: " + this.latestStart + " LF: " + this.latestFinish + " Float: " + this.activityFloat;
+	}
 }

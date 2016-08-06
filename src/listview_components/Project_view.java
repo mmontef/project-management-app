@@ -16,6 +16,7 @@ import javax.swing.border.BevelBorder;
 
 import org.jfree.ui.RefineryUtilities;
 
+import graphview_components.CriticalPathChart;
 import graphview_components.GanttChart;
 
 import javax.swing.JButton;
@@ -81,14 +82,26 @@ public class Project_view extends JFrame {
         if (DataResource.currentUser.getType() == UserType.MANAGER)
         {
             JButton btnGantt = new JButton("Generate Gantt");
+            JButton btnCrit = new JButton("Critical Path Analysis");
             btnGantt.setBounds(46, 261, 89, 23);
+            btnCrit.setBounds(46, 285, 100, 23);
             contentPane.add(btnGantt);
+            contentPane.add(btnCrit);
 
             btnGantt.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     ganttAction();
+                    disposeWindow();
+                }
+            });
+            
+            btnCrit.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    criticalPathAction();
                     disposeWindow();
                 }
             });
@@ -120,6 +133,15 @@ public class Project_view extends JFrame {
 	
 	private void ganttAction() {
 		final GanttChart chart = new GanttChart(DataResource.selectedProject.getProjectName());
+		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		chart.pack();
+		RefineryUtilities.centerFrameOnScreen(chart);
+		chart.setVisible(true);
+	}
+	
+	private void criticalPathAction() {
+		DataResource.selectedProject.calculateTimes();
+		final CriticalPathChart chart = new CriticalPathChart(DataResource.selectedProject.getActivityGraph(), DataResource.selectedProject.getProjectName());
 		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		chart.pack();
 		RefineryUtilities.centerFrameOnScreen(chart);
