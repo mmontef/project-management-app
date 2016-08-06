@@ -677,8 +677,51 @@ public class Projects {
 		
 	}
 	
-	private void performBackwardPass(Activities[] siblingNodes) {
-		return;
+	// performs backward pass calculations on the current activity graph
+	private void performBackwardPass() {
+		Activities[] nodes = (Activities[]) getActivitySet().toArray();
+		
+		// node index
+		int i = 0;
+		
+		// iterate over all the nodes
+		while(true) {
+			
+			//check if the current node can be processed
+			for (int currentDepth = maxDepth; currentDepth >= 0; currentDepth--) {
+				
+				// checks if the node resides on the current level
+				if(nodes[i].getDepth() == currentDepth) {
+					
+					// check if the node is the last activity
+					if (this.activityGraph.outDegreeOf(nodes[i]) == 0) {
+						setLS(nodes[i], nodes[i].getEarliestStart());
+						setLF(nodes[i], nodes[i].getEarliestFinish());
+						setFloat(nodes[i], 0);
+					}
+					// otherwise process it
+					else {
+						Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(nodes[i]);
+						double latestFinish = 0;
+						for (DefaultEdge e : outEdges)
+						{
+							Activities currentChildNode = getActivityAfter(e); 
+							if (currentChildNode.getLatestStart() < latestFinish)
+								latestFinish = currentChildNode.getEarliestFinish();
+						}
+						setLF(nodes[i], latestFinish);
+						setLS(nodes[i], latestFinish - nodes[i].getDuration());
+						setFloat(nodes[i], nodes[i].getLatestStart() - nodes[i].getEarliestStart());
+					}
+					
+					//check if the node is the first activity
+					if(this.activityGraph.inDegreeOf(nodes[i]) == 0) {
+						setFloat(nodes[i], 0);
+						break;
+					}
+				}
+			} 
+		}
 	}
 	
 	// some evil recursion muhaha (too lazy to do it non recursive)

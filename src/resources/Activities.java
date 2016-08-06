@@ -424,7 +424,7 @@ public class Activities {
 		this.depth = d;
 	}
 	
-	public int getDepth(int d) {
+	public int getDepth() {
 		return this.depth;
 	}
 }
