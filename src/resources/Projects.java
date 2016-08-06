@@ -43,6 +43,7 @@ public class Projects {
 	private int managerID;
 	private double budget;
 	private String description;
+	private int maxDepth;
 
 	
 	/**
@@ -59,6 +60,7 @@ public class Projects {
 		this.managerID = -1;
 		this.budget = -1;
 		this.description = null;
+		this.maxDepth = -1;
 	}
 	
 	/**
@@ -634,7 +636,8 @@ public class Projects {
 	 */
 	public void calculateTimes() {
 		Set<Activities> vertexList = getActivitySet();
-		//Set<DefaultEdge> edgeList = getArrowSet();		
+		//Set<DefaultEdge> edgeList = getArrowSet();	
+		double earliestFinishOfProject = 0;
 		
 		// forward pass
 		for (Activities i : vertexList)
@@ -655,21 +658,58 @@ public class Projects {
 						highestEF = getActivityBefore(e).getEarliestFinish();
 				}
 				setES(i, highestEF);
-				setEF(i, highestEF + i.getDuration());
+				double latestFinish = highestEF + i.getDuration();
+				setEF(i, latestFinish);
+				
+				if (this.activityGraph.outDegreeOf(i) == 0)
+				{
+					earliestFinishOfProject = latestFinish;
+				}
 			}
 			
 		}
 		
 		// backward pass
-		
 		// float
-		
-		// critial path
-		
+		// critical path
+		// forward pass
 		// max duration
 		
 	}
 	
+	private void performBackwardPass(Activities[] siblingNodes) {
+		return;
+	}
 	
+	// some evil recursion muhaha (too lazy to do it non recursive)
+	// this method iterates through the graph as if it was a tree
+	// it sets the depth of each node 
+	// this will help us traverse the graph properly in forward and backwards passes
+	private void findMaxDepth(Activities currentNode, int currentDepth) {
+		if (this.activityGraph.outDegreeOf(currentNode) == 0) {
+			if(currentDepth > maxDepth) {
+				maxDepth = currentDepth;
+				setActivityDepth(currentNode, maxDepth);
+			}
+			return;
+		}
+		
+		setActivityDepth(currentNode, currentDepth);
+		currentDepth++;
+		
+		Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(currentNode);
+		for (DefaultEdge e : outEdges)
+		{
+			findMaxDepth(getActivityAfter(e), currentDepth); 		
+		}
+	}
 	
+	// sets a nodes depth in relation to the graph tree
+	private void setActivityDepth(Activities node, int depth) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == node.getId())
+				a.setDepth(depth);
+		}
+	}
 }
