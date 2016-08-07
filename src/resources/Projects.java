@@ -714,15 +714,15 @@ public class Projects {
 					// otherwise process it
 					else {
 						Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(nodes[i]);
-						double earliestLatestStart = 0;
+						double minLatestStart = 999999999;
 						for (DefaultEdge e : outEdges) {
 							Activities currentChildNode = getActivityAfter(e);
-							if (currentChildNode.getLatestStart() < earliestLatestStart)
-								earliestLatestStart = currentChildNode.getLatestStart();
+							if (currentChildNode.getLatestStart() < minLatestStart)
+								minLatestStart = currentChildNode.getLatestStart();
 						}
-						setLF(nodes[i], earliestLatestStart);
-						setLS(nodes[i], earliestLatestStart - nodes[i].getDuration());
-						setFloat(nodes[i], nodes[i].getLatestStart() - nodes[i].getEarliestStart());
+						setLF(nodes[i], minLatestStart);
+						setLS(nodes[i], minLatestStart - nodes[i].getDuration());
+						setFloat(nodes[i], minLatestStart - nodes[i].getDuration() - nodes[i].getEarliestStart());
 					}
 
 					//check if the node is the first activity

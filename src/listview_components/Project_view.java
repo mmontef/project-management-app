@@ -83,8 +83,8 @@ public class Project_view extends JFrame {
         {
             JButton btnGantt = new JButton("Generate Gantt");
             JButton btnCrit = new JButton("Critical Path Analysis");
-            btnGantt.setBounds(46, 261, 89, 23);
-            btnCrit.setBounds(46, 285, 100, 23);
+            btnGantt.setBounds(46, 261, 155, 23);
+            btnCrit.setBounds(46, 285, 200, 23);
             contentPane.add(btnGantt);
             contentPane.add(btnCrit);
 
