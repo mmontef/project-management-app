@@ -43,6 +43,7 @@ public class Projects {
 	private int managerID;
 	private double budget;
 	private String description;
+	private int maxDepth;
 
 	
 	/**
@@ -59,6 +60,7 @@ public class Projects {
 		this.managerID = -1;
 		this.budget = -1;
 		this.description = null;
+		this.maxDepth = -1;
 	}
 	
 	/**
@@ -629,47 +631,138 @@ public class Projects {
 	}
 	
 	/**
-	 * This method is to be used in future iterations to calculate and set the approriate variables for each Activity.
+	 * This method is to be used in future iterations to calculate and set the appropriate variables for each Activity.
 	 * Currently calculates earliestStart and earliestFinish for all Activities in the project by doing a forward pass.
 	 */
 	public void calculateTimes() {
-		Set<Activities> vertexList = getActivitySet();
-		//Set<DefaultEdge> edgeList = getArrowSet();		
+		Activities rootNode = null;
 		
-		// forward pass
-		for (Activities i : vertexList)
-		{
-			// check if activity is a "first level" activity, no incoming edges
-			if (this.activityGraph.inDegreeOf(i) == 0)
-			{
-				setES(i, 0);
-				setEF(i, i.getDuration());	
+		for(Activities node : getActivitySet()) {
+			if(this.activityGraph.inDegreeOf(node) == 0) {
+				rootNode = node;
+				break;
 			}
-			else
-			{
-				Set<DefaultEdge> inEdges = getIncomingArrowsOfActivity(i);
-				double highestEF = 0;
-				for (DefaultEdge e : inEdges)
-				{
-					if (getActivityBefore(e).getEarliestFinish() >= highestEF)
-						highestEF = getActivityBefore(e).getEarliestFinish();
-				}
-				setES(i, highestEF);
-				setEF(i, highestEF + i.getDuration());
-			}
-			
 		}
 		
-		// backward pass
+		findMaxDepth(rootNode, 0);
 		
-		// float
+		performForwardPass();
+
+		performBackwardPass();
 		
-		// critial path
-		
+		// critical path
+		// forward pass
 		// max duration
 		
 	}
 	
+	// performs backward pass calculations on the current activity graph
+	private void performForwardPass() {
+		Set<Activities> temp = getActivitySet();
+		Activities[] nodes = temp.toArray(new Activities[temp.size()]);
+			
+		//check if the current node can be processed
+		for (int currentDepth = 0; currentDepth <= maxDepth; currentDepth++) {
+			
+			// for each depth, find the relevant nodes
+			for (int i = 0; i < nodes.length; i++) {
+				// checks if the node resides on the current level
+				if (nodes[i].getDepth() == currentDepth) {
+
+					// check if the node is the first activity
+					if (this.activityGraph.inDegreeOf(nodes[i]) == 0) {
+						setES(nodes[i], 0);
+						setEF(nodes[i], nodes[i].getDuration());	
+					}
+					// otherwise process it
+					else {
+						Set<DefaultEdge> inEdges = getIncomingArrowsOfActivity(nodes[i]);
+						double highestEF = 0;
+						for (DefaultEdge e : inEdges)
+						{
+							Activities currentParentNode = getActivityBefore(e);  
+							if (currentParentNode.getEarliestFinish() >= highestEF)
+								highestEF = currentParentNode.getEarliestFinish();
+						}
+						setES(nodes[i], highestEF);
+						setEF(nodes[i], nodes[i].getEarliestStart() + nodes[i].getDuration());
+					}
+				} 
+			}
+		} 
+	}
 	
+	// performs backward pass calculations on the current activity graph
+	private void performBackwardPass() {
+		Set<Activities> temp = getActivitySet();
+		Activities[] nodes = temp.toArray(new Activities[temp.size()]);
+			
+		//check if the current node can be processed
+		for (int currentDepth = maxDepth; currentDepth >= 0; currentDepth--) {
+			
+			// for each depth, find the relevant nodes
+			for (int i = 0; i < nodes.length; i++) {
+				// checks if the node resides on the current level
+				if (nodes[i].getDepth() == currentDepth) {
+
+					// check if the node is the last activity
+					if (this.activityGraph.outDegreeOf(nodes[i]) == 0) {
+						setLS(nodes[i], nodes[i].getEarliestStart());
+						setLF(nodes[i], nodes[i].getEarliestFinish());
+						setFloat(nodes[i], 0);
+					}
+					// otherwise process it
+					else {
+						Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(nodes[i]);
+						double minLatestStart = 999999999;
+						for (DefaultEdge e : outEdges) {
+							Activities currentChildNode = getActivityAfter(e);
+							if (currentChildNode.getLatestStart() < minLatestStart)
+								minLatestStart = currentChildNode.getLatestStart();
+						}
+						setLF(nodes[i], minLatestStart);
+						setLS(nodes[i], minLatestStart - nodes[i].getDuration());
+						setFloat(nodes[i], minLatestStart - nodes[i].getDuration() - nodes[i].getEarliestStart());
+					}
+
+					//check if the node is the first activity
+					if (this.activityGraph.inDegreeOf(nodes[i]) == 0) {
+						setFloat(nodes[i], 0);
+					}
+				} 
+			}
+		} 
+	}
 	
+	// some evil recursion muhaha (too lazy to do it non recursive)
+	// this method iterates through the graph as if it was a tree
+	// it sets the depth of each node 
+	// this will help us traverse the graph properly in forward and backwards passes
+	private void findMaxDepth(Activities currentNode, int currentDepth) {
+		if (this.activityGraph.outDegreeOf(currentNode) == 0) {
+			if(currentDepth > maxDepth) {
+				maxDepth = currentDepth;
+				setActivityDepth(currentNode, maxDepth);
+			}
+			return;
+		}
+		
+		setActivityDepth(currentNode, currentDepth);
+		currentDepth++;
+		
+		Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(currentNode);
+		for (DefaultEdge e : outEdges)
+		{
+			findMaxDepth(getActivityAfter(e), currentDepth); 		
+		}
+	}
+	
+	// sets a nodes depth in relation to the graph tree
+	private void setActivityDepth(Activities node, int depth) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == node.getId())
+				a.setDepth(depth);
+		}
+	}
 }

@@ -43,6 +43,16 @@
     	<artifactId>jgrapht-core</artifactId>
     	<version>0.9.2</version>
     </dependency>
+    <dependency>
+    	<groupId>org.jgrapht</groupId>
+    	<artifactId>jgrapht-ext</artifactId>
+    	<version>0.9.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>jgraph</groupId>
+    	<artifactId>jgraphaddons</artifactId>
+    	<version>1.0.2</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>

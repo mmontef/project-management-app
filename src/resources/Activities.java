@@ -32,6 +32,7 @@ public class Activities {
 	private Date endDate;
 	private double xpos, ypos;
 	private double earliestStart, earliestFinish, latestStart, latestFinish, activityFloat, maxDuration;
+	private int depth;
 	private ArrayList<Users> memberList;
 
 	/**
@@ -51,6 +52,7 @@ public class Activities {
 		this.activityFloat = -1;
 		this.maxDuration = -1;
 		this.memberList = null;
+		this.depth = -1;
 	}
 
 	/**
@@ -83,6 +85,7 @@ public class Activities {
 		xpos = 0;
 		ypos = 0;
 		this.memberList = new ArrayList<Users>();
+		this.depth = -1;
 	}
 
 	/**
@@ -415,5 +418,17 @@ public class Activities {
 	 */
 	public void setMemberList(ArrayList<Users> memberList) {
 		this.memberList = memberList;
+	}
+
+	public void setDepth(int d) {
+		this.depth = d;
+	}
+	
+	public int getDepth() {
+		return this.depth;
+	}
+	
+	public String toString() {
+		return "ES: " + this.earliestStart + " EF: " + this.earliestFinish + " Duration: " + this.getDuration() + " LS: " + this.latestStart + " LF: " + this.latestFinish + " Float: " + this.activityFloat;
 	}
 }
