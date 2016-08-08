@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.swing.*;
 
 import resources.Activities;
+import resources.TaskProgress;
 import resources.Users;
 import saver_loader.DataResource;
 
@@ -16,7 +17,7 @@ public class ActivityController extends ActivitySubject{
 
 	}
 	
-	public static void addActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members) {
+	public static void addActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget) {
 		try {
 			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 			Date start = dateFormatter.parse(startDate);
@@ -25,7 +26,7 @@ public class ActivityController extends ActivitySubject{
             if (start.before(end))
             {
                 // Create activity and add it to current Project
-                Activities newActivity = new Activities(description, start, end, label);
+                Activities newActivity = new Activities(description, start, end, label, TaskProgress.valueOf(progress), budget);
                 DataResource.selectedProject.addActivity(newActivity);
 
                 // Set the dependencies in the JGraphT
@@ -83,7 +84,7 @@ public class ActivityController extends ActivitySubject{
 		}
 	}
 	
-	public static void editActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members) {		
+	public static void editActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget) {		
 		try {
 			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 			Date start = dateFormatter.parse(startDate);
@@ -97,6 +98,8 @@ public class ActivityController extends ActivitySubject{
                 myActivity.setStartDate(start);
                 myActivity.setEndDate(end);
                 myActivity.setLabel(label);
+                myActivity.setProgress(TaskProgress.valueOf(progress));
+                myActivity.setBudget(budget);
 
                 if (!dependencies.isEmpty()) {
 

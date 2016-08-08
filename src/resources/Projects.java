@@ -41,9 +41,13 @@ public class Projects {
 	private DefaultDirectedGraph<Activities,DefaultEdge> activityGraph;
 	private ArrayList<Activities> activityList;
 	private int managerID;
-	private double budget;
+	private double budget, earnedValue;
 	private String description;
 	private int maxDepth;
+	
+	private int budegetAtCompletion;
+	private double percentScheduledForCompletion;
+	private int actualCosts;
 
 	
 	/**
@@ -61,6 +65,9 @@ public class Projects {
 		this.budget = -1;
 		this.description = null;
 		this.maxDepth = -1;
+		this.budegetAtCompletion = 0;
+		this.percentScheduledForCompletion = 0;
+		this.actualCosts = 0;
 	}
 	
 	/**
@@ -650,10 +657,24 @@ public class Projects {
 
 		performBackwardPass();
 		
+		performEarnedValueAnalysis();
+		
 		// critical path
 		// forward pass
 		// max duration
 		
+	}
+	
+	private void performEarnedValueAnalysis() {
+		for (Activities activity : getActivitySet()) {
+			activity.calculateEarnedValue();
+			this.budegetAtCompletion += activity.getBudget();
+			this.earnedValue += activity.getEarnedValue(); 
+			if(activity.getProgress() == TaskProgress.complete)
+				actualCosts += activity.getBudget();
+		}
+		
+		this.percentScheduledForCompletion = (this.budget / this.budegetAtCompletion);
 	}
 	
 	// performs backward pass calculations on the current activity graph
@@ -764,5 +785,33 @@ public class Projects {
 			if (a.getId() == node.getId())
 				a.setDepth(depth);
 		}
+	}
+	
+	public double getPercentComplete() {
+		return this.earnedValue / this.budegetAtCompletion;
+	}
+	
+	public double getCostVariance() {
+		return this.earnedValue - this.actualCosts;
+	}
+	
+	public double getScheduleVariance() {
+		return this.earnedValue - this.budget;
+	}
+	
+	public double getCostPerformanceIndex() {
+		return this.earnedValue / this.actualCosts;
+	}
+	
+	public double getSchedulePerformanceIndex() {
+		return this.earnedValue / this.budget;
+	}
+	
+	public double getEstimateAtCompletion() {
+		return this.budegetAtCompletion / this.getCostPerformanceIndex();
+	}
+	
+	public double getEstimateToCompletion() { 
+		return this.getEstimateAtCompletion() - this.actualCosts;
 	}
 }

@@ -3,6 +3,7 @@ package listview_components;
 import javax.swing.*;
 
 import resources.Activities;
+import resources.TaskProgress;
 import saver_loader.DataResource;
 
 import java.awt.event.ActionEvent;
@@ -26,6 +27,8 @@ public class Activity_form extends JFrame {
 	private JTextField startField;
 	private JTextField endField;
 	private JTextField activityLabelField;
+	private JComboBox<String> progressField;
+	private JSpinner budgetField;
 
 	private ArrayList<String> dependencies = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -52,6 +55,18 @@ public class Activity_form extends JFrame {
 		descriptionField.setBounds(216, 120, 124, 20);
 		descriptionField.setColumns(10);
 		contentPane.add(descriptionField);
+		
+		// Create and add Progress Field
+		progressField = new JComboBox<String>();
+		for(TaskProgress state : TaskProgress.values())
+			progressField.addItem(state.name());
+		progressField.setBounds(216, 145, 124, 20);
+		contentPane.add(progressField);
+		
+		SpinnerModel spinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		budgetField = new JSpinner(spinModel);
+		budgetField.setBounds(216, 370, 124, 20);
+		contentPane.add(budgetField);
 
 		// Create and add all Labels
 		JLabel lblLabel = new JLabel("Name");
@@ -61,6 +76,14 @@ public class Activity_form extends JFrame {
 		JLabel lblDescription = new JLabel("Description");
 		lblDescription.setBounds(21, 123, 160, 14);
 		contentPane.add(lblDescription);
+		
+		JLabel lblProgress = new JLabel("Progress");
+		lblProgress.setBounds(21, 140, 160, 14);
+		contentPane.add(lblProgress);
+		
+		JLabel lblBudget = new JLabel("Budget");
+		lblBudget.setBounds(21, 370, 160, 14);
+		contentPane.add(lblBudget);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
 		lblStart.setBounds(21, 64, 170, 14);
@@ -107,7 +130,7 @@ public class Activity_form extends JFrame {
 		// Create ScrollPane with list inside and add to Frame
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollPane_1.setBounds(216, 157, 101, 88);
+		scrollPane_1.setBounds(216, 175, 101, 88);
 		scrollPane_1.setViewportView(selectionList);
 
 		contentPane.add(scrollPane_1);
@@ -128,11 +151,11 @@ public class Activity_form extends JFrame {
 
 		// Initialize and set Buttons
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(28, 372, 89, 23);
+		btnCancel.setBounds(28, 400, 89, 23);
 		contentPane.add(btnCancel);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(138, 372, 89, 23);
+		btnSave.setBounds(138, 400, 89, 23);
 		contentPane.add(btnSave);
 
 		// Add and define ActionListeners to the buttons
@@ -157,7 +180,8 @@ public class Activity_form extends JFrame {
 					
 					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
 					{
-						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
+						//TODO: PATRICK add budget
+						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue());
                         disposeWindow();
 					}
 					else
