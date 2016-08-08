@@ -814,4 +814,66 @@ public class Projects {
 	public double getEstimateToCompletion() { 
 		return this.getEstimateAtCompletion() - this.actualCosts;
 	}
+	
+	public double getEarnedValue() {
+		return this.earnedValue;
+	}
+
+	public double getActualCost() {
+		return this.actualCosts;
+	}
+	
+	public String isProjectOnSchedule() {
+		if(this.earnedValue > this.budget)
+			return "Project is ahead of schedule";
+		else if(this.earnedValue < this.budget)
+			return "Project is behind schedule";
+		else
+			return "Project is on schedule";
+	}
+	
+	public String isProjectRespectingBudget() {
+		if(this.earnedValue > this.actualCosts)
+			return "Project is under budget";
+		else if(this.earnedValue < this.actualCosts)
+			return "Project is over budget";
+		else
+			return "Project is respecting the budget";
+	}
+	
+	public String areWeSpendingTooMuch() {
+		if(this.getCostVariance() > 1)
+			return "Less money was spent for the work accomplished than what was planned to be spent";
+		else if(this.getCostVariance() < 1)
+			return "More money was spent for the work accomplished than what was planned";
+		else
+			return "Money spent as planned";
+	}
+	
+	public String areWeOnSchedule() {
+		if(this.getScheduleVariance() > 1)
+			return "Ahead of schedule";
+		else if(this.getScheduleVariance() < 1)
+			return "Behind schedule";
+		else
+			return "On schedule";
+	}
+	
+	public String isCostAsPlanned() {
+		if(this.getCostPerformanceIndex() > 1.2)
+			return "Cost is less than planned";
+		else if(this.getCostPerformanceIndex() < .99)
+			return "Cost is higher than planned";
+		else 
+			return "Cost is as planned";
+	}
+	
+	public String isTheProjectEfficient() {
+		if(this.getSchedulePerformanceIndex() > 1.2)
+			return "Project is running superbly";
+		else if(this.getSchedulePerformanceIndex() < .99)
+			return "Project is inefficient";
+		else 
+			return "Project is running efficiently";
+	}
 }

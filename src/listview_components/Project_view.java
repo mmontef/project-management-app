@@ -17,6 +17,7 @@ import javax.swing.border.BevelBorder;
 import org.jfree.ui.RefineryUtilities;
 
 import graphview_components.CriticalPathChart;
+import graphview_components.EarnedValueAnalysis;
 import graphview_components.GanttChart;
 
 import javax.swing.JButton;
@@ -83,10 +84,13 @@ public class Project_view extends JFrame {
         {
             JButton btnGantt = new JButton("Generate Gantt");
             JButton btnCrit = new JButton("Critical Path Analysis");
+            JButton btnEarned = new JButton("Earned Value Analysis");
             btnGantt.setBounds(46, 261, 155, 23);
             btnCrit.setBounds(46, 285, 200, 23);
+            btnEarned.setBounds(46, 305, 200, 23);
             contentPane.add(btnGantt);
             contentPane.add(btnCrit);
+            contentPane.add(btnEarned);
 
             btnGantt.addActionListener(new ActionListener() {
 
@@ -102,6 +106,15 @@ public class Project_view extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     criticalPathAction();
+                    disposeWindow();
+                }
+            });
+            
+            btnEarned.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    EarnedValueAction();
                     disposeWindow();
                 }
             });
@@ -146,6 +159,15 @@ public class Project_view extends JFrame {
 		chart.pack();
 		RefineryUtilities.centerFrameOnScreen(chart);
 		chart.setVisible(true);
+	}
+	
+	private void EarnedValueAction() {
+		DataResource.selectedProject.calculateTimes();
+		final EarnedValueAnalysis view = new EarnedValueAnalysis(DataResource.selectedProject.getProjectName());
+		view.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		view.pack();
+		RefineryUtilities.centerFrameOnScreen(view);
+		view.setVisible(true);
 	}
 	
 	private void disposeWindow() {
