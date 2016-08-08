@@ -15,6 +15,7 @@ import org.jgraph.graph.DefaultEdge;
 
 import resources.Activities;
 import resources.Projects;
+import resources.TaskProgress;
 import resources.Users;
 
 /**
@@ -298,8 +299,10 @@ public class DataResource {
 					String desc = result5.getString(3);
 					Date start = dateFormatter.parse(result5.getString(4));
 					Date end = dateFormatter.parse(result5.getString(5));
+					TaskProgress progress = TaskProgress.valueOf(result5.getString(6));
+					int activityBudget = result5.getInt(7);
 
-					activityList.add(new Activities(desc, start, end, name, id));
+					activityList.add(new Activities(desc, start, end, name, id, progress, activityBudget));
 				}
 
 			}
@@ -545,24 +548,28 @@ public class DataResource {
 
 				// for each project, insert the list of activities associated
 				// with that project into the database
-				int activityID, dependentActivityID;
-				String actLabel, actDescription, start, end;
+				int activityID, dependentActivityID, activityBudget;
+				String actLabel, actDescription, start, end, progress;
 
 				for (Activities activity : projects.getActivityList()) {
 					activityID = activity.getId();
 					actLabel = activity.getLabel();
 					actDescription = activity.getDescription();
+					progress = activity.getProgress().name();
 					start = dateFormatter.format(activity.getStartDate());
 					end =  dateFormatter.format(activity.getEndDate());
+					activityBudget = activity.getBudget();
 
-					sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate) VALUES "
-							+ "(?, ?, ?, ?, ?)");
+					sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate, progress, budget) VALUES "
+							+ "(?, ?, ?, ?, ?, ?, ?)");
 					ps = connection.prepareStatement(sql);
 					ps.setInt(1, activityID);
 					ps.setString(2, actLabel);
 					ps.setString(3, actDescription);
 					ps.setString(4, start);
 					ps.setString(5, end);
+					ps.setString(6, progress);
+					ps.setInt(7, activityBudget);
 					ps.executeUpdate();
 
 					sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "
@@ -634,19 +641,21 @@ public class DataResource {
 		//save the tuple in Activities table in the database where that id is equal to the selected activity id
 		Connection connection = createConnectionToDB(dataBase);
 		
-		int activityID, dependentActivityID;
+		int activityID, dependentActivityID, activityBudget;
 		
-		String actLabel, actDescription, start, end;
+		String actLabel, actDescription, start, end, progress;
 		
 		activityID = selectedActivity.getId();
 		actLabel = selectedActivity.getLabel();
 		actDescription = selectedActivity.getDescription();
 		start = dateFormatter.format(selectedActivity.getStartDate());
 		end =  dateFormatter.format(selectedActivity.getEndDate());
+		progress = selectedActivity.getProgress().name();
+		activityBudget = selectedActivity.getBudget();
 		
 		
-		String sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate) VALUES "
-				+ "(?, ?, ?, ?, ?)");
+		String sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate, progress, budget) VALUES "
+				+ "(?, ?, ?, ?, ?, ?, ?)");
 		
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -655,6 +664,8 @@ public class DataResource {
 			ps.setString(3, actDescription);
 			ps.setString(4, start);
 			ps.setString(5, end);
+			ps.setString(6, progress);
+			ps.setInt(7, activityBudget);
 			ps.executeUpdate();
 			
 			sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "

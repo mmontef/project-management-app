@@ -23,7 +23,9 @@ public class Activity_view extends JFrame {
 	private JLabel descriptionField;
 	private JLabel startField;
 	private JLabel endField;
-	private JLabel activityLabelField;	
+	private JLabel activityLabelField;
+	private JLabel progressField;
+	private JLabel budgetField;
 	
 	public Activity_view() {
 		
@@ -37,11 +39,19 @@ public class Activity_view extends JFrame {
 		contentPane.setLayout(null);
 		
 		activityLabelField = new JLabel(DataResource.selectedActivity.getLabel());
-		activityLabelField.setBounds(226, 23, 58, 20);
+		activityLabelField.setBounds(226, 23, 124, 20);
 		contentPane.add(activityLabelField);
 		
+		progressField = new JLabel(DataResource.selectedActivity.getProgress().name());
+		progressField.setBounds(226, 40, 124, 20);
+		contentPane.add(progressField);
+		
+		budgetField = new JLabel("" + DataResource.selectedActivity.getBudget());
+		budgetField.setBounds(226, 140, 124, 20);
+		contentPane.add(budgetField);
+		
 		//Create and add Description Field
-		descriptionField = new JLabel( DataResource.selectedActivity.getDescription());
+		descriptionField = new JLabel(DataResource.selectedActivity.getDescription());
 		descriptionField.setBounds(226, 120, 124, 20);
 		contentPane.add(descriptionField);
 
@@ -49,6 +59,14 @@ public class Activity_view extends JFrame {
 		JLabel lblDescription = new JLabel("Description");
 		lblDescription.setBounds(21, 123, 160, 14);
 		contentPane.add(lblDescription);
+		
+		JLabel lblProgress = new JLabel("Progress");
+		lblProgress.setBounds(21, 40, 160, 14);
+		contentPane.add(lblProgress);
+		
+		JLabel lblBudget = new JLabel("Budget");
+		lblBudget.setBounds(21, 140, 160, 14);
+		contentPane.add(lblBudget);
 		
 		JLabel lblDuration = new JLabel("Start Date (DD-MM-YYYY)");
 		lblDuration.setBounds(21, 64, 170, 14);
@@ -107,7 +125,7 @@ public class Activity_view extends JFrame {
 		contentPane.add(scrollPane_1);
 		
 		//Create list with selections
-		JList<String> selectionList = new JList<String>(selections);
+		JList<String> selectionList = new JList<>(selections);
 		selectionList.setBounds(232, 192, 95, 82);
 		
 		//Set the default selections to current dependent activities
@@ -120,7 +138,7 @@ public class Activity_view extends JFrame {
 					selectedIndices[i] = j;
 			}
 		}
-		selectionList.setSelectedIndices(selectedIndices);
+		selectionList.setSelectedIndices(selectedIndices); 
 		contentPane.add(selectionList);
 		
 		//Add to viewport

@@ -41,9 +41,13 @@ public class Projects {
 	private DefaultDirectedGraph<Activities,DefaultEdge> activityGraph;
 	private ArrayList<Activities> activityList;
 	private int managerID;
-	private double budget;
+	private double budget, earnedValue;
 	private String description;
 	private int maxDepth;
+	
+	private int budegetAtCompletion;
+	private double percentScheduledForCompletion;
+	private int actualCosts;
 
 	
 	/**
@@ -61,6 +65,9 @@ public class Projects {
 		this.budget = -1;
 		this.description = null;
 		this.maxDepth = -1;
+		this.budegetAtCompletion = 0;
+		this.percentScheduledForCompletion = 0;
+		this.actualCosts = 0;
 	}
 	
 	/**
@@ -650,10 +657,24 @@ public class Projects {
 
 		performBackwardPass();
 		
+		performEarnedValueAnalysis();
+		
 		// critical path
 		// forward pass
 		// max duration
 		
+	}
+	
+	private void performEarnedValueAnalysis() {
+		for (Activities activity : getActivitySet()) {
+			activity.calculateEarnedValue();
+			this.budegetAtCompletion += activity.getBudget();
+			this.earnedValue += activity.getEarnedValue(); 
+			if(activity.getProgress() == TaskProgress.complete)
+				actualCosts += activity.getBudget();
+		}
+		
+		this.percentScheduledForCompletion = (this.budget / this.budegetAtCompletion);
 	}
 	
 	// performs backward pass calculations on the current activity graph
@@ -764,5 +785,95 @@ public class Projects {
 			if (a.getId() == node.getId())
 				a.setDepth(depth);
 		}
+	}
+	
+	public double getPercentComplete() {
+		return this.earnedValue / this.budegetAtCompletion;
+	}
+	
+	public double getCostVariance() {
+		return this.earnedValue - this.actualCosts;
+	}
+	
+	public double getScheduleVariance() {
+		return this.earnedValue - this.budget;
+	}
+	
+	public double getCostPerformanceIndex() {
+		return this.earnedValue / this.actualCosts;
+	}
+	
+	public double getSchedulePerformanceIndex() {
+		return this.earnedValue / this.budget;
+	}
+	
+	public double getEstimateAtCompletion() {
+		return this.budegetAtCompletion / this.getCostPerformanceIndex();
+	}
+	
+	public double getEstimateToCompletion() { 
+		return this.getEstimateAtCompletion() - this.actualCosts;
+	}
+	
+	public double getEarnedValue() {
+		return this.earnedValue;
+	}
+
+	public double getActualCost() {
+		return this.actualCosts;
+	}
+	
+	public String isProjectOnSchedule() {
+		if(this.earnedValue > this.budget)
+			return "Project is ahead of schedule";
+		else if(this.earnedValue < this.budget)
+			return "Project is behind schedule";
+		else
+			return "Project is on schedule";
+	}
+	
+	public String isProjectRespectingBudget() {
+		if(this.earnedValue > this.actualCosts)
+			return "Project is under budget";
+		else if(this.earnedValue < this.actualCosts)
+			return "Project is over budget";
+		else
+			return "Project is respecting the budget";
+	}
+	
+	public String areWeSpendingTooMuch() {
+		if(this.getCostVariance() > 1)
+			return "Less money was spent for the work accomplished than what was planned to be spent";
+		else if(this.getCostVariance() < 1)
+			return "More money was spent for the work accomplished than what was planned";
+		else
+			return "Money spent as planned";
+	}
+	
+	public String areWeOnSchedule() {
+		if(this.getScheduleVariance() > 1)
+			return "Ahead of schedule";
+		else if(this.getScheduleVariance() < 1)
+			return "Behind schedule";
+		else
+			return "On schedule";
+	}
+	
+	public String isCostAsPlanned() {
+		if(this.getCostPerformanceIndex() > 1.2)
+			return "Cost is less than planned";
+		else if(this.getCostPerformanceIndex() < .99)
+			return "Cost is higher than planned";
+		else 
+			return "Cost is as planned";
+	}
+	
+	public String isTheProjectEfficient() {
+		if(this.getSchedulePerformanceIndex() > 1.2)
+			return "Project is running superbly";
+		else if(this.getSchedulePerformanceIndex() < .99)
+			return "Project is inefficient";
+		else 
+			return "Project is running efficiently";
 	}
 }

@@ -3,11 +3,16 @@ package listview_components;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+
 import resources.Activities;
+import resources.TaskProgress;
 import resources.Users;
 import saver_loader.DataResource;
 
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -23,6 +28,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 
 import domain.ActivityController;
 
@@ -34,6 +40,8 @@ public class Activity_edit extends JFrame {
 	private JTextField startField;
 	private JTextField endField;
 	private JTextField activityLabelField;
+	private JComboBox<String> progressField;
+	private JSpinner budgetField;
 
 	private ArrayList<String> dependencies = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -59,11 +67,32 @@ public class Activity_edit extends JFrame {
 		descriptionField.setBounds(226, 120, 124, 20);
 		descriptionField.setColumns(10);
 		contentPane.add(descriptionField);
+		
+		// Create and add Progress Field
+		progressField = new JComboBox<String>();
+		for(TaskProgress state : TaskProgress.values())
+			progressField.addItem(state.name());
+		progressField.setSelectedItem(DataResource.selectedActivity.getProgress().name());
+		progressField.setBounds(226, 145, 124, 20);
+		contentPane.add(progressField);
+		
+		SpinnerModel spinModel = new SpinnerNumberModel(DataResource.selectedActivity.getBudget(), 0, 9999, 1);  
+		budgetField = new JSpinner(spinModel);
+		budgetField.setBounds(216, 380, 124, 20);
+		contentPane.add(budgetField);
 
 		// Create and add all Labels
 		JLabel lblDescription = new JLabel("Description");
 		lblDescription.setBounds(21, 123, 160, 14);
 		contentPane.add(lblDescription);
+		
+		JLabel lblProgress = new JLabel("Progress");
+		lblProgress.setBounds(21, 140, 160, 14);
+		contentPane.add(lblProgress);
+		
+		JLabel lblBudget = new JLabel("Budget");
+		lblBudget.setBounds(21, 380, 160, 14);
+		contentPane.add(lblBudget);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
 		lblStart.setBounds(21, 64, 170, 14);
@@ -244,7 +273,7 @@ public class Activity_edit extends JFrame {
 					
 					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
 					{
-						ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members);
+						ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue());
 						disposeWindow();
 					}
 					else

@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import resources.Activities;
 import resources.Projects;
+import resources.TaskProgress;
 import resources.UserType;
 import resources.Users;
 
@@ -337,7 +338,7 @@ public class DataResourceTest {
 		}
 		
 		//create the activity to add
-		Activities a = new Activities("New Activity Created", startDate, endDate, "New Label Created", 4 );
+		Activities a = new Activities("New Activity Created", startDate, endDate, "New Label Created", 4, TaskProgress.pending, 0);
 		//add the activity
 		p.addActivity(a);
 		
