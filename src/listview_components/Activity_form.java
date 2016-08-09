@@ -29,6 +29,10 @@ public class Activity_form extends JFrame {
 	private JTextField activityLabelField;
 	private JComboBox<String> progressField;
 	private JSpinner budgetField;
+	private JSpinner mostLikelyTimeField;
+	private JSpinner optimisticTimeField;
+	private JSpinner pessimisticTimeField;
+	private JSpinner targetDateField;
 
 	private ArrayList<String> dependencies = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -38,7 +42,7 @@ public class Activity_form extends JFrame {
 		// Initialize JFrame Settings
 		setTitle("ACTIVITY CREATION");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 420, 455);
+		setBounds(100, 100, 433, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		setContentPane(contentPane);
@@ -67,6 +71,26 @@ public class Activity_form extends JFrame {
 		budgetField = new JSpinner(spinModel);
 		budgetField.setBounds(216, 370, 124, 20);
 		contentPane.add(budgetField);
+		
+		SpinnerModel mSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		mostLikelyTimeField = new JSpinner(mSpinModel);
+		mostLikelyTimeField.setBounds(216, 400, 124, 20);
+		contentPane.add(mostLikelyTimeField);
+		
+		SpinnerModel oSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		optimisticTimeField = new JSpinner(oSpinModel);
+		optimisticTimeField.setBounds(216, 420, 124, 20);
+		contentPane.add(optimisticTimeField);
+		
+		SpinnerModel pSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		pessimisticTimeField = new JSpinner(pSpinModel);
+		pessimisticTimeField.setBounds(216, 440, 124, 20);
+		contentPane.add(pessimisticTimeField);
+		
+		SpinnerModel tdSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		targetDateField = new JSpinner(tdSpinModel);
+		targetDateField.setBounds(216, 460, 124, 20);
+		contentPane.add(targetDateField);
 
 		// Create and add all Labels
 		JLabel lblLabel = new JLabel("Name");
@@ -84,6 +108,22 @@ public class Activity_form extends JFrame {
 		JLabel lblBudget = new JLabel("Budget");
 		lblBudget.setBounds(21, 370, 160, 14);
 		contentPane.add(lblBudget);
+		
+		JLabel lblMostLikelyTime = new JLabel("Most Likely Time");
+		lblMostLikelyTime.setBounds(21, 400, 160, 14);
+		contentPane.add(lblMostLikelyTime);
+		
+		JLabel lblOptimisticTime = new JLabel("Optimistic Time");
+		lblOptimisticTime.setBounds(21, 420, 160, 14);
+		contentPane.add(lblOptimisticTime);
+		
+		JLabel lblPessimisticTime = new JLabel("Pessimistic Time");
+		lblPessimisticTime.setBounds(21, 440, 160, 14);
+		contentPane.add(lblPessimisticTime);
+		
+		JLabel lblTargetDate = new JLabel("Target Date");
+		lblTargetDate.setBounds(21, 460, 160, 14);
+		contentPane.add(lblTargetDate);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
 		lblStart.setBounds(21, 64, 170, 14);
@@ -151,11 +191,11 @@ public class Activity_form extends JFrame {
 
 		// Initialize and set Buttons
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(28, 400, 89, 23);
+		btnCancel.setBounds(28, 480, 89, 23);
 		contentPane.add(btnCancel);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(138, 400, 89, 23);
+		btnSave.setBounds(138, 480, 89, 23);
 		contentPane.add(btnSave);
 
 		// Add and define ActionListeners to the buttons
@@ -180,7 +220,7 @@ public class Activity_form extends JFrame {
 					
 					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
 					{
-						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue());
+						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue(), (int)mostLikelyTimeField.getModel().getValue(), (int)optimisticTimeField.getModel().getValue(), (int)pessimisticTimeField.getModel().getValue(), (int)targetDateField.getModel().getValue());
                         disposeWindow();
 					}
 					else

@@ -19,6 +19,7 @@ import org.jfree.ui.RefineryUtilities;
 import graphview_components.CriticalPathChart;
 import graphview_components.EarnedValueAnalysis;
 import graphview_components.GanttChart;
+import graphview_components.PERTAnalysis;
 
 import javax.swing.JButton;
 
@@ -85,12 +86,15 @@ public class Project_view extends JFrame {
             JButton btnGantt = new JButton("Generate Gantt");
             JButton btnCrit = new JButton("Critical Path Analysis");
             JButton btnEarned = new JButton("Earned Value Analysis");
+            JButton btnPert = new JButton("PERT Analysis");
             btnGantt.setBounds(46, 261, 155, 23);
             btnCrit.setBounds(46, 285, 200, 23);
             btnEarned.setBounds(46, 305, 200, 23);
+            btnPert.setBounds(46, 325, 200, 23);
             contentPane.add(btnGantt);
             contentPane.add(btnCrit);
             contentPane.add(btnEarned);
+            contentPane.add(btnPert);
 
             btnGantt.addActionListener(new ActionListener() {
 
@@ -115,6 +119,15 @@ public class Project_view extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     EarnedValueAction();
+                    disposeWindow();
+                }
+            });
+            
+            btnPert.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PertAction();
                     disposeWindow();
                 }
             });
@@ -154,6 +167,7 @@ public class Project_view extends JFrame {
 	
 	private void criticalPathAction() {
 		DataResource.selectedProject.calculateTimes();
+		DataResource.selectedProject.setGraphStyle(true);
 		final CriticalPathChart chart = new CriticalPathChart(DataResource.selectedProject.getActivityGraph(), DataResource.selectedProject.getProjectName());
 		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		chart.pack();
@@ -168,6 +182,16 @@ public class Project_view extends JFrame {
 		view.pack();
 		RefineryUtilities.centerFrameOnScreen(view);
 		view.setVisible(true);
+	}
+	
+	private void PertAction() {
+		DataResource.selectedProject.calculateTimes();
+		DataResource.selectedProject.setGraphStyle(false);
+		final PERTAnalysis chart = new PERTAnalysis(DataResource.selectedProject.getActivityGraph(), DataResource.selectedProject.getProjectName());
+		chart.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		chart.pack();
+		RefineryUtilities.centerFrameOnScreen(chart);
+		chart.setVisible(true);
 	}
 	
 	private void disposeWindow() {

@@ -301,8 +301,12 @@ public class DataResource {
 					Date end = dateFormatter.parse(result5.getString(5));
 					TaskProgress progress = TaskProgress.valueOf(result5.getString(6));
 					int activityBudget = result5.getInt(7);
+					int mTime = result5.getInt(8);
+					int oTime = result5.getInt(9);
+					int pTime = result5.getInt(10);
+					int targetDate = result5.getInt(11);
 
-					activityList.add(new Activities(desc, start, end, name, id, progress, activityBudget));
+					activityList.add(new Activities(desc, start, end, name, id, progress, activityBudget, mTime, oTime, pTime, targetDate));
 				}
 
 			}
@@ -559,9 +563,13 @@ public class DataResource {
 					start = dateFormatter.format(activity.getStartDate());
 					end =  dateFormatter.format(activity.getEndDate());
 					activityBudget = activity.getBudget();
+					int mTime = activity.getMostLikelyTime(); 
+					int oTime = activity.getOptimisticTime();
+					int pTime = activity.getPessimisticTime();
+					int targetDate = activity.getTargetDate();
 
-					sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate, progress, budget) VALUES "
-							+ "(?, ?, ?, ?, ?, ?, ?)");
+					sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate, progress, budget, most_likely, optimistic, pessimistic, target_date) VALUES "
+							+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					ps = connection.prepareStatement(sql);
 					ps.setInt(1, activityID);
 					ps.setString(2, actLabel);
@@ -570,6 +578,10 @@ public class DataResource {
 					ps.setString(5, end);
 					ps.setString(6, progress);
 					ps.setInt(7, activityBudget);
+					ps.setInt(8, mTime);
+					ps.setInt(9, oTime);
+					ps.setInt(10, pTime);
+					ps.setInt(11, targetDate);
 					ps.executeUpdate();
 
 					sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "
@@ -652,10 +664,14 @@ public class DataResource {
 		end =  dateFormatter.format(selectedActivity.getEndDate());
 		progress = selectedActivity.getProgress().name();
 		activityBudget = selectedActivity.getBudget();
+		int mTime = selectedActivity.getMostLikelyTime();
+		int oTime = selectedActivity.getOptimisticTime();
+		int pTime = selectedActivity.getPessimisticTime();
+		int targetDate = selectedActivity.getTargetDate();
 		
 		
-		String sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate, progress, budget) VALUES "
-				+ "(?, ?, ?, ?, ?, ?, ?)");
+		String sql = ("INSERT OR REPLACE INTO activities(id, label, description, startdate, endate, progress, budget, most_likely, optimistic, pessimistic, target_date) VALUES "
+				+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
@@ -666,6 +682,10 @@ public class DataResource {
 			ps.setString(5, end);
 			ps.setString(6, progress);
 			ps.setInt(7, activityBudget);
+			ps.setInt(8, mTime);
+			ps.setInt(9, oTime);
+			ps.setInt(10, pTime);
+			ps.setInt(11, targetDate);
 			ps.executeUpdate();
 			
 			sql = ("INSERT OR REPLACE INTO activity_project_relationships(project_id, activity_id) VALUES "

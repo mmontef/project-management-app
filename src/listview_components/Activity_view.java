@@ -3,6 +3,9 @@ package listview_components;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 import resources.Activities;
 import resources.Users;
@@ -26,6 +29,10 @@ public class Activity_view extends JFrame {
 	private JLabel activityLabelField;
 	private JLabel progressField;
 	private JLabel budgetField;
+	private JLabel mostLikelyTimeField;
+	private JLabel optimisticTimeField;
+	private JLabel pessimisticTimeField;
+	private JLabel targetDateField;
 	
 	public Activity_view() {
 		
@@ -49,6 +56,22 @@ public class Activity_view extends JFrame {
 		budgetField = new JLabel("" + DataResource.selectedActivity.getBudget());
 		budgetField.setBounds(226, 140, 124, 20);
 		contentPane.add(budgetField);
+		  
+		mostLikelyTimeField = new JLabel("" + DataResource.selectedActivity.getMostLikelyTime());
+		mostLikelyTimeField.setBounds(216, 400, 124, 20);
+		contentPane.add(mostLikelyTimeField);
+		
+		optimisticTimeField = new JLabel("" + DataResource.selectedActivity.getOptimisticTime());
+		optimisticTimeField.setBounds(216, 420, 124, 20);
+		contentPane.add(optimisticTimeField);
+		
+		pessimisticTimeField = new JLabel("" + DataResource.selectedActivity.getPessimisticTime());
+		pessimisticTimeField.setBounds(216, 440, 124, 20);
+		contentPane.add(pessimisticTimeField);
+		
+		targetDateField = new JLabel("" + DataResource.selectedActivity.getTargetDate());
+		targetDateField.setBounds(216, 460, 124, 20);
+		contentPane.add(targetDateField);
 		
 		//Create and add Description Field
 		descriptionField = new JLabel(DataResource.selectedActivity.getDescription());
@@ -67,6 +90,22 @@ public class Activity_view extends JFrame {
 		JLabel lblBudget = new JLabel("Budget");
 		lblBudget.setBounds(21, 140, 160, 14);
 		contentPane.add(lblBudget);
+		
+		JLabel lblMostLikelyTime = new JLabel("Most Likely Time");
+		lblMostLikelyTime.setBounds(21, 400, 160, 14);
+		contentPane.add(lblMostLikelyTime);
+		
+		JLabel lblOptimisticTime = new JLabel("Optimistic Time");
+		lblOptimisticTime.setBounds(21, 420, 160, 14);
+		contentPane.add(lblOptimisticTime);
+		
+		JLabel lblPessimisticTime = new JLabel("Pessimistic Time");
+		lblPessimisticTime.setBounds(21, 440, 160, 14);
+		contentPane.add(lblPessimisticTime);
+		
+		JLabel lblTargetDate = new JLabel("Target");
+		lblTargetDate.setBounds(21, 460, 160, 14);
+		contentPane.add(lblTargetDate);
 		
 		JLabel lblDuration = new JLabel("Start Date (DD-MM-YYYY)");
 		lblDuration.setBounds(21, 64, 170, 14);
@@ -178,7 +217,7 @@ public class Activity_view extends JFrame {
 		
 		//Initialize and set Buttons
 		JButton btnCancel = new JButton("Close");
-		btnCancel.setBounds(64, 419, 89, 23);
+		btnCancel.setBounds(250, 460, 89, 23);
 		contentPane.add(btnCancel);
 		
 		//Add and define ActionListeners to the buttons

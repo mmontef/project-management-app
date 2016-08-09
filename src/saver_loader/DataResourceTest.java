@@ -338,7 +338,7 @@ public class DataResourceTest {
 		}
 		
 		//create the activity to add
-		Activities a = new Activities("New Activity Created", startDate, endDate, "New Label Created", 4, TaskProgress.pending, 0);
+		Activities a = new Activities("New Activity Created", startDate, endDate, "New Label Created", 4, TaskProgress.pending, 0, 0, 0 ,0, 0);
 		//add the activity
 		p.addActivity(a);
 		
