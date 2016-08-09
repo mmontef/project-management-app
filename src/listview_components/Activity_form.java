@@ -180,7 +180,6 @@ public class Activity_form extends JFrame {
 					
 					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
 					{
-						//TODO: PATRICK add budget
 						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue());
                         disposeWindow();
 					}
