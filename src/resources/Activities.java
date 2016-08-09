@@ -33,7 +33,7 @@ public class Activities {
 	private double xpos, ypos;
 	private double earliestStart, earliestFinish, latestStart, latestFinish, activityFloat, maxDuration;
 	private int depth;
-	private int pv;
+	private int pv, mostLikely, optimistic, pessimistic;
 	private double ev;
 	private ArrayList<Users> memberList;
 	private TaskProgress progress;
@@ -59,6 +59,9 @@ public class Activities {
 		this.progress = TaskProgress.pending;
 		this.pv = -1;
 		this.ev = -1;
+		this.mostLikely = -1;
+		this.optimistic = -1;
+		this.pessimistic = -1;
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class Activities {
 	 * @param label
 	 *            value for label
 	 */
-	public Activities(String description, Date startDate, Date endDate, String label, TaskProgress p, int budget) {
+	public Activities(String description, Date startDate, Date endDate, String label, TaskProgress p, int budget, int mTime, int oTime, int pTime) {
 		this.id = ++activityCount;
 		this.description = description;
 		this.startDate = startDate;
@@ -94,6 +97,9 @@ public class Activities {
 		this.depth = -1;
 		this.progress = p;
 		this.pv = budget;
+		this.pessimistic = pTime;
+		this.optimistic = oTime;
+		this.mostLikely = mTime;
 	}
 
 	/**
@@ -114,7 +120,7 @@ public class Activities {
 	 *            value for id
 	 * @param progress2 
 	 */
-	public Activities(String description, Date startDate, Date endDate, String label, int id, TaskProgress p, int budget) {
+	public Activities(String description, Date startDate, Date endDate, String label, int id, TaskProgress p, int budget, int mTime, int oTime, int pTime) {
 		this.id = id;
 		this.description = description;
 		this.description = description;
@@ -132,6 +138,9 @@ public class Activities {
 		this.memberList = new ArrayList<Users>();
 		this.progress = p;
 		this.pv = budget;
+		this.pessimistic = pTime;
+		this.optimistic = oTime;
+		this.mostLikely = mTime;
 	}
 
 	/**
@@ -476,5 +485,37 @@ public class Activities {
 	
 	public double getEarnedValue() {
 		return this.ev;
+	}
+	
+	public void setMostLikelyTime(int time) {
+		this.mostLikely = time;
+	}
+	
+	public int getMostLikelyTime() {
+		return this.mostLikely;
+	}
+	
+	public void setPessimisticTime(int time) {
+		this.pessimistic = time;
+	}
+	
+	public int getPessimisticTime() {
+		return this.pessimistic;
+	}
+	
+	public void setOptimisticTime(int time) {
+		this.optimistic = time;
+	}
+	
+	public int getOptimisticTime() {
+		return this.optimistic;
+	}
+	
+	public double getExpectedDuration () {
+		return (this.optimistic + (4 * this.mostLikely) + this.pessimistic) / 6;
+	}
+	
+	public double getStandardDuration () {
+		return (this.pessimistic - this.optimistic) / 6;
 	}
 }
