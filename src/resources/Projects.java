@@ -694,26 +694,76 @@ public class Projects {
 					// check if the node is the first activity
 					if (this.activityGraph.inDegreeOf(nodes[i]) == 0) {
 						setES(nodes[i], 0);
-						setEF(nodes[i], nodes[i].getDuration());	
+						setEF(nodes[i], nodes[i].getDuration());
+						setExpectedDate(nodes[i], 0);
+						setExpectedFinishDate(nodes[i], nodes[i].getExpectedDuration());
+						setStandardDeviation(nodes[i], 0);
 					}
 					// otherwise process it
 					else {
 						Set<DefaultEdge> inEdges = getIncomingArrowsOfActivity(nodes[i]);
 						double highestEF = 0;
+						double highestExpectedDuration = 0;
+						double lowestExpectedDuration = 99999;
+						double highestStandardDeviation = 0;
 						for (DefaultEdge e : inEdges)
 						{
 							Activities currentParentNode = getActivityBefore(e);  
 							if (currentParentNode.getEarliestFinish() >= highestEF)
 								highestEF = currentParentNode.getEarliestFinish();
+							if (currentParentNode.getExpectedDuration() >= highestExpectedDuration)
+								highestExpectedDuration = currentParentNode.getExpectedDuration();
+							if (currentParentNode.getExpectedDuration() <= lowestExpectedDuration)
+								lowestExpectedDuration = currentParentNode.getExpectedDuration();
+							
+							double currentStd = Math.sqrt(Math.pow(currentParentNode.getStandardDerivation(), 2) + Math.pow(currentParentNode.getStandardDeviationEvent(),2));
+							if(currentStd > highestStandardDeviation)
+								highestStandardDeviation = currentStd;
 						}
 						setES(nodes[i], highestEF);
 						setEF(nodes[i], nodes[i].getEarliestStart() + nodes[i].getDuration());
+						setExpectedDate(nodes[i], highestExpectedDuration);
+						setExpectedStartDate(nodes[i], lowestExpectedDuration);
+						setExpectedFinishDate(nodes[i], lowestExpectedDuration + nodes[i].getExpectedDuration());
+						setStandardDeviation(nodes[i], highestStandardDeviation);
 					}
 				} 
 			}
 		} 
 	}
 	
+	private void setExpectedDate(Activities A, double highestExpectedDuration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setExpectedDate(highestExpectedDuration);
+		}
+	}
+	
+	private void setExpectedStartDate(Activities A, double duration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setExpectedStartDate(duration);
+		}
+	}
+	
+	private void setExpectedFinishDate(Activities A, double duration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setExpectedFinishDate(duration);
+		}
+	}
+	
+	private void setStandardDeviation(Activities A, double duration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setStandardDeviationEvent(duration);
+		}
+	}
+
 	// performs backward pass calculations on the current activity graph
 	private void performBackwardPass() {
 		Set<Activities> temp = getActivitySet();
@@ -876,5 +926,11 @@ public class Projects {
 			return "Project is inefficient";
 		else 
 			return "Project is running efficiently";
+	}
+	
+	public void setGraphStyle(boolean criticalPath) {
+		for(Activities a : this.getActivitySet()) {
+			a.setCriticalPathGraph(criticalPath);
+		}
 	}
 }

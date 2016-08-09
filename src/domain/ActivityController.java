@@ -17,7 +17,7 @@ public class ActivityController extends ActivitySubject{
 
 	}
 	
-	public static void addActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime) {
+	public static void addActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime, int targetDate) {
 		try {
 			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 			Date start = dateFormatter.parse(startDate);
@@ -26,7 +26,7 @@ public class ActivityController extends ActivitySubject{
             if (start.before(end))
             {
                 // Create activity and add it to current Project
-                Activities newActivity = new Activities(description, start, end, label, TaskProgress.valueOf(progress), budget, mTime, oTime, pTime);
+                Activities newActivity = new Activities(description, start, end, label, TaskProgress.valueOf(progress), budget, mTime, oTime, pTime, targetDate);
                 DataResource.selectedProject.addActivity(newActivity);
 
                 // Set the dependencies in the JGraphT
@@ -84,7 +84,7 @@ public class ActivityController extends ActivitySubject{
 		}
 	}
 	
-	public static void editActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime) {		
+	public static void editActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime, int targetDate) {		
 		try {
 			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 			Date start = dateFormatter.parse(startDate);
@@ -103,6 +103,7 @@ public class ActivityController extends ActivitySubject{
                 myActivity.setOptimisticTime(oTime);
                 myActivity.setPessimisticTime(pTime);
                 myActivity.setMostLikelyTime(mTime);
+                myActivity.setTargetDate(targetDate);
 
                 if (!dependencies.isEmpty()) {                	
                 	String firstNode = new String();

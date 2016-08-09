@@ -45,6 +45,7 @@ public class Activity_edit extends JFrame {
 	private JSpinner mostLikelyTimeField;
 	private JSpinner optimisticTimeField;
 	private JSpinner pessimisticTimeField;
+	private JSpinner targetDateField;
 
 	private ArrayList<String> dependencies = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -84,20 +85,25 @@ public class Activity_edit extends JFrame {
 		budgetField.setBounds(216, 380, 124, 20);
 		contentPane.add(budgetField);
 		
-		SpinnerModel mSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		SpinnerModel mSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getMostLikelyTime(), 0, 9999, 1);  
 		mostLikelyTimeField = new JSpinner(mSpinModel);
 		mostLikelyTimeField.setBounds(216, 400, 124, 20);
 		contentPane.add(mostLikelyTimeField);
 		
-		SpinnerModel oSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		SpinnerModel oSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getOptimisticTime(), 0, 9999, 1);  
 		optimisticTimeField = new JSpinner(oSpinModel);
 		optimisticTimeField.setBounds(216, 420, 124, 20);
 		contentPane.add(optimisticTimeField);
 		
-		SpinnerModel pSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		SpinnerModel pSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getPessimisticTime(), 0, 9999, 1);  
 		pessimisticTimeField = new JSpinner(pSpinModel);
 		pessimisticTimeField.setBounds(216, 440, 124, 20);
 		contentPane.add(pessimisticTimeField);
+		
+		SpinnerModel tdSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getTargetDate(), 0, 9999, 1);  
+		targetDateField = new JSpinner(tdSpinModel);
+		targetDateField.setBounds(216, 460, 124, 20);
+		contentPane.add(targetDateField);
 
 		// Create and add all Labels
 		JLabel lblDescription = new JLabel("Description");
@@ -123,6 +129,10 @@ public class Activity_edit extends JFrame {
 		JLabel lblPessimisticTime = new JLabel("Pessimistic Time");
 		lblPessimisticTime.setBounds(21, 440, 160, 14);
 		contentPane.add(lblPessimisticTime);
+		
+		JLabel lblTargetDate = new JLabel("Target Date");
+		lblTargetDate.setBounds(21, 460, 160, 14);
+		contentPane.add(lblTargetDate);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
 		lblStart.setBounds(21, 64, 170, 14);
@@ -303,7 +313,7 @@ public class Activity_edit extends JFrame {
 					
 					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
 					{
-						ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue(), (int)mostLikelyTimeField.getModel().getValue(), (int)optimisticTimeField.getModel().getValue(), (int)pessimisticTimeField.getModel().getValue());
+						ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue(), (int)mostLikelyTimeField.getModel().getValue(), (int)optimisticTimeField.getModel().getValue(), (int)pessimisticTimeField.getModel().getValue(), (int)targetDateField.getModel().getValue());
 						disposeWindow();
 					}
 					else

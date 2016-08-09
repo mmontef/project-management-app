@@ -32,6 +32,7 @@ public class Activity_view extends JFrame {
 	private JLabel mostLikelyTimeField;
 	private JLabel optimisticTimeField;
 	private JLabel pessimisticTimeField;
+	private JLabel targetDateField;
 	
 	public Activity_view() {
 		
@@ -68,6 +69,10 @@ public class Activity_view extends JFrame {
 		pessimisticTimeField.setBounds(216, 440, 124, 20);
 		contentPane.add(pessimisticTimeField);
 		
+		targetDateField = new JLabel("" + DataResource.selectedActivity.getTargetDate());
+		targetDateField.setBounds(216, 460, 124, 20);
+		contentPane.add(targetDateField);
+		
 		//Create and add Description Field
 		descriptionField = new JLabel(DataResource.selectedActivity.getDescription());
 		descriptionField.setBounds(226, 120, 124, 20);
@@ -97,6 +102,10 @@ public class Activity_view extends JFrame {
 		JLabel lblPessimisticTime = new JLabel("Pessimistic Time");
 		lblPessimisticTime.setBounds(21, 440, 160, 14);
 		contentPane.add(lblPessimisticTime);
+		
+		JLabel lblTargetDate = new JLabel("Target");
+		lblTargetDate.setBounds(21, 460, 160, 14);
+		contentPane.add(lblTargetDate);
 		
 		JLabel lblDuration = new JLabel("Start Date (DD-MM-YYYY)");
 		lblDuration.setBounds(21, 64, 170, 14);
@@ -208,7 +217,7 @@ public class Activity_view extends JFrame {
 		
 		//Initialize and set Buttons
 		JButton btnCancel = new JButton("Close");
-		btnCancel.setBounds(64, 460, 89, 23);
+		btnCancel.setBounds(250, 460, 89, 23);
 		contentPane.add(btnCancel);
 		
 		//Add and define ActionListeners to the buttons

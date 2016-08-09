@@ -32,6 +32,7 @@ public class Activity_form extends JFrame {
 	private JSpinner mostLikelyTimeField;
 	private JSpinner optimisticTimeField;
 	private JSpinner pessimisticTimeField;
+	private JSpinner targetDateField;
 
 	private ArrayList<String> dependencies = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -85,6 +86,11 @@ public class Activity_form extends JFrame {
 		pessimisticTimeField = new JSpinner(pSpinModel);
 		pessimisticTimeField.setBounds(216, 440, 124, 20);
 		contentPane.add(pessimisticTimeField);
+		
+		SpinnerModel tdSpinModel = new SpinnerNumberModel(0, 0, 9999, 1);  
+		targetDateField = new JSpinner(tdSpinModel);
+		targetDateField.setBounds(216, 460, 124, 20);
+		contentPane.add(targetDateField);
 
 		// Create and add all Labels
 		JLabel lblLabel = new JLabel("Name");
@@ -114,6 +120,10 @@ public class Activity_form extends JFrame {
 		JLabel lblPessimisticTime = new JLabel("Pessimistic Time");
 		lblPessimisticTime.setBounds(21, 440, 160, 14);
 		contentPane.add(lblPessimisticTime);
+		
+		JLabel lblTargetDate = new JLabel("Target Date");
+		lblTargetDate.setBounds(21, 460, 160, 14);
+		contentPane.add(lblTargetDate);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
 		lblStart.setBounds(21, 64, 170, 14);
@@ -210,7 +220,7 @@ public class Activity_form extends JFrame {
 					
 					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
 					{
-						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue(), (int)mostLikelyTimeField.getModel().getValue(), (int)optimisticTimeField.getModel().getValue(), (int)pessimisticTimeField.getModel().getValue());
+						ActivityController.addActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue(), (int)mostLikelyTimeField.getModel().getValue(), (int)optimisticTimeField.getModel().getValue(), (int)pessimisticTimeField.getModel().getValue(), (int)targetDateField.getModel().getValue());
                         disposeWindow();
 					}
 					else

@@ -22,12 +22,12 @@ import org.jgrapht.ext.JGraphModelAdapter;
 
 import resources.Activities;
 
-public class CriticalPathChart extends JFrame {
+public class PERTAnalysis extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	public CriticalPathChart(DirectedAcyclicGraph<Activities, DefaultEdge> graph, String title) {
-		super("Critical Path Analysis " + title);
+	public PERTAnalysis(DirectedAcyclicGraph<Activities, DefaultEdge> graph, String title) {
+		super("PERT Analysis " + title);
 		
 		JGraphModelAdapter<Activities, DefaultEdge> graphAdapter = new JGraphModelAdapter<Activities, DefaultEdge>( graph );
 	    JGraph jgraph = new JGraph( graphAdapter );
