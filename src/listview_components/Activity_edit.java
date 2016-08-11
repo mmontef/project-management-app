@@ -3,13 +3,20 @@ package listview_components;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+
 import resources.Activities;
+import resources.TaskProgress;
 import resources.Users;
 import saver_loader.DataResource;
 
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -21,6 +28,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+
+import domain.ActivityController;
 
 @SuppressWarnings("serial")
 public class Activity_edit extends JFrame {
@@ -30,6 +40,12 @@ public class Activity_edit extends JFrame {
 	private JTextField startField;
 	private JTextField endField;
 	private JTextField activityLabelField;
+	private JComboBox<String> progressField;
+	private JSpinner budgetField;
+	private JSpinner mostLikelyTimeField;
+	private JSpinner optimisticTimeField;
+	private JSpinner pessimisticTimeField;
+	private JSpinner targetDateField;
 
 	private ArrayList<String> dependencies = new ArrayList<String>();
 	private ArrayList<String> members = new ArrayList<String>();
@@ -39,41 +55,103 @@ public class Activity_edit extends JFrame {
 		// Initialize JFrame Settings
 		setTitle("EDITING");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 426, 562);
+		setBounds(100, 100, 433, 562);
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		activityLabelField = new JTextField(DataResource.selectedActivity.getLabel());
+		activityLabelField.setBounds(226, 23, 124, 20);
+		contentPane.add(activityLabelField);
+		activityLabelField.setColumns(10);
+		
 		// Create and add Description Field
 		descriptionField = new JTextField(DataResource.selectedActivity.getDescription());
-		descriptionField.setBounds(226, 23, 124, 20);
+		descriptionField.setBounds(226, 120, 124, 20);
 		descriptionField.setColumns(10);
 		contentPane.add(descriptionField);
+		
+		// Create and add Progress Field
+		progressField = new JComboBox<String>();
+		for(TaskProgress state : TaskProgress.values())
+			progressField.addItem(state.name());
+		progressField.setSelectedItem(DataResource.selectedActivity.getProgress().name());
+		progressField.setBounds(226, 145, 124, 20);
+		contentPane.add(progressField);
+		
+		SpinnerModel spinModel = new SpinnerNumberModel(DataResource.selectedActivity.getBudget(), 0, 9999, 1);  
+		budgetField = new JSpinner(spinModel);
+		budgetField.setBounds(216, 380, 124, 20);
+		contentPane.add(budgetField);
+		
+		SpinnerModel mSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getMostLikelyTime(), 0, 9999, 1);  
+		mostLikelyTimeField = new JSpinner(mSpinModel);
+		mostLikelyTimeField.setBounds(216, 400, 124, 20);
+		contentPane.add(mostLikelyTimeField);
+		
+		SpinnerModel oSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getOptimisticTime(), 0, 9999, 1);  
+		optimisticTimeField = new JSpinner(oSpinModel);
+		optimisticTimeField.setBounds(216, 420, 124, 20);
+		contentPane.add(optimisticTimeField);
+		
+		SpinnerModel pSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getPessimisticTime(), 0, 9999, 1);  
+		pessimisticTimeField = new JSpinner(pSpinModel);
+		pessimisticTimeField.setBounds(216, 440, 124, 20);
+		contentPane.add(pessimisticTimeField);
+		
+		SpinnerModel tdSpinModel = new SpinnerNumberModel(DataResource.selectedActivity.getTargetDate(), 0, 9999, 1);  
+		targetDateField = new JSpinner(tdSpinModel);
+		targetDateField.setBounds(216, 460, 124, 20);
+		contentPane.add(targetDateField);
 
 		// Create and add all Labels
 		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(64, 26, 124, 14);
+		lblDescription.setBounds(21, 123, 160, 14);
 		contentPane.add(lblDescription);
+		
+		JLabel lblProgress = new JLabel("Progress");
+		lblProgress.setBounds(21, 140, 160, 14);
+		contentPane.add(lblProgress);
+		
+		JLabel lblBudget = new JLabel("Budget");
+		lblBudget.setBounds(21, 380, 160, 14);
+		contentPane.add(lblBudget);
+		
+		JLabel lblMostLikelyTime = new JLabel("Most Likely Time");
+		lblMostLikelyTime.setBounds(21, 400, 160, 14);
+		contentPane.add(lblMostLikelyTime);
+		
+		JLabel lblOptimisticTime = new JLabel("Optimistic Time");
+		lblOptimisticTime.setBounds(21, 420, 160, 14);
+		contentPane.add(lblOptimisticTime);
+		
+		JLabel lblPessimisticTime = new JLabel("Pessimistic Time");
+		lblPessimisticTime.setBounds(21, 440, 160, 14);
+		contentPane.add(lblPessimisticTime);
+		
+		JLabel lblTargetDate = new JLabel("Target Date");
+		lblTargetDate.setBounds(21, 460, 160, 14);
+		contentPane.add(lblTargetDate);
 
 		JLabel lblStart = new JLabel("Start Date (DD-MM-YYYY)");
-		lblStart.setBounds(64, 64, 124, 14);
+		lblStart.setBounds(21, 64, 170, 14);
 		contentPane.add(lblStart);
 
 		JLabel lblEnd = new JLabel("End Date (DD-MM-YYYY)");
-		lblEnd.setBounds(64, 94, 124, 14);
+		lblEnd.setBounds(21, 94, 170, 14);
 		contentPane.add(lblEnd);
 
-		JLabel lblLabel = new JLabel("Label");
-		lblLabel.setBounds(64, 123, 46, 14);
+		JLabel lblLabel = new JLabel("Name");
+		lblLabel.setBounds(21, 26, 160, 14);
 		contentPane.add(lblLabel);
 
 		JLabel lblDependencies = new JLabel("Dependencies");
-		lblDependencies.setBounds(64, 193, 80, 14);
+		lblDependencies.setBounds(21, 157, 160, 14);
 		contentPane.add(lblDependencies);
 
 		JLabel lblResources = new JLabel("Resources");
-		lblResources.setBounds(64, 293, 80, 14);
+		lblResources.setBounds(21, 267, 160, 14);
 		contentPane.add(lblResources);
 
 		// Create and add all text Fields
@@ -88,11 +166,6 @@ public class Activity_edit extends JFrame {
 		endField.setBounds(226, 91, 124, 20);
 		contentPane.add(endField);
 		endField.setColumns(10);
-
-		activityLabelField = new JTextField(DataResource.selectedActivity.getLabel());
-		activityLabelField.setBounds(226, 120, 58, 20);
-		contentPane.add(activityLabelField);
-		activityLabelField.setColumns(10);
 
 		// Create an array of the current Activities
 		int activityCount = DataResource.selectedProject.getActivityList().size();
@@ -168,19 +241,19 @@ public class Activity_edit extends JFrame {
 
 		// Initialize and set Buttons
 		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(64, 419, 89, 23);
+		btnCancel.setBounds(64, 480, 89, 23);
 		contentPane.add(btnCancel);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(238, 419, 89, 23);
+		btnSave.setBounds(238, 480, 89, 23);
 		contentPane.add(btnSave);
 
 		JLabel lblDoYouWant = new JLabel("Do you want to delete?");
-		lblDoYouWant.setBounds(64, 471, 124, 23);
+		lblDoYouWant.setBounds(64, 500, 200, 23);
 		contentPane.add(lblDoYouWant);
 
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.setBounds(238, 471, 89, 23);
+		btnDelete.setBounds(238, 500, 89, 23);
 		contentPane.add(btnDelete);
 
 		// Create the listListener for dependency choices
@@ -215,8 +288,7 @@ public class Activity_edit extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				deleteAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
+				ActivityController.deleteActivity();
 				disposeWindow();
 			}
 		});
@@ -233,71 +305,46 @@ public class Activity_edit extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveAction();
-				ActivityListPane.updateTable(DataResource.selectedProject);
-				disposeWindow();
+				try
+				{
+					DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+					Date start = dateFormatter.parse(startField.getText());
+					Date end = dateFormatter.parse(endField.getText());
+					
+					if (start.before(end) && !descriptionField.getText().isEmpty() && !startField.getText().isEmpty() && !endField.getText().isEmpty() && !activityLabelField.getText().isEmpty())
+					{
+						ActivityController.editActivity(descriptionField.getText(), startField.getText(), endField.getText(), activityLabelField.getText(), dependencies, members, progressField.getSelectedItem().toString(), (int)budgetField.getModel().getValue(), (int)mostLikelyTimeField.getModel().getValue(), (int)optimisticTimeField.getModel().getValue(), (int)pessimisticTimeField.getModel().getValue(), (int)targetDateField.getModel().getValue());
+						disposeWindow();
+					}
+					else
+					{
+						if (start.after(end))
+		                {
+		                    JOptionPane.showMessageDialog(new JFrame(),
+		                            "End date must be AFTER start date",
+		                            "Incorrect Dates",
+		                            JOptionPane.WARNING_MESSAGE);
+		                }
+		                else
+		                {
+		                    JOptionPane.showMessageDialog(new JFrame(),
+		                            "Please Fill in all values correctly",
+		                            "Values are incorrect format or missing",
+		                            JOptionPane.WARNING_MESSAGE);
+		                }
+					}
+					
+				}
+				catch (Exception exception)
+				{
+					JOptionPane.showMessageDialog(new JFrame(),
+                            "Please Fill in all values correctly",
+                            "Values are incorrect format or missing",
+                            JOptionPane.WARNING_MESSAGE);
+				}
+				
 			}
 		});
-
-	}
-
-	private void saveAction() {
-		try {
-			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-			Date start = dateFormatter.parse(startField.getText());
-			Date end = dateFormatter.parse(endField.getText());
-			
-			Activities myActivity = DataResource.selectedActivity;
-
-			myActivity.setDescription(descriptionField.getText());
-			myActivity.setStartDate(start);
-			myActivity.setEndDate(end);
-			myActivity.setLabel(activityLabelField.getText());
-
-			if (!dependencies.isEmpty()) {
-
-				DataResource.selectedProject.resetIncomingEdges(myActivity);
-				ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
-
-				// Set the dependencies in the JGraphT
-				for (String element : dependencies) {
-
-					for (Activities activity : activities) {
-
-						if (activity.getLabel().equals(element))
-							DataResource.selectedProject.addArrow(activity, myActivity);
-					}
-				}
-			}
-
-			if (!members.isEmpty()) {
-				DataResource.resetActivityMembers(DataResource.selectedActivity.getId());
-				ArrayList<Users> users = DataResource.projectMembers;
-				ArrayList<Users> tmp = new ArrayList<Users>();
-
-				for (String element : members) {
-					for (Users user : users) {
-						if (user.getName().equals(element))
-							tmp.add(user);
-					}
-				}
-				DataResource.selectedActivity.setMemberList(tmp);
-			}
-			
-			
-			//******************************SAVE TO DATABASE METHOD*********************************8
-			DataResource.saveActivity(DataResource.selectedActivity);
-			//DataResource.saveToDB();
-		} catch (Exception exception) {
-			System.out.println(exception.getMessage());
-		}
-
-	}
-
-	private void deleteAction() {
-
-		Activities myActivity = DataResource.selectedActivity;
-		DataResource.selectedProject.deleteActivity(myActivity);
 
 	}
 

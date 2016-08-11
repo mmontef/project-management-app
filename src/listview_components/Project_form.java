@@ -1,23 +1,15 @@
 package listview_components;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import resources.Projects;
-import resources.Users;
-import saver_loader.DataResource;
+import javax.swing.*;
 
-import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.awt.Color;
-import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
-import javax.swing.JButton;
+
+import domain.ProjectController;
 
 @SuppressWarnings("serial")
 public class Project_form extends JFrame {
@@ -26,8 +18,6 @@ public class Project_form extends JFrame {
 	private JTextField NameField;
 	private JTextField DescField;
 	private JTextField BudgetField;
-
-	
 
 	/**
 	 * Create the frame.
@@ -105,27 +95,30 @@ public class Project_form extends JFrame {
 	}
 		
 	private void saveAction () {
-		
-		//Initialize A user list and add current user to it
-		ArrayList<Users> userList = new ArrayList<Users>();
-        userList.add(DataResource.currentUser);
-        
-        // Create the date
-        DateFormat df = new SimpleDateFormat("dd/MM/yy");
-        Date dateobj = new Date();
-        String date = df.format(dateobj);
-        
-        
-        //Create a new Project with information from the form, userList, and date
-        Projects newProject = new Projects(NameField.getText(), userList, date,DataResource.currentUser.getID(),
-        		DescField.getText(), Double.parseDouble(BudgetField.getText()));
-        DataResource.projectList.add(newProject);
-        
-        ProjectListPane.updateList();
-        this.dispose();
-        
-        DataResource.saveProject(newProject);
-        //DataResource.saveToDB(); 
+		try
+		{
+			double budget = Double.parseDouble(BudgetField.getText());
+			if (!NameField.getText().isEmpty() && !DescField.getText().isEmpty() && budget > 0)
+			{
+				ProjectController.addProject(NameField.getText(), DescField.getText(), Double.parseDouble(BudgetField.getText()));
+                this.dispose();
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(new JFrame(),
+	                    "Please Fill in all values correctly",
+	                    "Values are incorrect format or missing values",
+	                    JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		catch (Exception exception)
+		{
+			JOptionPane.showMessageDialog(new JFrame(),
+                    "Budget must be numeric",
+                    "Budget must be numeric",
+                    JOptionPane.WARNING_MESSAGE);
+		}
+
     }
 	
 	private void disposeWindow(){

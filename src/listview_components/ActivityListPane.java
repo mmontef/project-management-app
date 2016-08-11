@@ -18,8 +18,10 @@ import resources.Activities;
 import resources.Projects;
 import saver_loader.DataResource;
 
+import domain.IObserver;
+
 @SuppressWarnings("serial")
-public class ActivityListPane extends JPanel implements MouseListener {
+public class ActivityListPane extends JPanel implements MouseListener, IObserver {
 
 	public static JTable table = new JTable();
 	private  DefaultTableModel mod = new DefaultTableModel();
@@ -35,7 +37,7 @@ public class ActivityListPane extends JPanel implements MouseListener {
 		this.setLayout(new BorderLayout());
 		
 		//Set Headers to the Table Model
-		String[] columnHeaders = {"Label" , "Description", "Start Date", "End Date", "Depedencies"};
+		String[] columnHeaders = {"Name" , "Description", "Start Date", "End Date", "Depedencies"};
 		mod.setColumnIdentifiers(columnHeaders);
 		
 		
@@ -43,9 +45,9 @@ public class ActivityListPane extends JPanel implements MouseListener {
 		//Set Basic Table Options
 		table.setModel(mod);
 		table.setFillsViewportHeight(true);
-		table.setFont(table.getFont().deriveFont(fontScalar*30f));
+		table.setFont(table.getFont().deriveFont(fontScalar*25f));
 		table.setRowHeight(35);
-		table.getTableHeader().setFont(table.getFont().deriveFont(40f));
+		table.getTableHeader().setFont(table.getFont().deriveFont(21f));
 		table.addMouseListener(this);
 		table.setRowSelectionAllowed(true);
 		table.setEnabled(true);
@@ -55,7 +57,7 @@ public class ActivityListPane extends JPanel implements MouseListener {
 		JScrollPane scrollpane = new JScrollPane(table);
 		
 		//Set the Title
-		title = new JLabel("               Activity ViewPort");
+		title = new JLabel("Activity ViewPort", JLabel.CENTER);
 		title.setFont(title.getFont().deriveFont(fontScalar*50f));
 		
 		//Add title and Table(scrollpane) to Panel
@@ -100,9 +102,48 @@ public class ActivityListPane extends JPanel implements MouseListener {
 			
 			model.addRow(data);	
 			
-		}
-				
+		}		
 	}
+
+	@Override
+	public void update() {
+		Projects selectedProject = DataResource.selectedProject;
+		
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int rows = model.getRowCount();
+				
+		//Remove Current Previous Rows from the table
+		for (int i = rows - 1; i >= 0; i--) 
+		    model.removeRow(i);
+		
+		//Create an Array of the activities we need to add from the Selected Project
+		int activityCount = selectedProject.getActivityList().size();
+		Activities[] activityArray = new Activities [activityCount];
+		selectedProject.getActivityList().toArray(activityArray);
+		
+		//Add new Rows
+		for(int i = 0; i < activityCount; i++){
+			
+			//-----------The first task is to create a list of dependencies-------
+			Set<DefaultEdge> edgeList=  selectedProject.getIncomingArrowsOfActivity(activityArray[i]);
+			String dependencies = "";
+			
+			if(edgeList.isEmpty())
+			 dependencies = "none";
+			else
+				dependencies = "| ";
+			
+			for(DefaultEdge e: edgeList)
+				dependencies += selectedProject.getActivityBefore(e).getLabel()+ " | ";
+			
+			//Add The rows		
+			Object data[] = {activityArray[i].getLabel(), activityArray[i].getDescription(),
+					DataResource.dateFormatter.format(activityArray[i].getStartDate()), DataResource.dateFormatter.format(activityArray[i].getEndDate()), dependencies}; 
+			
+			model.addRow(data);	
+			
+		}
+	}	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -139,7 +180,5 @@ public class ActivityListPane extends JPanel implements MouseListener {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
 }
 

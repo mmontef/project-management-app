@@ -1,9 +1,12 @@
 package listview_components;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -16,9 +19,10 @@ import javax.swing.event.ListSelectionListener;
 import resources.Projects;
 import saver_loader.DataResource;
 
+import domain.IObserver;
 
 @SuppressWarnings("serial")
-public class ProjectListPane extends JPanel{
+public class ProjectListPane extends JPanel implements IObserver{
 
 	public static JList<String> list;
 	public JScrollPane scrollpane;
@@ -49,6 +53,12 @@ public class ProjectListPane extends JPanel{
 		//Set List variables
 		list.setFont(list.getFont().deriveFont(fontScalar*30f));
 	    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    list.setBackground(Color.decode("#a3b8cc"));
+	    list.setFont(new Font("Monospaced", Font.BOLD, 20));
+	    
+	    //creating a "renderer" to manipulate text positioning
+	    DefaultListCellRenderer renderer =  (DefaultListCellRenderer)list.getCellRenderer();
+	    renderer.setHorizontalAlignment(JLabel.RIGHT);  
 	    
 	    //Add and define Listener for the list
 	    list.addListSelectionListener(new ListSelectionListener() {
@@ -83,14 +93,14 @@ public class ProjectListPane extends JPanel{
 				
 		
 	}
-	
-	public static void updateList(){
-		
+
+	@Override
+	public void update() 
+	{
 		listModel.clear();
 		
 		for(Projects element : DataResource.projectList)
 			listModel.addElement(element.getProjectName());
-		
 	}
 	
 }

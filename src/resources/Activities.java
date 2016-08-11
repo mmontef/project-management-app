@@ -3,6 +3,8 @@ package resources;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.math3.distribution.NormalDistribution;
+
 /**
  * Activities class:
  * 
@@ -32,7 +34,13 @@ public class Activities {
 	private Date endDate;
 	private double xpos, ypos;
 	private double earliestStart, earliestFinish, latestStart, latestFinish, activityFloat, maxDuration;
+	private int depth;
+	private int pv, mostLikely, optimistic, pessimistic;
+	private double ev, standardDeviationEvent, expectedDate, expectedStart, expectedFinish;
+	private int targetDate;
 	private ArrayList<Users> memberList;
+	private TaskProgress progress;
+	private boolean criticalPathGraph;
 
 	/**
 	 * Default Constructor. Sets all values to null or junk values.
@@ -51,6 +59,15 @@ public class Activities {
 		this.activityFloat = -1;
 		this.maxDuration = -1;
 		this.memberList = null;
+		this.depth = -1;
+		this.progress = TaskProgress.pending;
+		this.pv = -1;
+		this.ev = -1;
+		this.mostLikely = -1;
+		this.optimistic = -1;
+		this.pessimistic = -1;
+		this.setTargetDate(-1);
+		this.setCriticalPathGraph(true);
 	}
 
 	/**
@@ -68,7 +85,7 @@ public class Activities {
 	 * @param label
 	 *            value for label
 	 */
-	public Activities(String description, Date startDate, Date endDate, String label) {
+	public Activities(String description, Date startDate, Date endDate, String label, TaskProgress p, int budget, int mTime, int oTime, int pTime, int tDate) {
 		this.id = ++activityCount;
 		this.description = description;
 		this.startDate = startDate;
@@ -83,6 +100,14 @@ public class Activities {
 		xpos = 0;
 		ypos = 0;
 		this.memberList = new ArrayList<Users>();
+		this.depth = -1;
+		this.progress = p;
+		this.pv = budget;
+		this.pessimistic = pTime;
+		this.optimistic = oTime;
+		this.mostLikely = mTime;
+		this.setTargetDate(tDate);
+		this.setCriticalPathGraph(true);
 	}
 
 	/**
@@ -101,8 +126,9 @@ public class Activities {
 	 *            value for label
 	 * @param id
 	 *            value for id
+	 * @param progress2 
 	 */
-	public Activities(String description, Date startDate, Date endDate, String label, int id) {
+	public Activities(String description, Date startDate, Date endDate, String label, int id, TaskProgress p, int budget, int mTime, int oTime, int pTime, int tDate) {
 		this.id = id;
 		this.description = description;
 		this.description = description;
@@ -118,6 +144,13 @@ public class Activities {
 		xpos = 0;
 		ypos = 0;
 		this.memberList = new ArrayList<Users>();
+		this.progress = p;
+		this.pv = budget;
+		this.pessimistic = pTime;
+		this.optimistic = oTime;
+		this.mostLikely = mTime;
+		this.setTargetDate(tDate);
+		this.setCriticalPathGraph(true);
 	}
 
 	/**
@@ -415,5 +448,151 @@ public class Activities {
 	 */
 	public void setMemberList(ArrayList<Users> memberList) {
 		this.memberList = memberList;
+	}
+
+	public void setDepth(int d) {
+		this.depth = d;
+	}
+	
+	public int getDepth() {
+		return this.depth;
+	}
+	
+	public String toString() {
+		if(this.criticalPathGraph)
+			return "ES: " + this.earliestStart + " EF: " + this.earliestFinish + " Duration: " + this.getDuration() + " LS: " + this.latestStart + " LF: " + this.latestFinish + " Float: " + this.activityFloat;
+		else
+			return "Expected Date: " + this.expectedDate + 
+					"| Target Date: " + this.getTargetDate() +
+					"| Standard Derivation Event: " + this.getStandardDeviationEvent() + 
+					"| Expected Duration: " + this.getExpectedDuration() + 
+					"| Standard Deviation: " + this.getStandardDerivation() +
+					"| " + targetDateReachable();
+	}
+
+	public TaskProgress getProgress() {
+		return progress;
+	}
+
+	public void setProgress(TaskProgress progress) {
+		this.progress = progress;
+	}
+
+	public int getBudget() {
+		return pv;
+	}
+
+	public void setBudget(int budget) {
+		this.pv = budget;
+	}
+	
+	public void calculateEarnedValue() {
+		switch(this.getProgress()) {
+		case complete:
+			this.ev = this.pv;
+			break;
+		case started:
+			this.ev = this.pv / 2;
+			break;
+		default:
+			this.ev = 0;
+			break;
+		
+		}
+	}
+	
+	public double getEarnedValue() {
+		return this.ev;
+	}
+	
+	public void setMostLikelyTime(int time) {
+		this.mostLikely = time;
+	}
+	
+	public int getMostLikelyTime() {
+		return this.mostLikely;
+	}
+	
+	public void setPessimisticTime(int time) {
+		this.pessimistic = time;
+	}
+	
+	public int getPessimisticTime() {
+		return this.pessimistic;
+	}
+	
+	public void setOptimisticTime(int time) {
+		this.optimistic = time;
+	}
+	
+	public int getOptimisticTime() {
+		return this.optimistic;
+	}
+	
+	public double getExpectedDuration () {
+		return (this.optimistic + (4 * this.mostLikely) + this.pessimistic) / 6;
+	}
+	
+	public double getStandardDerivation () {
+		return (this.pessimistic - this.optimistic) / 6;
+	}
+	
+	public void setExpectedDate(double highestExpectedDuration) {
+		this.expectedDate = highestExpectedDuration;
+	}
+	
+	public void setExpectedStartDate(double lowestExpectedDuration) {
+		this.expectedStart = lowestExpectedDuration;
+	}
+	
+	public void setExpectedFinishDate(double duration) {
+		this.expectedFinish = duration;
+	}
+
+	public double getStandardDeviationEvent() {
+		return standardDeviationEvent;
+	}
+
+	public void setStandardDeviationEvent(double standardDeviationEvent) {
+		this.standardDeviationEvent = standardDeviationEvent;
+	}
+
+	public int getTargetDate() {
+		return targetDate;
+	}
+
+	public void setTargetDate(int targetDate) {
+		this.targetDate = targetDate;
+	}
+	
+	public String targetDateReachable() {
+		if(this.targetDate > 0)
+			return "This target date can be met with %" + zScoreToPercentage(getZValue()) + " confidence";
+		return "";
+	}
+	
+	public double getZValue() {
+		if (this.targetDate > 0) {
+			return (this.targetDate - this.expectedDate) / this.getStandardDeviationEvent();
+		}
+		
+		return 0;
+	}
+	
+	public static double zScoreToPercentage(double zScore)
+	{
+		double percentile = 0;
+		
+		NormalDistribution dist = new NormalDistribution();
+		percentile = dist.cumulativeProbability(zScore) * 100;
+		return percentile;
+	}
+
+	public boolean isCriticalPathGraph() {
+		return criticalPathGraph;
+	}
+
+	public void setCriticalPathGraph(boolean criticalPathGraph) {
+		this.criticalPathGraph = criticalPathGraph;
 	}
 }

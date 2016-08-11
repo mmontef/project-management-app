@@ -3,6 +3,7 @@ package resources;
 import java.util.Set;
 
 import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
 import saver_loader.DataResource;
@@ -38,11 +39,16 @@ public class Projects {
 	private String projectName;
 	private ArrayList<Users> userList;
 	private String date;
-	private DefaultDirectedGraph<Activities,DefaultEdge> activityGraph;
+	private DirectedAcyclicGraph<Activities,DefaultEdge> activityGraph;
 	private ArrayList<Activities> activityList;
 	private int managerID;
-	private double budget;
+	private double budget, earnedValue;
 	private String description;
+	private int maxDepth;
+	
+	private int budegetAtCompletion;
+	private double percentScheduledForCompletion;
+	private int actualCosts;
 
 	
 	/**
@@ -59,6 +65,10 @@ public class Projects {
 		this.managerID = -1;
 		this.budget = -1;
 		this.description = null;
+		this.maxDepth = -1;
+		this.budegetAtCompletion = 0;
+		this.percentScheduledForCompletion = 0;
+		this.actualCosts = 0;
 	}
 	
 	/**
@@ -79,7 +89,7 @@ public class Projects {
 		this.projectName = projectName;
 		this.userList = userList;
 		this.date = date;
-		this.activityGraph = new DefaultDirectedGraph<Activities,DefaultEdge>(DefaultEdge.class);
+		this.activityGraph = new DirectedAcyclicGraph<Activities,DefaultEdge>(DefaultEdge.class);
 		this.activityList = new ArrayList<Activities>();
 		this.managerID = managerID;
 		this.budget = budget;
@@ -105,7 +115,7 @@ public class Projects {
 		this.projectName = projectName;
 		this.userList = userList;
 		this.date = date;
-		this.activityGraph = new DefaultDirectedGraph<Activities,DefaultEdge>(DefaultEdge.class);
+		this.activityGraph = new DirectedAcyclicGraph<Activities,DefaultEdge>(DefaultEdge.class);
 		this.activityList = new ArrayList<Activities>();
 		this.managerID = managerID;
 		this.budget = budget;
@@ -245,7 +255,7 @@ public class Projects {
 	 * Getter for activityGraph
 	 * @return DefaultDirectedGraph activityGraph
 	 */
-	public DefaultDirectedGraph<Activities, DefaultEdge> getActivityGraph() {
+	public DirectedAcyclicGraph<Activities, DefaultEdge> getActivityGraph() {
 		return activityGraph;
 	}
 
@@ -253,7 +263,7 @@ public class Projects {
 	 * Setter for activityGraph
 	 * @param activityGraph value activityGraph
 	 */
-	public void setActivityGraph(DefaultDirectedGraph<Activities, DefaultEdge> activityGraph) {
+	public void setActivityGraph(DirectedAcyclicGraph<Activities, DefaultEdge> activityGraph) {
 		this.activityGraph = activityGraph;
 	}
 	
@@ -629,47 +639,298 @@ public class Projects {
 	}
 	
 	/**
-	 * This method is to be used in future iterations to calculate and set the approriate variables for each Activity.
+	 * This method is to be used in future iterations to calculate and set the appropriate variables for each Activity.
 	 * Currently calculates earliestStart and earliestFinish for all Activities in the project by doing a forward pass.
 	 */
 	public void calculateTimes() {
-		Set<Activities> vertexList = getActivitySet();
-		//Set<DefaultEdge> edgeList = getArrowSet();		
+		Activities rootNode = null;
 		
-		// forward pass
-		for (Activities i : vertexList)
-		{
-			// check if activity is a "first level" activity, no incoming edges
-			if (this.activityGraph.inDegreeOf(i) == 0)
-			{
-				setES(i, 0);
-				setEF(i, i.getDuration());	
+		for(Activities node : getActivitySet()) {
+			if(this.activityGraph.inDegreeOf(node) == 0) {
+				rootNode = node;
+				break;
 			}
-			else
-			{
-				Set<DefaultEdge> inEdges = getIncomingArrowsOfActivity(i);
-				double highestEF = 0;
-				for (DefaultEdge e : inEdges)
-				{
-					if (getActivityBefore(e).getEarliestFinish() >= highestEF)
-						highestEF = getActivityBefore(e).getEarliestFinish();
-				}
-				setES(i, highestEF);
-				setEF(i, highestEF + i.getDuration());
-			}
-			
 		}
 		
-		// backward pass
+		findMaxDepth(rootNode, 0);
 		
-		// float
+		performForwardPass();
+
+		performBackwardPass();
 		
-		// critial path
+		performEarnedValueAnalysis();
 		
+		// critical path
+		// forward pass
 		// max duration
 		
 	}
 	
+	private void performEarnedValueAnalysis() {
+		for (Activities activity : getActivitySet()) {
+			activity.calculateEarnedValue();
+			this.budegetAtCompletion += activity.getBudget();
+			this.earnedValue += activity.getEarnedValue(); 
+			if(activity.getProgress() == TaskProgress.complete)
+				actualCosts += activity.getBudget();
+		}
+		
+		this.percentScheduledForCompletion = (this.budget / this.budegetAtCompletion);
+	}
 	
+	// performs backward pass calculations on the current activity graph
+	private void performForwardPass() {
+		Set<Activities> temp = getActivitySet();
+		Activities[] nodes = temp.toArray(new Activities[temp.size()]);
+			
+		//check if the current node can be processed
+		for (int currentDepth = 0; currentDepth <= maxDepth; currentDepth++) {
+			
+			// for each depth, find the relevant nodes
+			for (int i = 0; i < nodes.length; i++) {
+				// checks if the node resides on the current level
+				if (nodes[i].getDepth() == currentDepth) {
+
+					// check if the node is the first activity
+					if (this.activityGraph.inDegreeOf(nodes[i]) == 0) {
+						setES(nodes[i], 0);
+						setEF(nodes[i], nodes[i].getDuration());
+						setExpectedDate(nodes[i], 0);
+						setExpectedFinishDate(nodes[i], nodes[i].getExpectedDuration());
+						setStandardDeviation(nodes[i], 0);
+					}
+					// otherwise process it
+					else {
+						Set<DefaultEdge> inEdges = getIncomingArrowsOfActivity(nodes[i]);
+						double highestEF = 0;
+						double highestExpectedDuration = 0;
+						double lowestExpectedDuration = 99999;
+						double highestStandardDeviation = 0;
+						for (DefaultEdge e : inEdges)
+						{
+							Activities currentParentNode = getActivityBefore(e);  
+							if (currentParentNode.getEarliestFinish() >= highestEF)
+								highestEF = currentParentNode.getEarliestFinish();
+							if (currentParentNode.getExpectedDuration() >= highestExpectedDuration)
+								highestExpectedDuration = currentParentNode.getExpectedDuration();
+							if (currentParentNode.getExpectedDuration() <= lowestExpectedDuration)
+								lowestExpectedDuration = currentParentNode.getExpectedDuration();
+							
+							double currentStd = Math.sqrt(Math.pow(currentParentNode.getStandardDerivation(), 2) + Math.pow(currentParentNode.getStandardDeviationEvent(),2));
+							if(currentStd > highestStandardDeviation)
+								highestStandardDeviation = currentStd;
+						}
+						setES(nodes[i], highestEF);
+						setEF(nodes[i], nodes[i].getEarliestStart() + nodes[i].getDuration());
+						setExpectedDate(nodes[i], highestExpectedDuration);
+						setExpectedStartDate(nodes[i], lowestExpectedDuration);
+						setExpectedFinishDate(nodes[i], lowestExpectedDuration + nodes[i].getExpectedDuration());
+						setStandardDeviation(nodes[i], highestStandardDeviation);
+					}
+				} 
+			}
+		} 
+	}
 	
+	private void setExpectedDate(Activities A, double highestExpectedDuration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setExpectedDate(highestExpectedDuration);
+		}
+	}
+	
+	private void setExpectedStartDate(Activities A, double duration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setExpectedStartDate(duration);
+		}
+	}
+	
+	private void setExpectedFinishDate(Activities A, double duration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setExpectedFinishDate(duration);
+		}
+	}
+	
+	private void setStandardDeviation(Activities A, double duration) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == A.getId())
+				a.setStandardDeviationEvent(duration);
+		}
+	}
+
+	// performs backward pass calculations on the current activity graph
+	private void performBackwardPass() {
+		Set<Activities> temp = getActivitySet();
+		Activities[] nodes = temp.toArray(new Activities[temp.size()]);
+			
+		//check if the current node can be processed
+		for (int currentDepth = maxDepth; currentDepth >= 0; currentDepth--) {
+			
+			// for each depth, find the relevant nodes
+			for (int i = 0; i < nodes.length; i++) {
+				// checks if the node resides on the current level
+				if (nodes[i].getDepth() == currentDepth) {
+
+					// check if the node is the last activity
+					if (this.activityGraph.outDegreeOf(nodes[i]) == 0) {
+						setLS(nodes[i], nodes[i].getEarliestStart());
+						setLF(nodes[i], nodes[i].getEarliestFinish());
+						setFloat(nodes[i], 0);
+					}
+					// otherwise process it
+					else {
+						Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(nodes[i]);
+						double minLatestStart = 999999999;
+						for (DefaultEdge e : outEdges) {
+							Activities currentChildNode = getActivityAfter(e);
+							if (currentChildNode.getLatestStart() < minLatestStart)
+								minLatestStart = currentChildNode.getLatestStart();
+						}
+						setLF(nodes[i], minLatestStart);
+						setLS(nodes[i], minLatestStart - nodes[i].getDuration());
+						setFloat(nodes[i], minLatestStart - nodes[i].getDuration() - nodes[i].getEarliestStart());
+					}
+
+					//check if the node is the first activity
+					if (this.activityGraph.inDegreeOf(nodes[i]) == 0) {
+						setFloat(nodes[i], 0);
+					}
+				} 
+			}
+		} 
+	}
+	
+	// some evil recursion muhaha (too lazy to do it non recursive)
+	// this method iterates through the graph as if it was a tree
+	// it sets the depth of each node 
+	// this will help us traverse the graph properly in forward and backwards passes
+	private void findMaxDepth(Activities currentNode, int currentDepth) {
+		if (this.activityGraph.outDegreeOf(currentNode) == 0) {
+			if(currentDepth > maxDepth) {
+				maxDepth = currentDepth;
+				setActivityDepth(currentNode, maxDepth);
+			}
+			return;
+		}
+		
+		setActivityDepth(currentNode, currentDepth);
+		currentDepth++;
+		
+		Set<DefaultEdge> outEdges = getOutgoingArrowsOfActivity(currentNode);
+		for (DefaultEdge e : outEdges)
+		{
+			findMaxDepth(getActivityAfter(e), currentDepth); 		
+		}
+	}
+	
+	// sets a nodes depth in relation to the graph tree
+	private void setActivityDepth(Activities node, int depth) {
+		for(Activities a : this.activityList)
+		{
+			if (a.getId() == node.getId())
+				a.setDepth(depth);
+		}
+	}
+	
+	public double getPercentComplete() {
+		return this.earnedValue / this.budegetAtCompletion;
+	}
+	
+	public double getCostVariance() {
+		return this.earnedValue - this.actualCosts;
+	}
+	
+	public double getScheduleVariance() {
+		return this.earnedValue - this.budget;
+	}
+	
+	public double getCostPerformanceIndex() {
+		return this.earnedValue / this.actualCosts;
+	}
+	
+	public double getSchedulePerformanceIndex() {
+		return this.earnedValue / this.budget;
+	}
+	
+	public double getEstimateAtCompletion() {
+		return this.budegetAtCompletion / this.getCostPerformanceIndex();
+	}
+	
+	public double getEstimateToCompletion() { 
+		return this.getEstimateAtCompletion() - this.actualCosts;
+	}
+	
+	public double getEarnedValue() {
+		return this.earnedValue;
+	}
+
+	public double getActualCost() {
+		return this.actualCosts;
+	}
+	
+	public String isProjectOnSchedule() {
+		if(this.earnedValue > this.budget)
+			return "Project is ahead of schedule";
+		else if(this.earnedValue < this.budget)
+			return "Project is behind schedule";
+		else
+			return "Project is on schedule";
+	}
+	
+	public String isProjectRespectingBudget() {
+		if(this.earnedValue > this.actualCosts)
+			return "Project is under budget";
+		else if(this.earnedValue < this.actualCosts)
+			return "Project is over budget";
+		else
+			return "Project is respecting the budget";
+	}
+	
+	public String areWeSpendingTooMuch() {
+		if(this.getCostVariance() > 1)
+			return "Less money was spent for the work accomplished than what was planned to be spent";
+		else if(this.getCostVariance() < 1)
+			return "More money was spent for the work accomplished than what was planned";
+		else
+			return "Money spent as planned";
+	}
+	
+	public String areWeOnSchedule() {
+		if(this.getScheduleVariance() > 1)
+			return "Ahead of schedule";
+		else if(this.getScheduleVariance() < 1)
+			return "Behind schedule";
+		else
+			return "On schedule";
+	}
+	
+	public String isCostAsPlanned() {
+		if(this.getCostPerformanceIndex() > 1.2)
+			return "Cost is less than planned";
+		else if(this.getCostPerformanceIndex() < .99)
+			return "Cost is higher than planned";
+		else 
+			return "Cost is as planned";
+	}
+	
+	public String isTheProjectEfficient() {
+		if(this.getSchedulePerformanceIndex() > 1.2)
+			return "Project is running superbly";
+		else if(this.getSchedulePerformanceIndex() < .99)
+			return "Project is inefficient";
+		else 
+			return "Project is running efficiently";
+	}
+	
+	public void setGraphStyle(boolean criticalPath) {
+		for(Activities a : this.getActivitySet()) {
+			a.setCriticalPathGraph(criticalPath);
+		}
+	}
 }
