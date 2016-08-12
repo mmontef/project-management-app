@@ -17,45 +17,62 @@ public class ActivityController extends ActivitySubject{
 
 	}
 	
-	public static void addActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime, int targetDate) {
+	private static void addDependencies(ArrayList<String> dependencies, Activities a)
+	{
+		for (String element : dependencies)
+		{
+			ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
+
+            for (Activities activity : activities) 
+            {
+
+                if (activity.getLabel().equals(element))
+                    DataResource.selectedProject.addArrow(activity, a);
+            }
+		}
+	}
+	
+	private static ArrayList<Users> addMembers(ArrayList<String> members, Activities a)
+	{
+		ArrayList<Users> users = DataResource.projectMembers;
+        ArrayList<Users> tmp = new ArrayList<Users>();
+
+        for (String element : members) {
+            for (Users user : users) {
+                if (user.getName().equals(element))
+                    tmp.add(user);
+            }
+        }
+        return tmp;
+	}
+	
+	public static boolean addActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime, int targetDate) {
 		try {
 			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 			Date start = dateFormatter.parse(startDate);
 			Date end = dateFormatter.parse(endDate);
 
-            if (start.before(end))
+            if (start.before(end) && budget >= 0 && mTime >= 0 && oTime >= 0 && pTime >= 0 && targetDate >= 0 && oTime <= mTime && pTime >= mTime && (progress.equals("pending") || progress.equals("started") || progress.equals("complete")))
             {
                 // Create activity and add it to current Project
                 Activities newActivity = new Activities(description, start, end, label, TaskProgress.valueOf(progress), budget, mTime, oTime, pTime, targetDate);
                 DataResource.selectedProject.addActivity(newActivity);
 
                 // Set the dependencies in the JGraphT
-                for (String element : dependencies) {
-
-                    ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
-
-                    for (Activities activity : activities) {
-
-                        if (activity.getLabel().equals(element))
-                            DataResource.selectedProject.addArrow(activity, newActivity);
-                    }
-                }
-
-                ArrayList<Users> users = DataResource.projectMembers;
-                ArrayList<Users> tmp = new ArrayList<Users>();
-
-                for (String element : members) {
-                    for (Users user : users) {
-                        if (user.getName().equals(element))
-                            tmp.add(user);
-                    }
-                }
+                if (!dependencies.isEmpty())
+                	addDependencies(dependencies, newActivity);
+                
+                if (!members.isEmpty())
+                {
+                ArrayList<Users> tmp = addMembers(members, newActivity);
                 newActivity.setMemberList(tmp);
+                }
 
                 //***************************** SAVE NEW ACTIVITY TO DATABASE **********************
                 DataResource.saveActivity(newActivity);
 
                 notifyObservers();
+                return true;
             }
             else
             {
@@ -69,10 +86,11 @@ public class ActivityController extends ActivitySubject{
                 else
                 {
                     JOptionPane.showMessageDialog(new JFrame(),
-                            "Please Fill in all values correctly",
+                            "No changes made: Please Fill in all values correctly",
                             "Values are incorrect format or missing",
                             JOptionPane.WARNING_MESSAGE);
                 }
+                return false;
             }
 
 		} catch (Exception exception) {
@@ -81,10 +99,11 @@ public class ActivityController extends ActivitySubject{
                     "Please Fill in all values correctly",
                     "Values are incorrect format or missing",
                     JOptionPane.WARNING_MESSAGE);
+            return false;
 		}
 	}
 	
-	public static void editActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime, int targetDate) {		
+	public static boolean editActivity(String description, String startDate, String endDate, String label, ArrayList<String> dependencies, ArrayList<String> members, String progress, int budget, int mTime, int oTime, int pTime, int targetDate) {		
 		try {
 			DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 			Date start = dateFormatter.parse(startDate);
@@ -92,7 +111,7 @@ public class ActivityController extends ActivitySubject{
 			
 			Activities myActivity = DataResource.selectedActivity;
 
-            if (start.before(end))
+            if (start.before(end) && budget >= 0 && mTime >= 0 && oTime >= 0 && pTime >= 0 && targetDate >= 0 && oTime <= mTime && pTime >= mTime && (progress.equals("pending") || progress.equals("started") || progress.equals("complete")))
             {
                 myActivity.setDescription(description);
                 myActivity.setStartDate(start);
@@ -120,7 +139,7 @@ public class ActivityController extends ActivitySubject{
                                 "Cannot add dependencies to the first activity",
                                 "Incorrect Dependency",
                                 JOptionPane.WARNING_MESSAGE);
-                		return;
+                		return false;
             		}
                 	
                 	if(dependencies.contains(lastNode)) {
@@ -128,34 +147,19 @@ public class ActivityController extends ActivitySubject{
                                 "Activity cannot depend on the last activity",
                                 "Incorrect Dependency",
                                 JOptionPane.WARNING_MESSAGE);
-                		return;
+                		return false;
             		}
 
                     DataResource.selectedProject.resetIncomingEdges(myActivity);
-                    ArrayList<Activities> activities = DataResource.selectedProject.getActivityList();
 
                     // Set the dependencies in the JGraphT
-                    for (String element : dependencies) {
-
-                        for (Activities activity : activities) {
-
-                            if (activity.getLabel().equals(element))
-                                DataResource.selectedProject.addArrow(activity, myActivity);
-                        }
-                    }
+                    addDependencies(dependencies, myActivity);
                 }
 
                 if (!members.isEmpty()) {
                     DataResource.resetActivityMembers(DataResource.selectedActivity.getId());
-                    ArrayList<Users> users = DataResource.projectMembers;
-                    ArrayList<Users> tmp = new ArrayList<Users>();
-
-                    for (String element : members) {
-                        for (Users user : users) {
-                            if (user.getName().equals(element))
-                                tmp.add(user);
-                        }
-                    }
+                    ArrayList<Users> tmp = addMembers(members, myActivity);
+                    myActivity.setMemberList(tmp);
                     DataResource.selectedActivity.setMemberList(tmp);
                 }
 
@@ -164,6 +168,7 @@ public class ActivityController extends ActivitySubject{
                 DataResource.saveActivity(DataResource.selectedActivity);
 
                 notifyObservers();
+                return true;
             }
             else
             {
@@ -177,10 +182,11 @@ public class ActivityController extends ActivitySubject{
                 else
                 {
                     JOptionPane.showMessageDialog(new JFrame(),
-                            "End date must be AFTER start date",
-                            "Incorrect Dates",
+                    		"No changes made: Please Fill in all values correctly",
+                            "Values are incorrect format or missing",
                             JOptionPane.WARNING_MESSAGE);
                 }
+                return false;
             }
 
 		} catch (Exception exception) {
@@ -188,6 +194,7 @@ public class ActivityController extends ActivitySubject{
                     "Please Fill in all values",
                     "Empty Values",
                     JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
 	}

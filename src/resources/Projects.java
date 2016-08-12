@@ -839,11 +839,31 @@ public class Projects {
 	}
 	
 	public double getPercentComplete() {
-		return this.earnedValue / this.budegetAtCompletion;
+		if(this.earnedValue < 0 || this.budegetAtCompletion <0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
+		if(budegetAtCompletion ==0)
+		{
+			return 0.0;
+		}
+		else
+		{
+			return this.earnedValue / this.budegetAtCompletion;
+		}
+		
 	}
 	
 	public double getCostVariance() {
+		
+		if(this.earnedValue < 0 || this.actualCosts < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
 		return this.earnedValue - this.actualCosts;
+		
 	}
 	
 	public double getScheduleVariance() {
@@ -851,26 +871,77 @@ public class Projects {
 	}
 	
 	public double getCostPerformanceIndex() {
-		return this.earnedValue / this.actualCosts;
+		if(this.earnedValue < 0 || this.actualCosts < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
+		if(this.actualCosts==0)
+		{
+			return 0.0;
+		}
+		else
+		{
+			return this.earnedValue / this.actualCosts;
+		}
+		
 	}
 	
 	public double getSchedulePerformanceIndex() {
-		return this.earnedValue / this.budget;
+		if(this.earnedValue < 0 || this.budget < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
+		if(this.budget==0)
+		{
+			return 0.0;
+		}
+		else
+		{
+			return this.earnedValue / this.budget;
+		}
+		
 	}
 	
 	public double getEstimateAtCompletion() {
-		return this.budegetAtCompletion / this.getCostPerformanceIndex();
+		if(this.budegetAtCompletion < 0 || this.getCostPerformanceIndex() < 0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
+		if(this.getCostPerformanceIndex()==0)
+		{
+			return 0.0;
+		}
+		else
+		{
+			return this.budegetAtCompletion / this.getCostPerformanceIndex();
+		}
 	}
 	
-	public double getEstimateToCompletion() { 
+	public double getEstimateToCompletion() {
+		if(this.getEstimateAtCompletion() < 0 || this.actualCosts <0)
+		{
+			throw new IllegalArgumentException();
+		}
+		
 		return this.getEstimateAtCompletion() - this.actualCosts;
 	}
 	
 	public double getEarnedValue() {
+		if(this.earnedValue < 0)
+		{
+			throw new IllegalArgumentException(); 
+		}
 		return this.earnedValue;
 	}
 
 	public double getActualCost() {
+		if(this.actualCosts < 0)
+		{
+			throw new IllegalArgumentException();
+		}
 		return this.actualCosts;
 	}
 	
@@ -934,3 +1005,4 @@ public class Projects {
 		}
 	}
 }
+
