@@ -15,14 +15,14 @@ public class ProjectController extends ProjectSubject{
 		
 	}
 	
-	public static void addProject(String projectName, String projectIDDescription, double budget) {
+	public static boolean addProject(String projectName, String projectIDDescription, double budget) {
 		//Initialize A user list and add current user to it
 		ArrayList<Users> userList = new ArrayList<Users>();
         userList.add(DataResource.currentUser);
 
         try
         {
-            if (!projectName.isEmpty() && !projectIDDescription.isEmpty() && budget > 0)
+            if (!projectName.isEmpty() && !projectIDDescription.isEmpty() && budget >= 0)
             {
                 // Create the date
                 DateFormat df = new SimpleDateFormat("dd/MM/yy");
@@ -36,6 +36,7 @@ public class ProjectController extends ProjectSubject{
                 DataResource.saveProject(newProject);
 
                 notifyObservers();
+                return true;
             }
             else
             {
@@ -53,6 +54,7 @@ public class ProjectController extends ProjectSubject{
                             "Values are Empty",
                             JOptionPane.WARNING_MESSAGE);
                 }
+                return false;
             }
 
         }
@@ -62,16 +64,17 @@ public class ProjectController extends ProjectSubject{
                     "Please fill in all values",
                     "Values are Empty",
                     JOptionPane.WARNING_MESSAGE);
+            return false;
         }
 
 	}
 	
-	public static void editProject(String projectName, String projectIDDescription, double budget) {
+	public static boolean editProject(String projectName, String projectIDDescription, double budget) {
 		Projects myProject = DataResource.selectedProject;
 
         try
         {
-            if (!projectName.isEmpty() && !projectIDDescription.isEmpty() && budget > 0)
+            if (!projectName.isEmpty() && !projectIDDescription.isEmpty() && budget >= 0)
             {
                 myProject.setProjectName(projectName);
                 myProject.setDescription(projectIDDescription);
@@ -80,6 +83,7 @@ public class ProjectController extends ProjectSubject{
                 DataResource.saveProject(myProject); //Save the new project to the database.
 
                 notifyObservers();
+                return true;
             }
             else
             {
@@ -97,6 +101,7 @@ public class ProjectController extends ProjectSubject{
                             "Values are Empty",
                             JOptionPane.WARNING_MESSAGE);
                 }
+                return false;
             }
 
         }
@@ -106,6 +111,8 @@ public class ProjectController extends ProjectSubject{
                     "Please fill in all values",
                     "Values are Empty",
                             JOptionPane.WARNING_MESSAGE);
+                    
+                    return false;
         }
 
 	}
